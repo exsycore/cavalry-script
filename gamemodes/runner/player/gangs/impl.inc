@@ -596,7 +596,8 @@ stock InvitePlayerToGang(playerid, targetid) {
         #pragma unused list, input
         if (!res) @return 1;
 
-        SetPlayerGang(targetid, playerData[playerid][pGang], 1);
+        new gangid = GetPlayerGangIndex(playerid);
+        SetPlayerGang(targetid, gangid, 1);
         SendCongratMessage(targetid, "{FFFFFF}คุณได้ตอบรับคำเชิญเข้าร่วมกลุ่มแล้ว");
         SendCongratMessage(playerid, "{FFFFFF}%s ได้ตอบรับคำเชิญเข้าร่วมกลุ่มแล้ว", ReturnPlayerRPName(targetid));
     }

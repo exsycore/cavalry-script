@@ -477,18 +477,21 @@ YCMD:adminmenu(playerid, string:params[], help) {
     return 1;
 }
 
-hook OnPlayerConnect(playerid) {
-    // if (IsPlayerAdminEx(playerid)) {
-    
-    // }
-    return 1;
-}
-
-hook OnGameModeInit() {
-    for (new i = 0; i < 53; i++)
-        EnableAntiCheat(i, 0);
-    return 1;
-}
+#if defined DISABLE_ANTICHEAT
+    hook OnGameModeInit() {
+        for (new i = 0; i < 53; i++)
+            EnableAntiCheat(i, 0);
+        return 1;
+    }
+#else
+    hook OnPlayerConnect(playerid) {
+        if (IsPlayerAdminEx(playerid)) {
+            for (new i = 0; i < 53; i++)
+                EnableAntiCheatForPlayer(playerid, i, 0);
+        }
+        return 1;
+    }
+#endif
 
 hook OnPlayerClickMap(playerid, Float:fX, Float:fY, Float:fZ) {
     if (IsPlayerAdminEx(playerid)) {

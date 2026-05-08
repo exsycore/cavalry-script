@@ -4,6 +4,8 @@
 
 #define CGEN_MEMORY (50000)
 
+#define DISABLE_ANTICHEAT
+
 #define SERVER_NAME 	"Cavalry City | Beta"
 #define	SERVER_MODE		"RP"
 #define SERVER_LANGUAGE "Thai"

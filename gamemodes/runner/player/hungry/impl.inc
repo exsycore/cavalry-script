@@ -192,8 +192,8 @@ public HungryTime(playerid) {
     new Thirsty = floatround(GetPlayerThirsty(playerid));
     GetPlayerHealth(playerid, sHealth);
 
-    SetPlayerHungry(playerid, GetPlayerHungry(playerid) - 2.0);
-    SetPlayerThirsty(playerid, GetPlayerThirsty(playerid) - 1.0);
+    SetPlayerHungry(playerid, GetPlayerHungry(playerid) - 0.7);
+    SetPlayerThirsty(playerid, GetPlayerThirsty(playerid) - 0.5);
 
     switch (Hungry) {
         case 1 .. 20: {
