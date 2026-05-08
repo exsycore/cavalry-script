@@ -33,7 +33,7 @@ hook OnPlayerConnect(playerid) {
     PlayerTextDrawSetOutline(playerid, buildVersionName[playerid], 0);
     PlayerTextDrawSetShadow(playerid, buildVersionName[playerid], 0);
     PlayerTextDrawAlignment(playerid, buildVersionName[playerid], 1);
-    PlayerTextDrawColor(playerid, buildVersionName[playerid], -1);
+    PlayerTextDrawColor(playerid, buildVersionName[playerid], -94);
     PlayerTextDrawBackgroundColor(playerid, buildVersionName[playerid], 255);
     PlayerTextDrawBoxColor(playerid, buildVersionName[playerid], 50);
     PlayerTextDrawUseBox(playerid, buildVersionName[playerid], 0);

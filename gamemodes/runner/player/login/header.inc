@@ -43,7 +43,7 @@ enum PLAYER_DATA {
     Float: pPosA,
     Float: pHealth,
     Float: pArmour,
-    Float: pExp,
+    pExp,
     pLevel,
     Float: pHungry,
     Float: pThirsty,

@@ -185,6 +185,7 @@ stock ATMDialogDeposit(playerid) {
 
         // บันทึกลง DB
         SavePlayerBank(playerid);
+        ApplyAnimation(playerid, "DEALER", "shop_pay", 4.1, 0, 1, 1, 0, 0, 1);
         SendCongratMessage(playerid, "{FFFFFF}คุณฝากเงิน {00DD00}$%d{FFFFFF} | ยอดธนาคาร: {00DD00}$%d{FFFFFF} | เงินสด: {00DD00}$%d", amount, playerData[playerid][pBank], playerData[playerid][pMoney]);
         @return ATMDialogUse(playerid);
     }
@@ -215,6 +216,7 @@ stock ATMDialogWithdraw(playerid) {
         GivePlayerMoneyEx(playerid, amount);
 
         SavePlayerBank(playerid);
+        ApplyAnimation(playerid, "DEALER", "shop_pay", 4.1, 0, 1, 1, 0, 0, 1);
         SendCongratMessage(playerid, "{FFFFFF}คุณฝากเงิน {FF4444}$%d{FFFFFF} | ยอดธนาคาร: {FF4444}$%d{FFFFFF} | เงินสด: {FF4444}$%d", amount, playerData[playerid][pBank], playerData[playerid][pMoney]);
         @return ATMDialogUse(playerid);
     }
@@ -340,6 +342,7 @@ stock ATMDialogTransferAmount(playerid, targetid) {
         SavePlayerBank(playerid);
         SavePlayerBank(targetid);
 
+        ApplyAnimation(playerid, "DEALER", "shop_pay", 4.1, 0, 1, 1, 0, 0, 1);
         SendCongratMessage(playerid, "{FFFFFF}โอนเงิน {00DD00}$%d{FFFFFF} ให้ %s (ID:%d) | ยอดคงเหลือ: {00DD00}$%d", amount, ReturnPlayerRPName(targetid), targetid, playerData[playerid][pBank]);
         SendCongratMessage(targetid, "{FFFFFF}ได้รับโอนเงิน {00DD00}$%d{FFFFFF} จาก %s (ID:%d) | ยอดคงเหลือ: {00DD00}$%d", amount, ReturnPlayerRPName(playerid), playerid, playerData[targetid][pBank]);
         @return ATMDialogUse(playerid);

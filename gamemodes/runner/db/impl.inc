@@ -46,7 +46,7 @@ public InitDB() {
 	printf("[SYSTEM][DB] Handshaking with MySQL server...");
 	printf("[SYSTEM][DB] Database \"" MYSQL_DATABASE "\" online.");
 
-	SetNameTagDrawDistance(8.0);
+	SetNameTagDrawDistance(10.0);
 	ShowPlayerMarkers(0);
 	// ShowNameTags(false);
 	ManualVehicleEngineAndLights();

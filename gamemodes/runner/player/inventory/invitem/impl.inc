@@ -1689,6 +1689,7 @@ stock UseItem(playerid, td, itemIndex, itemModel) {
 		case 2768: {
 			if (playerData[playerid][pHungry] >= 100) return SendErrorMessage(playerid, "{FFFFFF}ตอนนี้คุณยังไม่หิวอาหาร");
 			GivePlayerHungry(playerid, 25);
+			ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.1, 0, 0, 0, 0, 0, 1);
 			CallLocalFunction("DeleteItem", "ddd", playerid, itemIndex, 1);
 			SendCongratMessage(playerid, "{FFFFFF}คุณได้รับประทานอาหาร (ค่าอาหาร +25)");
 		}
@@ -1696,6 +1697,7 @@ stock UseItem(playerid, td, itemIndex, itemModel) {
 		case 2647: {
 			if (playerData[playerid][pThirsty] >= 100) return SendErrorMessage(playerid, "{FFFFFF}ตอนนี้คุณยังไม่หิวน้ำ");
 			GivePlayerThirsty(playerid, 30);
+			ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.1, 0, 0, 0, 0, 0, 1);
 			CallLocalFunction("DeleteItem", "ddd", playerid, itemIndex, 1);
 			SendCongratMessage(playerid, "{FFFFFF}คุณได้ดื่มเครื่องดื่ม (ค่าพลังงาน +30)");
 		}

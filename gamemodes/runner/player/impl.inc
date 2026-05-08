@@ -4,6 +4,7 @@
 
 #include "util\impl"
 #include "login\impl"
+#include "level\impl"
 #include "hungry\impl"
 #include "death\impl"
 #include "admin\impl"

@@ -19,28 +19,6 @@ stock bool:GetPlayerLoggedIn(playerid) {
 	return (playerData[playerid][IsLoggedIn] == true) ? true : false;
 }
 
-stock Float:GetPlayerExp(playerid) {
-	return playerData[playerid][pExp];
-}
-
-stock GetPlayerLevel(playerid) {
-	return playerData[playerid][pLevel];
-}
-
-stock SetPlayerLevel(playerid, level) {
-	playerData[playerid][pLevel] = level;
-	SetPlayerScore(playerid, playerData[playerid][pLevel]);
-	Query(get_handle(), "UPDATE "PLAYER_TABLE" SET `playerLevel` = '%d' WHERE `playerID` = '%d'", playerData[playerid][pLevel], playerData[playerid][pID]);
-	return 1;
-}
-
-stock GivePlayerLevel(playerid, level) {
-	playerData[playerid][pLevel] += level;
-	SetPlayerScore(playerid, playerData[playerid][pLevel]);
-	Query(get_handle(), "UPDATE "PLAYER_TABLE" SET `playerLevel` = '%d' WHERE `playerID` = '%d'", playerData[playerid][pLevel], playerData[playerid][pID]);
-	return 1;
-}
-
 stock SelectGenderDialog(playerid) {
 	new hash[256];
 	GetPVarString(playerid, "hash", hash, sizeof(hash));
@@ -153,7 +131,7 @@ stock LoadPlayerData(playerid) {
 	cache_get_value_name_float(0, "pPosA", playerData[playerid][pPosA]);
 	cache_get_value_name_float(0, "playerHealth", playerData[playerid][pHealth]);
 	cache_get_value_name_float(0, "playerArmour", playerData[playerid][pArmour]);
-	cache_get_value_name_float(0, "playerExp", playerData[playerid][pExp]);
+	cache_get_value_name_int(0, "playerExp", playerData[playerid][pExp]);
 	cache_get_value_name_int(0, "playerLevel", playerData[playerid][pLevel]);
 	cache_get_value_name_float(0, "playerHungry", playerData[playerid][pHungry]);
 	cache_get_value_name_float(0, "playerThirsty", playerData[playerid][pThirsty]);
@@ -233,7 +211,7 @@ stock UpdatePlayerData(playerid) {
 	acc_float_strcat(query, sizeof(query), "pPosA", playerData[playerid][pPosA]);
 	acc_float_strcat(query, sizeof(query), "playerHealth", playerData[playerid][pHealth]);
 	acc_float_strcat(query, sizeof(query), "playerArmour", playerData[playerid][pArmour]);
-	acc_float_strcat(query, sizeof(query), "playerExp", playerData[playerid][pExp]);
+	acc_int_strcat(query, sizeof(query), "playerExp", playerData[playerid][pExp]);
 	acc_int_strcat(query, sizeof(query), "playerLevel", playerData[playerid][pLevel]);
 	acc_float_strcat(query, sizeof(query), "playerHungry", playerData[playerid][pHungry]);
 	acc_float_strcat(query, sizeof(query), "playerThirsty", playerData[playerid][pThirsty]);
@@ -479,7 +457,6 @@ hook OnPlayerSpawn(playerid) {
 	SetPlayerLevel(playerid, playerData[playerid][pLevel]);
 
 	if (playerData[playerid][pFaction] != INVALID_FACTION) {
-		// SetPlayerColor(playerid, FactionData[playerData[playerid][pFaction]][FactionColor]);
 		Attach3DTextFactionToPlayer(playerid, playerData[playerid][pFaction]);
 	} else if (playerData[playerid][pGang] != INVALID_GANG) {
         new gangIndex = GetPlayerGangIndex(playerid);
@@ -492,7 +469,6 @@ hook OnPlayerSpawn(playerid) {
 			, playerData[playerid][pGangRank]
 			, playerData[playerid][pID]);
         } else {
-            // SetPlayerColor(playerid, Player.Gang[gangIndex][@gangcolor]);
             Attached3DTextGangToPlayer(playerid, gangIndex);
         }
     }

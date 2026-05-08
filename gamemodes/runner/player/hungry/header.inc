@@ -10,8 +10,3 @@ forward HungryTime(playerid);
 
 new HungryTimer[MAX_PLAYERS];
 new FullnessTick[MAX_PLAYERS];
-new StatusUIStatus[MAX_PLAYERS];
-
-new PlayerText:statusUI[MAX_PLAYERS][4];
-new PlayerBar:hungryProgressbar[MAX_PLAYERS];
-new PlayerBar:thirstyProgressbar[MAX_PLAYERS];

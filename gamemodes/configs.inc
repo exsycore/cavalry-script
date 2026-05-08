@@ -4,7 +4,8 @@
 
 #define CGEN_MEMORY (50000)
 
-#define DISABLE_ANTICHEAT
+// สามารถเปิดใช้งานเวลา Test กันตัวเองด้วยเน็ตเดียวกันได้
+// #define DISABLE_ANTICHEAT
 
 #define SERVER_NAME 	"Cavalry City | Beta"
 #define	SERVER_MODE		"RP"
