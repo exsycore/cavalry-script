@@ -64,6 +64,15 @@ public LoadDealershipStock() {
     return 1;
 }
 
+stock DealershipNearest(playerid) {
+    for (new i = 0; i < MAX_DEALERSHIPS; i++) {
+        if (DealershipData[i][ds_exists] && IsPlayerInRangeOfPoint(playerid, 1.0, DealershipData[i][ds_posx], DealershipData[i][ds_posy], DealershipData[i][ds_posz])) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 stock DealershipCreateObjects(idx) {
     if (!DealershipData[idx][ds_exists]) return 0;
 
@@ -84,11 +93,11 @@ stock DealershipCreateObjects(idx) {
 
     new labelStr[128];
     format(labelStr, sizeof labelStr,
-        "{FFD700}%s\n{FFFFFF}กด {FFFF00}E {FFFFFF}เพื่อเข้าชมรถ",
+        "{FFD700}%s\n{FFFFFF}กด {FFFF00}N {FFFFFF}เพื่อเข้าชมรถ",
         DealershipData[idx][ds_name]
     );
     DealershipData[idx][ds_label] = CreateDynamic3DTextLabel(
-        labelStr, 0xFFD700FF, x, y, z + 1.2, 8.0,
+        labelStr, 0xFFD700FF, x, y, z, 8.0,
         .interiorid = inter, .worldid = world
     );
     return 1;
@@ -105,28 +114,22 @@ stock DealershipDestroyObjects(idx) {
 }
 
 hook OnPlayerConnect(playerid) {
-    SetPVarInt(playerid, "isOpenDeal", 0);
     return 1;
 }
 
-hook OnPlayerPickUpDynamicPickup(playerid, pickupid) {
+hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
     if (!GetPlayerLoggedIn(playerid)) return 1;
 
-    for (new i = 0; i < MAX_DEALERSHIPS; i++) {
-        if (!DealershipData[i][ds_exists]) continue;
-        if (DealershipData[i][ds_pickup] != pickupid) continue;
-        if (GetPVarInt(playerid, "isOpenDeal") == 1) continue;
-
-        OpenDealershipMenu(playerid, i);
-        break;
+    if (newkeys & PRESS_N) {
+        new id = DealershipNearest(playerid);
+        if (id == -1) return 1;
+        OpenDealershipMenu(playerid, id);
     }
     return 1;
 }
 
 stock OpenDealershipMenu(playerid, idx) {
     if (!DealershipData[idx][ds_exists]) return 0;
-
-    SetPVarInt(playerid, "isOpenDeal", 1);
 
     PlayerDealershipID[playerid]   = idx;
     PlayerDealershipPage[playerid] = 0;
@@ -167,7 +170,6 @@ stock DealershipShowPage(playerid, idx, page) {
         #pragma unused input
         if (!res) {
             PlayerDealershipID[playerid] = -1;
-            SetPVarInt(playerid, "isOpenDeal", 0);
             @return 1;
         }
 
@@ -175,7 +177,6 @@ stock DealershipShowPage(playerid, idx, page) {
         if (slot == -1) @return 1;
 
         DealershipConfirmBuy(playerid, idx, slot);
-        SetPVarInt(playerid, "isOpenDeal", 0);
     }
     Dialog_ShowCallback(playerid, using inline BuyMenu,
         DIALOG_STYLE_TABLIST_HEADERS, title, body,
@@ -206,13 +207,11 @@ stock DealershipConfirmBuy(playerid, idx, slot) {
         #pragma unused list, input
         if (!res) {
             DealershipShowPage(playerid, idx, 0);
-            SetPVarInt(playerid, "isOpenDeal", 0);
             @return 1;
         }
 
         if (GetPlayerMoney(playerid) < price) {
             SendErrorMessage(playerid, "{FFFFFF}เงินไม่พอ ต้องการ {AAFFAA}$%d", price);
-            SetPVarInt(playerid, "isOpenDeal", 0);
             @return DealershipShowPage(playerid, idx, 0);
         }
 
@@ -353,14 +352,14 @@ YCMD:createdealer(playerid, string:params[], help) {
 YCMD:deletedealer(playerid, string:params[], help) {
     if (!IsPlayerAdminEx(playerid)) return 1;
 
-    new body[1024] = "{FFFFFF}ID\t{000000}-\t{FFFFFF}ชื่อร้าน\n";
+    new body[1024] = "{FFFFFF}ID\t{FFFFFF}Index\t{FFFFFF}ชื่อร้าน\n";
     new line[128];
     new count = 0;
 
     for (new i = 0; i < MAX_DEALERSHIPS; i++) {
         if (!DealershipData[i][ds_exists]) continue;
-        format(line, sizeof line, "{FFFFFF}%d\t{000000}-\t{FFFFFF}%s\n",
-            DealershipData[i][ds_id], DealershipData[i][ds_name]);
+        format(line, sizeof line, "{FFFFFF}%d\t{FFFFFF}%d\t{FFFFFF}%s\n",
+            DealershipData[i][ds_id], i, DealershipData[i][ds_name]);
         strcat(body, line, sizeof body);
         count++;
     }
@@ -418,14 +417,14 @@ YCMD:deletedealer(playerid, string:params[], help) {
 YCMD:addcardealer(playerid, string:params[], help) {
     if (!IsPlayerAdminEx(playerid)) return 1;
 
-    new body[1024] = "{FFFFFF}ID\t{000000}-\t{FFFFFF}ชื่อร้าน\n";
+    new body[1024] = "{FFFFFF}ID\t{FFFFFF}Index\t{FFFFFF}ชื่อร้าน\n";
     new line[128];
     new count = 0;
 
     for (new i = 0; i < MAX_DEALERSHIPS; i++) {
         if (!DealershipData[i][ds_exists]) continue;
-        format(line, sizeof line, "{FFFFFF}%d\t{000000}-\t{FFFFFF}%s\n",
-            DealershipData[i][ds_id], DealershipData[i][ds_name]);
+        format(line, sizeof line, "{FFFFFF}%d\t{FFFFFF}%d\t{FFFFFF}%s\n",
+            DealershipData[i][ds_id], i, DealershipData[i][ds_name]);
         strcat(body, line, sizeof body);
         count++;
     }
@@ -450,7 +449,6 @@ YCMD:addcardealer(playerid, string:params[], help) {
             if (!res2) @return 1;
 
             new modelid = GetVehicleModelByName(in2);
-            new vName[64];
 
             if (!modelid || modelid < 400 || modelid > 611) {
                 SendErrorMessage(playerid, "{FFFFFF}ไม่พบรุ่นรถนั้น กรอก ID (400-611) หรือชื่อรถ");
@@ -472,11 +470,12 @@ YCMD:addcardealer(playerid, string:params[], help) {
                     if (!res4) @return 1;
 
                     new c1, c2;
+                    new vName[64];
                     if (sscanf(in4, "dd", c1, c2)) {
                         c1 = 1; c2 = 1;
                     }
 
-                    strmid(vName, ReturnVehicleModelName(modelid), 0, 64);
+                    strcopy(vName, ReturnVehicleModelName(modelid));
 
                     new query[256];
                     mysql_format(get_handle(), query, sizeof query,
@@ -493,7 +492,7 @@ YCMD:addcardealer(playerid, string:params[], help) {
                         DealershipStock[idx][slot][dss_color1]  = c1;
                         DealershipStock[idx][slot][dss_color2]  = c2;
                         DealershipStock[idx][slot][dss_price]   = price;
-                        strmid(DealershipStock[idx][slot][dss_name], vName, 0, 64);
+                        strcopy(DealershipStock[idx][slot][dss_name], vName);
                         DealershipData[idx][ds_stockCount]++;
                         
                         va_SendClientMessage(playerid, COLOR_GREEN, "แจ้งเตือน: {FFFFFF}เพิ่ม {FFD700}%s {FFFFFF}ราคา {AAFFAA}$%d {FFFFFF}ลงร้าน {FFD700}%s {FFFFFF}แล้ว",
@@ -509,7 +508,9 @@ YCMD:addcardealer(playerid, string:params[], help) {
                     "{FFFFFF}ถัดไป", "{FFFFFF}ยกเลิก");
             }
             new priceInfo[128];
-            format(priceInfo, sizeof priceInfo, "{FFFFFF}รุ่น: {FFD700}%s\n{FFFFFF}กรอกราคา:", vName);
+            new vehicleName[64];
+            strcopy(vehicleName, ReturnVehicleModelName(modelid));
+            format(priceInfo, sizeof priceInfo, "{FFFFFF}รุ่น: {FFD700}%s\n{FFFFFF}กรอกราคา:", vehicleName);
             Dialog_ShowCallback(playerid, using inline InputPrice, DIALOG_STYLE_INPUT,
                 "{FFFFFF}ตั้งราคา", priceInfo,
                 "{FFFFFF}ถัดไป", "{FFFFFF}ยกเลิก");
@@ -528,12 +529,12 @@ YCMD:addcardealer(playerid, string:params[], help) {
 YCMD:removecardealer(playerid, string:params[], help) {
     if (!IsPlayerAdminEx(playerid)) return 1;
 
-    new body[1024] = "{FFFFFF}ID\t{000000}-\t{FFFFFF}ชื่อร้าน\n";
+    new body[1024] = "{FFFFFF}ID\t{FFFFFF}Index\t{FFFFFF}ชื่อร้าน\n";
     new line[128], count = 0;
     for (new i = 0; i < MAX_DEALERSHIPS; i++) {
         if (!DealershipData[i][ds_exists]) continue;
-        format(line, sizeof line, "{FFFFFF}%d\t{000000}-\t{FFFFFF}%s\n",
-            DealershipData[i][ds_id], DealershipData[i][ds_name]);
+        format(line, sizeof line, "{FFFFFF}%d\t{FFFFFF}%d\t{FFFFFF}%s\n",
+            DealershipData[i][ds_id], i, DealershipData[i][ds_name]);
         strcat(body, line, sizeof body);
         count++;
     }
@@ -600,12 +601,12 @@ YCMD:removecardealer(playerid, string:params[], help) {
 YCMD:setpricedeal(playerid, string:params[], help) {
     if (!IsPlayerAdminEx(playerid)) return 1;
 
-    new body[1024] = "{FFFFFF}ID\t{000000}-\t{FFFFFF}ชื่อร้าน\n";
+    new body[1024] = "{FFFFFF}ID\t{FFFFFF}Index\t{FFFFFF}ชื่อร้าน\n";
     new line[128], count = 0;
     for (new i = 0; i < MAX_DEALERSHIPS; i++) {
         if (!DealershipData[i][ds_exists]) continue;
-        format(line, sizeof line, "{FFFFFF}%d\t{000000}-\t{FFFFFF}%s\n",
-            DealershipData[i][ds_id], DealershipData[i][ds_name]);
+        format(line, sizeof line, "{FFFFFF}%d\t{FFFFFF}%d\t{FFFFFF}%s\n",
+            DealershipData[i][ds_id], i, DealershipData[i][ds_name]);
         strcat(body, line, sizeof body);
         count++;
     }
@@ -683,12 +684,12 @@ YCMD:setpricedeal(playerid, string:params[], help) {
 YCMD:movedealer(playerid, string:params[], help) {
     if (!IsPlayerAdminEx(playerid)) return 1;
 
-    new body[1024] = "{FFFFFF}ID\t{000000}-\t{FFFFFF}ชื่อร้าน\n";
+    new body[1024] = "{FFFFFF}ID\t{FFFFFF}Index\t{FFFFFF}ชื่อร้าน\n";
     new line[128], count = 0;
     for (new i = 0; i < MAX_DEALERSHIPS; i++) {
         if (!DealershipData[i][ds_exists]) continue;
-        format(line, sizeof line, "{FFFFFF}%d\t{000000}-\t{FFFFFF}%s\n",
-            DealershipData[i][ds_id], DealershipData[i][ds_name]);
+        format(line, sizeof line, "{FFFFFF}%d\t{FFFFFF}%d\t{FFFFFF}%s\n",
+            DealershipData[i][ds_id], i, DealershipData[i][ds_name]);
         strcat(body, line, sizeof body);
         count++;
     }
@@ -746,12 +747,12 @@ YCMD:movedealer(playerid, string:params[], help) {
 YCMD:tpdealer(playerid, string:params[], help) {
     if (!IsPlayerAdminEx(playerid)) return 1;
 
-    new body[1024] = "{FFFFFF}ID\t{000000}-\t{FFFFFF}ชื่อร้าน\n";
+    new body[1024] = "{FFFFFF}ID\t{FFFFFF}Index\t{FFFFFF}ชื่อร้าน\n";
     new line[128], count = 0;
     for (new i = 0; i < MAX_DEALERSHIPS; i++) {
         if (!DealershipData[i][ds_exists]) continue;
-        format(line, sizeof line, "{FFFFFF}%d\t{000000}-\t{FFFFFF}%s\n",
-            DealershipData[i][ds_id], DealershipData[i][ds_name]);
+        format(line, sizeof line, "{FFFFFF}%d\t{FFFFFF}%d\t{FFFFFF}%s\n",
+            DealershipData[i][ds_id], i, DealershipData[i][ds_name]);
         strcat(body, line, sizeof body);
         count++;
     }
