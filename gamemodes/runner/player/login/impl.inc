@@ -58,6 +58,9 @@ stock ShowDialog_Register(playerid) {
 	format(string, sizeof(string), REGISTER_TEXT);
 	TogglePlayerSpectating(playerid, true);
 
+	InterpolateCameraPos(playerid, 2173.0742, -1046.8438, 74.5567, 2173.0742, -1046.8438, 74.5567, 10000);
+	InterpolateCameraLookAt(playerid, 2172.1289, -1047.1642, 74.4168, 2172.1289, -1047.1642, 74.4168, 10000);
+
 	inline Response(response, listitem, string:inputtext[]) {
 		#pragma unused listitem
 		if (!response) {
@@ -92,6 +95,9 @@ stock ShowDialog_Login(playerid) {
 	new string[256];
 	format(string, sizeof string, LOGIN_TEXT);
 	TogglePlayerSpectating(playerid, true);
+
+	InterpolateCameraPos(playerid, 2173.0742, -1046.8438, 74.5567, 2173.0742, -1046.8438, 74.5567, 10000);
+	InterpolateCameraLookAt(playerid, 2172.1289, -1047.1642, 74.4168, 2172.1289, -1047.1642, 74.4168, 10000);
 
 	inline Response(response, litsitem, string:inputtext[]) {
 		#pragma unused litsitem
