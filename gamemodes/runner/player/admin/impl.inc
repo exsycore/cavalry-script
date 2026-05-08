@@ -462,6 +462,9 @@ YCMD:adminmenu(playerid, string:params[], help) {
             case 6: { // หมวดหมู่ Garage/Pickcar/Pawncar
                 Command_ReProcess(playerid, "/garagepanel", 0);
             }
+            case 7: { // หมวดหมู่ Car Shop
+                Command_ReProcess(playerid, "/adealership", 0);
+            }
         }
     }
     Dialog_ShowCallback(playerid, using inline AdminMenu, DIALOG_STYLE_LIST,
@@ -472,7 +475,8 @@ YCMD:adminmenu(playerid, string:params[], help) {
         {FFFFFF}หมวดหมู่ Entrance\n\
         {FFFFFF}หมวดหมู่ ATM\n\
         {FFFFFF}หมวดหมู่หน่วยงาน\n\
-        {FFFFFF}หมวดหมู่ Garage/Pickcar/Pawncar",
+        {FFFFFF}หมวดหมู่ Garage/Pickcar/Pawncar\n\
+        {FFFFFF}หมวดหมู่ Car Shop",
         "{FFFFFF}เลือก", "{FFFFFF}ปิด");
     return 1;
 }

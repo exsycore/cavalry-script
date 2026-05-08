@@ -7,3 +7,4 @@
 #include "atm\impl"
 #include "gps\impl"
 #include "ui\impl"
+#include "carshop\impl"

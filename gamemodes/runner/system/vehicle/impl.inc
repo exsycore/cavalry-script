@@ -266,7 +266,7 @@ stock ReturnVehicleModelName(model)
 
 stock GetVehicleModelByName(const name[])
 {
-	if (isnumeric(name) && (strval(name) >= 400 && strval(name) <= 611)) return strval(name);
+	if (IsNumeric(name) && (strval(name) >= 400 && strval(name) <= 611)) return strval(name);
 
 	for (new i = 0; i < sizeof g_arrVehicleNames; i ++)
 	{
