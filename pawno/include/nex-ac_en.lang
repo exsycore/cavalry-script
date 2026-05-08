@@ -1,0 +1,37 @@
+//For Easy-AC v1.0 (0.3.7-R1)
+
+#if defined _nex_ac_lang_included
+	#endinput
+#endif
+#define _nex_ac_lang_included
+
+new
+    SUSPICION_1[] =         "[Easy-AC] พบความผิดปกติ ID %d รหัสเหตุผล: %03d%s",
+    SUSPICION_2[] =         "[Easy-AC] พบความผิดปกติ IP %s รหัสเหตุผล: %03d%s",
+    VERSION_WARNING[] =     "[Easy-AC] เวอร์ชันของ anticheat นี้ไม่รองรับเวอร์ชันของเซิร์ฟเวอร์",
+    CFG_OPENING_ERROR[] =   "[Easy-AC] เกิดข้อผิดพลาดในการสร้าง/เปิดไฟล์ %s!",
+
+#if defined DEBUG
+    DEBUG_CODE_1[] =        "[Easy-AC debug] ID %d เกินขีดจำกัด flood %d ครั้ง Public ID: %d",
+    DEBUG_CODE_2[] =        "[Easy-AC debug] เวอร์ชันไม่ถูกต้องจาก ID %d เวอร์ชัน: %s",
+    DEBUG_CODE_3[] =        "[Easy-AC debug] ID %d เกินขีดจำกัดการเชื่อมต่อจาก IP เดียวกัน %d ครั้ง",
+    DEBUG_CODE_4[] =        "[Easy-AC debug] พยายาม login RCON ผิดพลาดจาก IP %s โดยใช้รหัสผ่าน %s",
+    DEBUG_CODE_5[] =        "[Easy-AC debug] ID %d ใช้ NOP %s",
+#endif
+
+    KICK_MSG[] =            "คุณถูกเตะออกเนื่องจากต้องสงสัยว่าใช้โปรแกรมโกง (#%03d)",
+    MAX_CONNECTS_MSG[] =    "คุณเกินขีดจำกัดการเชื่อมต่อจาก IP เดียวกัน",
+    UNKNOWN_CLIENT_MSG[] =  "เวอร์ชันของ client นี้ไม่รองรับการเล่นบนเซิร์ฟเวอร์นี้",
+
+    LOADED_MSG_1[] =        " โหลด Anticheat Easy-AC สำเร็จ!",
+    LOADED_MSG_2[] =        " เวอร์ชัน Anticheat: %s",
+    LOADED_MSG_3[] =        " ผู้พัฒนา: Nexius&EasyCore",
+
+    STATS_STRING_1[] =      " สถิติ Anticheat Easy-AC",
+    STATS_STRING_2[] =      " ตรวจพบและป้องกัน:",
+    STATS_STRING_3[] =      "  การโกง %d ครั้ง",
+    STATS_STRING_4[] =      "  การแฮก %d ครั้ง",
+    STATS_STRING_5[] =      "  การพยายามแครช %d ครั้ง",
+    STATS_STRING_6[] =      "  การ flood %d ครั้ง",
+    STATS_STRING_7[] =      "  การโจมตี %d ครั้ง",
+    STATS_STRING_8[] =      " ตรวจพบและลงโทษผู้โกงทั้งหมด %d คน";

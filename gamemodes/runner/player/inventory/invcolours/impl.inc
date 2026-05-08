@@ -1,0 +1,208 @@
+#if defined _inc_impl
+#undef _inc_impl
+#endif
+
+#include <YSI_Coding\y_hooks>
+
+/* ################################################################## */
+/* #  ?????????  ???????????    ???????      ?????????  ?????   ????# */
+/* # ???????????????????????  ???????????   ????????????????   ???? # */
+/* #????    ??? ?   ????  ?  ???     ????? ???     ???  ????  ???   # */
+/* #???????????     ????    ????      ????????          ????????    # */
+/* # ???????????    ????    ????      ????????          ?????????   # */
+/* # ???    ????    ????    ?????     ??? ?????     ??? ???? ?????  # */
+/* #???????????     ?????    ???????????   ???????????  ????? ??????# */
+/* # ?????????     ?????       ???????      ?????????  ?????   ???? # */
+/* ################################################################## */
+
+stock InvUpdateToColor(playerid) {
+    new colorIndex = playerData[playerid][pInvColors];
+    new colors[25][2] = {
+        {0xBE9A55FF, 0xBE5555FF}, // 0
+        {0xc0aa55FF, 0xc0555bFF}, // 1
+        {0xc1af55FF, 0xc15555FF}, // 2
+        {0xc1ba55FF, 0xc16155FF}, // 3
+        {0xbec155FF, 0xc16b55FF}, // 4
+        {0xadc155FF, 0xc17c55FF}, // 5
+        {0xa2c155FF, 0xc18655FF}, // 6
+        {0x9dc155ff, 0xc18c55ff}, // 7
+        {0x8dc155ff, 0xc19b55ff}, // 8
+        {0x68c155ff, 0xc1c155ff}, // 9
+        {0x55c164ff, 0xa1c155ff}, // 10
+        {0x55c19aff, 0x55c164ff}, // 11
+        {0x55c19aff, 0x55b8c1ff}, // 12
+        {0x5598c1ff, 0x55a8c1ff}, // 13
+        {0x5588c1ff, 0x55c1a1ff}, // 14
+        {0x556dc1ff, 0x55c1bcff}, // 15
+        {0x6455c1ff, 0x556dc1ff}, // 16
+        {0x6f55c1ff, 0x6455c1ff}, // 17
+        {0x8a55c1ff, 0x6f55c1ff}, // 18
+        {0x9a55c1ff, 0x8a55c1ff}, // 19
+        {0xa955c1ff, 0x555ac1ff}, // 20
+        {0xc15596ff, 0xa955c1ff}, // 21
+        {0xc18a55ff, 0xc16f55ff}, // 22
+        {0xc19455ff, 0xc16f55ff}, // 23
+        {0x1C1F21FF, 0x1C1F21FF}  // 24
+    };
+    new buttonIndices[4] = {28, 26, 24, 22};
+    new mainIndices[9] = {20, 17, 7, 9, 57, 10, 56, 54, 52};
+
+    for(new i = 0; i < 4; i++) {
+        PlayerTextDrawColor(playerid, InvTextDraws[playerid][buttonIndices[i]], colors[colorIndex][0]);
+        PlayerTextDrawHide(playerid, InvTextDraws[playerid][buttonIndices[i]]);
+        PlayerTextDrawShow(playerid, InvTextDraws[playerid][buttonIndices[i]]);
+    }
+
+    for(new i = 0; i < 9; i++) {
+        PlayerTextDrawColor(playerid, InvTextDraws[playerid][mainIndices[i]], colors[colorIndex][1]);
+        PlayerTextDrawHide(playerid, InvTextDraws[playerid][mainIndices[i]]);
+        PlayerTextDrawShow(playerid, InvTextDraws[playerid][mainIndices[i]]);
+    }
+
+    PlayerTextDrawColor(playerid, TDinvTrash[playerid][2], colors[colorIndex][1]);
+    PlayerTextDrawHide(playerid, TDinvTrash[playerid][2]);
+    PlayerTextDrawShow(playerid, TDinvTrash[playerid][2]);
+    PlayerTextDrawColor(playerid, TDinvTrash[playerid][3], colors[colorIndex][1]);
+    PlayerTextDrawHide(playerid, TDinvTrash[playerid][3]);
+    PlayerTextDrawShow(playerid, TDinvTrash[playerid][3]);
+
+    if(colorIndex == 24) {
+        playerData[playerid][pColorInv] = 0x777777FF;
+    } else {
+        playerData[playerid][pColorInv] = colors[colorIndex][1];
+    }
+    return true;
+}
+
+stock bool:ShowInvChangeColours(playerid) {
+    inline Response(response, listitem, string:inputtext[]) {
+        #pragma unused listitem, inputtext
+        if (!response) TogglePlayerControllable(playerid, false);
+        else TogglePlayerControllable(playerid, false);
+    }
+    Dialog_ShowCallback(playerid, using inline Response, 0
+        , "การเปลี่ยนสี"
+        , "{FFFFFF}คุณได้เปิดใช้งานตัวแก้ไขสีสินค้าคงคลังหลักแล้ว!\n{FFFFFF}หากต้องการเปลี่ยนสี ให้ใช้ลูกศรบน {B09403}NUMPAD หรือลูกศรธรรมดา{FFFFFF}\nหากต้องการบันทึกการเปลี่ยนแปลง ให้คลิก '{B09403}F{FFFFFF}' หรือ '{B09403}ENTER{FFFFFF}'"
+        , "ยอมรับ"
+        , ""
+    );
+    return true;
+}
+
+/* ######################################################################## */
+/* # ???????????  ?????  ????? ???????????  ?????       ?????   ????????? # */
+/* #??????????????????  ????? ??????????????????       ?????   ???????????# */
+/* # ????    ???? ????   ????  ????    ???? ????        ????  ???     ??? # */
+/* # ???????????  ????   ????  ???????????  ????        ???? ????         # */
+/* # ??????????   ????   ????  ???????????? ????        ???? ????         # */
+/* # ????         ????   ????  ????    ???? ????      ? ???? ?????     ???# */
+/* # ?????        ??????????   ???????????  ??????????? ????? ??????????? # */
+/* #?????          ????????   ???????????  ??????????? ?????   ?????????  # */
+/* ######################################################################## */
+
+public govnotimer2(playerid) {
+    if (playerData[playerid][pInvColors] == 0) return UpdatePlayerDataEx(playerid, "pInvColors", playerData[playerid][pInvColors]), playerData[playerid][pInvColors] = 23, InvUpdateToColor(playerid);
+    playerData[playerid][pInvColors] -= 1;
+    UpdatePlayerDataEx(playerid, "pInvColors", playerData[playerid][pInvColors]);
+    InvUpdateToColor(playerid);
+    return 1;
+}
+
+public govnotimer3(playerid) {
+    if (playerData[playerid][pInvColors] == 23) return UpdatePlayerDataEx(playerid, "pInvColors", playerData[playerid][pInvColors]), playerData[playerid][pInvColors] = 0, InvUpdateToColor(playerid);
+    playerData[playerid][pInvColors] += 1;
+    UpdatePlayerDataEx(playerid, "pInvColors", playerData[playerid][pInvColors]);
+    InvUpdateToColor(playerid);
+    return 1;
+}
+
+/* ######################################################### */
+/* # ?????   ?????    ???????       ???????    ?????   ????# */
+/* #?????   ?????   ???????????   ??????????? ?????   ???? # */
+/* # ????    ????  ???     ????? ???     ????? ????  ???   # */
+/* # ???????????? ????      ????????      ???? ????????    # */
+/* # ???????????? ????      ????????      ???? ?????????   # */
+/* # ????    ???? ?????     ??? ?????     ???  ???? ?????  # */
+/* # ?????   ????? ???????????   ???????????   ????? ??????# */
+/* #?????   ?????    ???????       ???????    ?????   ???? # */
+/* ######################################################### */
+
+hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
+    if (newkeys & KEY_SECONDARY_ATTACK) {
+	  	if (playerData[playerid][pInventori] == 1) {
+	  		TogglePlayerControllable(playerid,true);
+			playerData[playerid][pInventori] = 0;
+			PlayerTextDrawColor(playerid, InvTextDraws[playerid][1], 0x111111FF);
+			PlayerTextDrawBackgroundColor(playerid, InvTextDraws[playerid][1], 0x111111FF);
+			PlayerTextDrawHide(playerid, InvTextDraws[playerid][1]);
+			PlayerTextDrawShow(playerid, InvTextDraws[playerid][1]);
+      		SelectTextDraw(playerid, playerData[playerid][pColorInv]-50);
+            ShowInventory(playerid);
+	    }
+		if (playerData[playerid][pInventori] == 3) {
+		    TogglePlayerControllable(playerid, true);
+		    playerData[playerid][pInventori] = 0;
+   			PlayerTextDrawColor(playerid, InvTextDraws[playerid][5], 0x111111FF);
+			PlayerTextDrawBackgroundColor(playerid, InvTextDraws[playerid][5], 0x111111FF);
+			PlayerTextDrawHide(playerid, InvTextDraws[playerid][5]);
+			PlayerTextDrawShow(playerid, InvTextDraws[playerid][5]);
+      		SelectTextDraw(playerid, playerData[playerid][pColorInv]-50);
+            ShowInventory(playerid);
+		}
+	}
+
+    if (newkeys & KEY_ANALOG_LEFT) {
+		if (playerData[playerid][pInventori] == 0) return 1;
+		if (playerData[playerid][pInventori] == 1) {
+			if (playerData[playerid][pInvColors] == 23) return UpdatePlayerDataEx(playerid, "pInvColors", playerData[playerid][pInvColors]), playerData[playerid][pInvColors] = 0, InvUpdateToColor(playerid);
+			govnotimer4[playerid] = SetTimerEx("govnotimer3", 250, 1, "d", playerid);
+		}
+	}
+    
+    if (oldkeys & KEY_ANALOG_LEFT) {
+        if (playerData[playerid][pInventori] == 0) return 1;
+        InvUpdateToColor(playerid);
+        KillTimer(govnotimer4[playerid]);
+	}
+
+    if (newkeys & KEY_ANALOG_RIGHT) {
+        if (playerData[playerid][pInventori] == 0) return 1;
+		if (playerData[playerid][pInventori] == 1) {
+			if (playerData[playerid][pInvColors] == 0) return UpdatePlayerDataEx(playerid, "pInvColors", playerData[playerid][pInvColors]), playerData[playerid][pInvColors] = 23, InvUpdateToColor(playerid);
+			govnotimer[playerid] = SetTimerEx("govnotimer2", 250, 1, "d", playerid);
+        }
+
+        if (playerData[playerid][pInventori2] == 1) {
+		    GameTextForPlayer(playerid, "~n~~n~~n~~n~~n~~n~~n~~n~~n~~w~POSITION: ~y~-35.00, 0.00~n~~w~SIZE: ~y~-0.00, 0.00", 2000, 3);
+        }
+	}
+
+    if (oldkeys & KEY_ANALOG_RIGHT) {
+        if (playerData[playerid][pInventori] == 0) return 1;
+        KillTimer(govnotimer[playerid]);
+        InvUpdateToColor(playerid);
+	}
+
+    return 1;
+}
+
+hook OnPlayerClickPlayerTD(playerid, PlayerText:playertextid) {
+    if (playertextid == InvTextDraws[playerid][1]) {
+        PlayerPlaySound(playerid, 6801, 0.0, 0.0, 0.0);
+        ShowInvChangeColours(playerid);
+		PlayerTextDrawColor(playerid, InvTextDraws[playerid][1], playerData[playerid][pColorInv]);
+		PlayerTextDrawBackgroundColor(playerid, InvTextDraws[playerid][1], playerData[playerid][pColorInv]);
+		PlayerTextDrawHide(playerid, InvTextDraws[playerid][1]);
+		PlayerTextDrawShow(playerid, InvTextDraws[playerid][1]);
+		playerData[playerid][pInventori] = 1;
+		TogglePlayerControllable(playerid, false);
+        CancelSelectTextDraw(playerid); // My bro
+		if (playerData[playerid][pInvColors] == 24) {
+		    playerData[playerid][pInvColors] = 0;
+		    UpdatePlayerDataEx(playerid, "pInvColors", playerData[playerid][pInvColors]);
+		    InvUpdateToColor(playerid);
+		}
+        return 1;
+	}
+	return 0;
+}

@@ -1,0 +1,8 @@
+logs/
+
+announce.exe
+samp-npc.exe
+samp-server.exe
+
+*.amx
+*.txt
