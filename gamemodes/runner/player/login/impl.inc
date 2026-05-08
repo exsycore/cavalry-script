@@ -479,7 +479,7 @@ hook OnPlayerSpawn(playerid) {
 	SetPlayerLevel(playerid, playerData[playerid][pLevel]);
 
 	if (playerData[playerid][pFaction] != INVALID_FACTION) {
-		SetPlayerColor(playerid, FactionData[playerData[playerid][pFaction]][FactionColor]);
+		// SetPlayerColor(playerid, FactionData[playerData[playerid][pFaction]][FactionColor]);
 		Attach3DTextFactionToPlayer(playerid, playerData[playerid][pFaction]);
 	} else if (playerData[playerid][pGang] != INVALID_GANG) {
         new gangIndex = GetPlayerGangIndex(playerid);
@@ -492,7 +492,7 @@ hook OnPlayerSpawn(playerid) {
 			, playerData[playerid][pGangRank]
 			, playerData[playerid][pID]);
         } else {
-            SetPlayerColor(playerid, Player.Gang[gangIndex][@gangcolor]);
+            // SetPlayerColor(playerid, Player.Gang[gangIndex][@gangcolor]);
             Attached3DTextGangToPlayer(playerid, gangIndex);
         }
     }

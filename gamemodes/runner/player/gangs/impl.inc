@@ -174,11 +174,16 @@ stock IsPlayerInGang(playerid, gangid)
     return (GetPlayerGangIndex(playerid) == Player.Gang[gangid][@id]);
 
 stock Attached3DTextGangToPlayer(playerid, gangid) {
+    if (IsValidDynamic3DTextLabel(gangLabel[playerid])) {
+        DestroyDynamic3DTextLabel(gangLabel[playerid]);
+        gangLabel[playerid] = INVALID_3DTEXT_ID;
+    }
+
     new str[128];
     format(str, sizeof(str), "%s", GetGangName(gangid));
     new Float:x, Float:y, Float:z;
     GetPlayerPos(playerid, x, y, z);
-    gangLabel[playerid] = CreateDynamic3DTextLabel(str, Player.Gang[gangid][@gangcolor] , x, y, z + 1.5, 9.0, .attachedplayer = playerid);
+    gangLabel[playerid] = CreateDynamic3DTextLabel(str, Player.Gang[gangid][@gangcolor] , x, y, z + 0.1, 8.0, .attachedplayer = playerid);
     return 1;
 }
 
@@ -215,11 +220,11 @@ stock ChangeGangColour(gangid, colour) {
     
     Player.Gang[gangid][@gangcolor] = colour;
 
-    foreach (new i : Player) {
-        if (playerData[i][pGang] == Player.Gang[gangid][@id]) {
-            SetPlayerColor(i, colour);
-        }
-    }
+    // foreach (new i : Player) {
+    //     if (playerData[i][pGang] == Player.Gang[gangid][@id]) {
+    //         SetPlayerColor(i, colour);
+    //     }
+    // }
 
     GangSave(gangid);
     return gangid;

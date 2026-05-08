@@ -58,11 +58,16 @@ stock GetFactionName(factionid) {
 }
 
 stock Attach3DTextFactionToPlayer(playerid, factionid) {
+    if (IsValidDynamic3DTextLabel(factionLabel[playerid])) {
+        DestroyDynamic3DTextLabel(factionLabel[playerid]);
+        factionLabel[playerid] = INVALID_3DTEXT_ID;
+    }
+
     new str[128];
     format(str, sizeof(str), "%s", GetFactionName(factionid));
     new Float:x, Float:y, Float:z;
     GetPlayerPos(playerid, x, y, z);
-    factionLabel[playerid] = CreateDynamic3DTextLabel(str, FactionData[factionid][FactionColor], x, y, z + 1.5, 9.0, .attachedplayer = playerid);
+    factionLabel[playerid] = CreateDynamic3DTextLabel(str, FactionData[factionid][FactionColor], x, y, z + 0.1, 8.0, .attachedplayer = playerid);
     return 1;
 }
 
@@ -149,7 +154,7 @@ stock SetPlayerDuty(playerid, bool:onDuty) {
 
         new rank = PlayerFactionData[playerid][PlayerFactionRank];
         SetPlayerSkin(playerid, FactionData[factionid][FactionSkin][rank]);
-        SetPlayerColor(playerid, FactionData[factionid][FactionColor]);
+        // SetPlayerColor(playerid, FactionData[factionid][FactionColor]);
 
         SendCongratMessage(playerid, "{FFFFFF}คุณอยู่ในเวรแล้ว (ON DUTY)");
     } else if (!onDuty && PlayerFactionData[playerid][PlayerOnDuty]) {
