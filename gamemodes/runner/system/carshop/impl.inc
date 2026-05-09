@@ -61,7 +61,7 @@ public LoadDealershipStock() {
         DealershipData[dsIdx][ds_stockCount]++;
     }
 
-    printf("[SYSTEM][DB] Dealership stock loaded.");
+    printf("[SYSTEM][DB] %d Dealership stock loaded.", rows);
     return 1;
 }
 
@@ -212,6 +212,11 @@ stock DealershipConfirmBuy(playerid, idx, slot) {
         if (!res) {
             DealershipShowPage(playerid, idx, 0);
             @return 1;
+        }
+
+        if (DealershipStock[idx][slot][dss_stock] <= 0) {
+            SendErrorMessage(playerid, "{FFFFFF}รถคันนี้หมดสต๊อกแล้ว");
+            @return DealershipShowPage(playerid, idx, 0);
         }
 
         if (GetPlayerMoney(playerid) < price) {
