@@ -55,6 +55,7 @@ public LoadDealershipStock() {
         cache_get_value_name_int(i, "color1",  DealershipStock[dsIdx][slot][dss_color1]);
         cache_get_value_name_int(i, "color2",  DealershipStock[dsIdx][slot][dss_color2]);
         cache_get_value_name_int(i, "price",   DealershipStock[dsIdx][slot][dss_price]);
+        cache_get_value_name_int(i, "stock",   DealershipStock[dsIdx][slot][dss_stock]);
         cache_get_value_name    (i, "name",    DealershipStock[dsIdx][slot][dss_name]);
 
         DealershipData[dsIdx][ds_stockCount]++;
@@ -140,7 +141,7 @@ stock OpenDealershipMenu(playerid, idx) {
 
 stock DealershipShowPage(playerid, idx, page) {
     #pragma unused page
-    new body[1024] = "{FFFFFF}รุ่นรถ\t{000000}-\t{FFFFFF}ราคา\n";
+    new body[1024] = "{FFFFFF}รุ่นรถ\t{FFFFFF}จำนวนที่มีในร้าน\t{FFFFFF}ราคา\n";
     new line[128];
     new count = 0;
 
@@ -148,12 +149,13 @@ stock DealershipShowPage(playerid, idx, page) {
         if (!DealershipStock[idx][s][dss_exists]) continue;
 
         new price = DealershipStock[idx][s][dss_price];
+        new vstock = DealershipStock[idx][s][dss_stock];
         new modelName[64];
         strmid(modelName, DealershipStock[idx][s][dss_name], 0, sizeof modelName);
 
         format(line, sizeof line,
-            "{FFFFFF}%s\t{000000}-\t{AAFFAA}$%d\n",
-            modelName, price
+            "{FFFFFF}%s\t{FFFFFF}%d\t{AAFFAA}$%d\n",
+            modelName, vstock, price
         );
         strcat(body, line, sizeof body);
         count++;
@@ -187,20 +189,22 @@ stock DealershipShowPage(playerid, idx, page) {
 stock DealershipConfirmBuy(playerid, idx, slot) {
     new price   = DealershipStock[idx][slot][dss_price];
     new model   = DealershipStock[idx][slot][dss_modelid];
+    new vstock  = DealershipStock[idx][slot][dss_stock];
     new c1      = DealershipStock[idx][slot][dss_color1];
     new c2      = DealershipStock[idx][slot][dss_color2];
 
     new str[512];
     format(str, sizeof str,
-        "{FFFFFF}รุ่น   : {FFD700}%s\n\
-        {FFFFFF}Model  : {AAAAAA}%d\n\
-        {FFFFFF}สี     : {AAAAAA}%d / %d\n\
-        {FFFFFF}ราคา   : {AAFFAA}$%d\n\n\
-        {FFFFFF}เงินคุณ: {AAFFAA}$%d\n\n\
+        "{FFFFFF}รุ่น : {FFD700}%s\n\
+        {FFFFFF}Model : {AAAAAA}%d\n\
+        {FFFFFF}สี : {AAAAAA}%d / %d\n\
+        {FFFFFF}จำนวนรถในร้าน : {AAAAAA}%d\n\
+        {FFFFFF}ราคา : {AAFFAA}$%d\n\n\
+        {FFFFFF}เงินคุณ : {AAFFAA}$%d\n\n\
         {DD0000}คุณยืนยันจะซื้อรถคันนี้หรือไม่?",
         DealershipStock[idx][slot][dss_name],
-        model, c1, c2, price,
-        GetPlayerMoney(playerid)
+        model, c1, c2, vstock, price,
+        GetPlayerMoneyEx(playerid)
     );
 
     inline ConfirmBuy(res, list, string:input[]) {
@@ -215,8 +219,10 @@ stock DealershipConfirmBuy(playerid, idx, slot) {
             @return DealershipShowPage(playerid, idx, 0);
         }
 
-        GivePlayerMoney(playerid, -price);
+        GivePlayerMoneyEx(playerid, -price);
         CreatePlayerVehicle(playerid, model, c1, c2);
+
+        DealershipStockUpdate(idx, slot);
 
         va_SendClientMessage(playerid, COLOR_GREEN, "แจ้งเตือน: {FFFFFF}คุณซื้อ {FFD700}%s {FFFFFF}ในราคา {AAFFAA}$%d {FFFFFF}เรียบร้อยแล้ว!",
             DealershipStock[idx][slot][dss_name], price
@@ -227,6 +233,29 @@ stock DealershipConfirmBuy(playerid, idx, slot) {
     Dialog_ShowCallback(playerid, using inline ConfirmBuy,
         DIALOG_STYLE_MSGBOX, "{FFD700}ยืนยันการซื้อรถ", str,
         "{FFFFFF}ยืนยัน", "{FFFFFF}กลับ");
+}
+
+stock DealershipStockUpdate(idx, slot) {
+    if (DealershipStock[idx][slot][dss_stock] > 1) {
+        DealershipStock[idx][slot][dss_stock]--;
+        new query[128];
+        format(query, sizeof query,
+            "UPDATE `"DEALERSHIP_STOCK_TABLE"` SET `stock` = '%d' WHERE `id` = '%d'"
+            , DealershipStock[idx][slot][dss_stock]
+            , DealershipStock[idx][slot][dss_id]);
+        mysql_tquery(get_handle(), query);
+    } else {
+        new query[128];
+        format(query, sizeof query,
+            "DELETE FROM `"DEALERSHIP_STOCK_TABLE"` WHERE `id` = '%d'",
+            DealershipStock[idx][slot][dss_id]);
+        mysql_tquery(get_handle(), query);
+
+        DealershipStock[idx][slot][dss_exists] = false;
+        DealershipStock[idx][slot][dss_stock] = 0;
+        DealershipData[idx][ds_stockCount]--;
+    }
+    return 1;
 }
 
 stock DealershipGetIndex(dbid) {
@@ -269,14 +298,15 @@ YCMD:adealership(playerid, string:params[], help) {
         #pragma unused in
         if (!res) @return 1;
         switch (list) {
-            case 0: Command_ReProcess(playerid, "/createdealer",  0);
-            case 1: Command_ReProcess(playerid, "/deletedealer",  0);
-            case 2: Command_ReProcess(playerid, "/addcardealer",  0);
-            case 3: Command_ReProcess(playerid, "/removecardealer", 0);
-            case 4: Command_ReProcess(playerid, "/setpricedeal",  0);
-            case 5: Command_ReProcess(playerid, "/movedealer",    0);
-            case 6: Command_ReProcess(playerid, "/tpdealer",      0);
-            case 7: Command_ReProcess(playerid, "/listdealers",   0);
+            case 0: Command_ReProcess(playerid, "/createdealer",        0);
+            case 1: Command_ReProcess(playerid, "/deletedealer",        0);
+            case 2: Command_ReProcess(playerid, "/addcardealer",        0);
+            case 3: Command_ReProcess(playerid, "/removecardealer",     0);
+            case 4: Command_ReProcess(playerid, "/setpricedeal",        0);
+            case 5: Command_ReProcess(playerid, "/movedealer",          0);
+            case 6: Command_ReProcess(playerid, "/tpdealer",            0);
+            case 7: Command_ReProcess(playerid, "/listdealers",         0);
+            case 8: Command_ReProcess(playerid, "/editstockcardealer",  0);
         }
     }
     Dialog_ShowCallback(playerid, using inline ADS_Main, DIALOG_STYLE_LIST,
@@ -288,7 +318,8 @@ YCMD:adealership(playerid, string:params[], help) {
         {FFFFFF}ตั้งราคารถ\n\
         {FFFFFF}ย้ายตำแหน่งร้าน\n\
         {FFFFFF}วาปไปร้าน\n\
-        {FFFFFF}รายการร้านทั้งหมด",
+        {FFFFFF}รายการร้านทั้งหมด\n\
+        {FFFFFF}ปรับจำนวนรถที่อยู่ในสต๊อก",
         "{FFFFFF}เลือก", "{FFFFFF}ปิด");
     return 1;
 }
@@ -337,7 +368,6 @@ YCMD:createdealer(playerid, string:params[], help) {
 
             DealershipCreateObjects(idx);
 
-            SendCongratMessage(playerid, "{FFFFFF}สร้างร้าน {FFD700}%s {FFFFFF}เรียบร้อยแล้ว (ID: %d)", input, DealershipData[idx][ds_id]);
             SendAdminMessage(COLOR_ADMIN, "AdmLog: %s สร้างร้านขายรถ '%s'", ReturnPlayerName(playerid), input);
         }
         MySQL_TQueryInline(get_handle(), using inline OnCreated, query);
@@ -398,8 +428,6 @@ YCMD:deletedealer(playerid, string:params[], help) {
             // DealershipData[idx][ds_name]   = "None";
             for (new s = 0; s < MAX_DEALERSHIP_STOCK; s++)
                 DealershipStock[idx][s][dss_exists] = false;
-
-            SendCongratMessage(playerid, "{FFFFFF}ลบร้านเรียบร้อยแล้ว");
         }
         new str[128];
         format(str, sizeof str, "{FFFFFF}ยืนยันลบร้าน {FF4444}%s{FFFFFF}?",
@@ -470,37 +498,50 @@ YCMD:addcardealer(playerid, string:params[], help) {
                     if (!res4) @return 1;
 
                     new c1, c2;
-                    new vName[64];
                     if (sscanf(in4, "dd", c1, c2)) {
                         c1 = 1; c2 = 1;
                     }
 
-                    strcopy(vName, ReturnVehicleModelName(modelid));
+                    inline InputStock(res5, list5, string:in5[]) {
+                        #pragma unused list5
+                        if (!res5) @return 1;
 
-                    new query[256];
-                    mysql_format(get_handle(), query, sizeof query,
-                        "INSERT INTO `"DEALERSHIP_STOCK_TABLE"` (`shopid`,`modelid`,`color1`,`color2`,`price`,`name`) \
-                        VALUES('%d','%d','%d','%d','%d','%e')",
-                        DealershipData[idx][ds_id], modelid, c1, c2, price, vName
-                    );
+                        new vStock;
+                        new vName[64];
+                        if (sscanf(in5, "d", vStock)) {
+                            vStock = 1;
+                        }
 
-                    inline OnStockAdded() {
-                        DealershipStock[idx][slot][dss_exists]  = true;
-                        DealershipStock[idx][slot][dss_id]      = cache_insert_id();
-                        DealershipStock[idx][slot][dss_shopid]  = DealershipData[idx][ds_id];
-                        DealershipStock[idx][slot][dss_modelid] = modelid;
-                        DealershipStock[idx][slot][dss_color1]  = c1;
-                        DealershipStock[idx][slot][dss_color2]  = c2;
-                        DealershipStock[idx][slot][dss_price]   = price;
-                        strcopy(DealershipStock[idx][slot][dss_name], vName);
-                        DealershipData[idx][ds_stockCount]++;
-                        
-                        va_SendClientMessage(playerid, COLOR_GREEN, "แจ้งเตือน: {FFFFFF}เพิ่ม {FFD700}%s {FFFFFF}ราคา {AAFFAA}$%d {FFFFFF}ลงร้าน {FFD700}%s {FFFFFF}แล้ว",
-                            vName, price, DealershipData[idx][ds_name]);
-                        SendAdminMessage(COLOR_ADMIN, "AdmLog: %s เพิ่มรถ %s ราคา $%d ลงร้าน %s",
-                            ReturnPlayerName(playerid), vName, price, DealershipData[idx][ds_name]);
+                        strcopy(vName, ReturnVehicleModelName(modelid));
+
+                        new query[256];
+                        mysql_format(get_handle(), query, sizeof query,
+                            "INSERT INTO `"DEALERSHIP_STOCK_TABLE"` (`shopid`,`modelid`,`color1`,`color2`,`price`,`name`,`stock`) \
+                            VALUES('%d','%d','%d','%d','%d','%e','%d')",
+                            DealershipData[idx][ds_id], modelid, c1, c2, price, vName, vStock
+                        );
+
+                        inline OnStockAdded() {
+                            DealershipStock[idx][slot][dss_exists]  = true;
+                            DealershipStock[idx][slot][dss_id]      = cache_insert_id();
+                            DealershipStock[idx][slot][dss_shopid]  = DealershipData[idx][ds_id];
+                            DealershipStock[idx][slot][dss_modelid] = modelid;
+                            DealershipStock[idx][slot][dss_color1]  = c1;
+                            DealershipStock[idx][slot][dss_color2]  = c2;
+                            DealershipStock[idx][slot][dss_price]   = price;
+                            DealershipStock[idx][slot][dss_stock]   = vStock;
+                            strcopy(DealershipStock[idx][slot][dss_name], vName);
+                            DealershipData[idx][ds_stockCount]++;
+                            
+                            SendAdminMessage(COLOR_ADMIN, "AdmLog: %s เพิ่มรถ %s ราคา $%d ลงร้าน %s จำนวน %d คัน",
+                                ReturnPlayerName(playerid), vName, price, DealershipData[idx][ds_name], vStock);
+                        }
+                        MySQL_TQueryInline(get_handle(), using inline OnStockAdded, query);
                     }
-                    MySQL_TQueryInline(get_handle(), using inline OnStockAdded, query);
+                    Dialog_ShowCallback(playerid, using inline InputStock, DIALOG_STYLE_INPUT,
+                        "{FFFFFF}ตั้งจำนวนที่อยู่ใน Stock",
+                        "{FFFFFF}กรอก: {FFFF00}[จำนวนคัน]\n{AAAAAA}ตัวอย่าง: 10",
+                        "{FFFFFF}ถัดไป", "{FFFFFF}ยกเลิก");                 
                 }
                 Dialog_ShowCallback(playerid, using inline InputColors, DIALOG_STYLE_INPUT,
                     "{FFFFFF}ตั้งสีรถ",
@@ -585,12 +626,112 @@ YCMD:removecardealer(playerid, string:params[], help) {
 
             DealershipStock[idx][slot][dss_exists] = false;
             DealershipData[idx][ds_stockCount]--;
-
-            SendCongratMessage(playerid, "{FFFFFF}ลบรถออกจากร้านเรียบร้อยแล้ว");
         }
         Dialog_ShowCallback(playerid, using inline SelectCar,
             DIALOG_STYLE_TABLIST_HEADERS, title, stockBody,
             "{FF4444}ลบ", "{FFFFFF}กลับ");
+    }
+    Dialog_ShowCallback(playerid, using inline SelectShop,
+        DIALOG_STYLE_TABLIST_HEADERS, "{FFFFFF}เลือกร้าน", body,
+        "{FFFFFF}เลือก", "{FFFFFF}ยกเลิก");
+    return 1;
+}
+
+YCMD:editstockcardealer(playerid, string:params[], help) {
+    if (!IsPlayerAdminEx(playerid)) return 1;
+
+    new body[1024] = "{FFFFFF}ID\t{FFFFFF}Index\t{FFFFFF}ชื่อร้าน\n";
+    new line[128], count = 0;
+    for (new i = 0; i < MAX_DEALERSHIPS; i++) {
+        if (!DealershipData[i][ds_exists]) continue;
+        format(line, sizeof line, "{FFFFFF}%d\t{FFFFFF}%d\t{FFFFFF}%s\n",
+            DealershipData[i][ds_id], i, DealershipData[i][ds_name]);
+        strcat(body, line, sizeof body);
+        count++;
+    }
+    if (!count) return SendErrorMessage(playerid, "{FFFFFF}ยังไม่มีร้านขายรถ");
+
+    inline SelectShop(res, list, string:input[]) {
+        #pragma unused input
+        if (!res) @return 1;
+        new idx = DealershipGetIndexByList(list);
+        if (idx == -1) @return 1;
+
+        new stockBody[1024] = "{FFFFFF}รุ่น\t{FFFFFF}จำนวน\t{FFFFFF}ราคา\n";
+        new stockLine[128], stockCount = 0;
+        for (new s = 0; s < MAX_DEALERSHIP_STOCK; s++) {
+            if (!DealershipStock[idx][s][dss_exists]) continue;
+            format(stockLine, sizeof stockLine, "{FFFFFF}%s\t{FFFFFF}%d\t{AAFFAA}$%d\n",
+                DealershipStock[idx][s][dss_name],
+                DealershipStock[idx][s][dss_stock],
+                DealershipStock[idx][s][dss_price]);
+            strcat(stockBody, stockLine, sizeof stockBody);
+            stockCount++;
+        }
+
+        if (!stockCount) {
+            SendErrorMessage(playerid, "{FFFFFF}ร้านนี้ยังไม่มีรถ");
+            @return 1;
+        }
+
+        new title[128];
+        format(title, sizeof title, "{FFFFFF}ตั้งค่าจำนวนรถจาก {FFD700}%s", DealershipData[idx][ds_name]);
+
+        inline SelectCar(res2, list2, string:in2[]) {
+            #pragma unused in2
+            if (!res2) @return 1;
+
+            new slot = DealershipGetSlotByList(idx, list2);
+            if (slot == -1) @return 1;
+
+            inline EditStock(res3, list3, string:in3[]) {
+                #pragma unused list3
+                if (!res3) @return 1;
+
+                new vStock = strval(in3);
+                if (vStock <= 0) {
+                    new query[128];
+                    format(query, sizeof query,
+                        "DELETE FROM `"DEALERSHIP_STOCK_TABLE"` WHERE `id` = '%d'"
+                        , DealershipStock[idx][slot][dss_id]);
+                    mysql_tquery(get_handle(), query);
+
+                    DealershipStock[idx][slot][dss_exists] = false;
+                    DealershipData[idx][ds_stockCount]--;
+
+                    SendAdminMessage(COLOR_ADMIN, "AdmLog: %s ลบรถ %s ออกจากร้าน %s",
+                        ReturnPlayerName(playerid),
+                        DealershipStock[idx][slot][dss_name],
+                        DealershipData[idx][ds_name]);
+                    @return 1;
+                }
+
+                DealershipStock[idx][slot][dss_stock] = vStock;
+                
+                new query[128];
+                format(query, sizeof query,
+                    "UPDATE `"DEALERSHIP_STOCK_TABLE"` SET `stock` = '%d' WHERE `id` = '%d'"
+                    , DealershipStock[idx][slot][dss_stock]
+                    , DealershipStock[idx][slot][dss_id]);
+                mysql_tquery(get_handle(), query);
+
+                SendAdminMessage(COLOR_ADMIN, "AdmLog: %s ปรับจำนวนรถรุ่น %s ร้าน %s เป็นจำนวน %d คัน",
+                    ReturnPlayerName(playerid),
+                    DealershipStock[idx][slot][dss_name],
+                    DealershipData[idx][ds_name],
+                    DealershipStock[idx][slot][dss_stock]);
+            }
+            new str[128];
+            format(str, sizeof str, "{FFFFFF}รถรุ่น: {FFFF00}%s\n{FFFFFF}จำนวนที่มีในสต๊อก: {FFFF00}%d\n{FFFFFF}กรอกจำนวนที่มีในสต๊อกที่นี่"
+                , DealershipStock[idx][slot][dss_name]
+                , DealershipStock[idx][slot][dss_stock]);
+            Dialog_ShowCallback(playerid, using inline EditStock,
+                DIALOG_STYLE_INPUT, "{FFFFFF}ปรับจำนวนรถ", str,
+                "{FF4444}เลือก", "{FFFFFF}กลับ");
+        }
+        Dialog_ShowCallback(playerid, using inline SelectCar,
+            DIALOG_STYLE_TABLIST_HEADERS, title, stockBody,
+            "{FF4444}เลือก", "{FFFFFF}กลับ");
     }
     Dialog_ShowCallback(playerid, using inline SelectShop,
         DIALOG_STYLE_TABLIST_HEADERS, "{FFFFFF}เลือกร้าน", body,
@@ -727,7 +868,6 @@ YCMD:movedealer(playerid, string:params[], help) {
 
             DealershipCreateObjects(idx);
 
-            SendCongratMessage(playerid, "{FFFFFF}ย้ายร้าน {FFD700}%s {FFFFFF}เรียบร้อยแล้ว", DealershipData[idx][ds_name]);
             SendAdminMessage(COLOR_ADMIN, "AdmLog: %s ย้ายร้านขายรถ '%s'",
                 ReturnPlayerName(playerid), DealershipData[idx][ds_name]);
         }

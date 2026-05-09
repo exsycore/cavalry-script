@@ -15,6 +15,11 @@
 /* # ?????????     ?????       ???????      ?????????  ?????   ???? # */
 /* ################################################################## */
 
+stock GetPlayerMoneyEx(playerid)
+    return playerData[playerid][pMoney];
+stock GetPlayerRedMoneyEx(playerid)
+    return playerData[playerid][pRedMoney];
+
 stock GivePlayerMoneyEx(playerid, money) {
     playerData[playerid][pMoney] += money;
 

@@ -2,6 +2,9 @@
 #undef _inc_header
 #endif
 
+#include <YSI_Visual\y_dialog>
+#include <YSI_Coding\y_inline>
+
 #define MAX_DEALERSHIPS         (20)      // จำนวนร้านสูงสุด
 #define MAX_DEALERSHIP_STOCK    (30)      // รถต่อร้านสูงสุด
 #define DEALERSHIP_TABLE        "dealership"
@@ -33,6 +36,7 @@ enum E_DS_STOCK {
     dss_color2,
     dss_price,
     dss_name[64],
+    dss_stock,
     bool:dss_exists
 }
 
