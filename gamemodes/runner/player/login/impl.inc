@@ -500,6 +500,12 @@ hook OnLoginFinished(playerid) {
 	
 	playerData[playerid][IsLoggedIn] = true;
 
+	if (GetPVarInt(playerid, "hasVoiceOnClient") == NO_SAMPVOICE_PLUGIN) {
+        SendErrorMessage(playerid, "{FFFFFF}ระบบไม่พบปลั๊กอินไมค์โครโฟนเสริมโปรดตรวจสอบหรือติดต่อแอดมิน");
+    } else if (GetPVarInt(playerid, "hasVoiceOnClient") == NO_SAMPVOICE_DEVICE) {
+        SendErrorMessage(playerid, "{FFFFFF}ระบบตรวจสอบได้ว่าไม่พบอุปกรณ์ของคุณโปรดตรวจสอบหรือติดต่อแอดมิน");
+    } else SendClientMessage(playerid, -1, "กด {00FF00}'B'{FFFFFF} เพื่อสนทนาด้วยเสียงในพื้นที่ใกล้เคียง");
+	
 	va_SendClientMessage(playerid, COLOR_GREEN, "[!] {FFFFFF}ท่านได้เข้าสู่ระบบเรียบร้อยแล้ว");
 	va_SendClientMessage(playerid, COLOR_GREEN, "[!] {FFFFFF}ยินดีต้อนรับกลับคุณ %s เล่นให้สนุก", GetPlayerNameEx(playerid));
 

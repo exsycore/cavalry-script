@@ -8,6 +8,7 @@
 #include "hungry\header"
 #include "death\header"
 #include "admin\header"
+#include "damage\header"
 #include "inventory\callape"
 #include "chat\header"
 #include "faction\header"

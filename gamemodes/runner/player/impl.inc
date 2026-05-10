@@ -8,6 +8,7 @@
 #include "hungry\impl"
 #include "death\impl"
 #include "admin\impl"
+#include "damage\impl"
 #include "chat\impl"
 #include "faction\impl"
 #include "gangs\impl"

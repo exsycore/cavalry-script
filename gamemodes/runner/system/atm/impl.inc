@@ -61,11 +61,11 @@ hook OnClickDynamicPlayerTD(playerid, PlayerText:playertextid) {
 
     if (ATM_Page[playerid] == ATM_PAGE_MAIN) {
         if (playertextid == atm_withdraw_btn[playerid]) {
-            ATM_ShowNumpad(playerid, ATM_MODE_WITHDRAW);
+            ATM_ShowNumpad(playerid, ATM_MODE_DEPOSIT);
             return 0;
         }
         if (playertextid == atm_deposit_btn[playerid]) {
-            ATM_ShowNumpad(playerid, ATM_MODE_DEPOSIT);
+            ATM_ShowNumpad(playerid, ATM_MODE_WITHDRAW);
             return 0;
         }
         // Quick withdraw $100
@@ -338,7 +338,7 @@ stock ATM_CreateTD(playerid) {
     PlayerTextDrawSetProportional(playerid, atm_deposit_btn[playerid], 1);
     PlayerTextDrawSetSelectable(playerid, atm_deposit_btn[playerid], 1);
 
-    atm_main[playerid][11] = CreatePlayerTextDraw(playerid, 231.000000, 240.000000, "Withdraw");
+    atm_main[playerid][11] = CreatePlayerTextDraw(playerid, 233.000000, 240.000000, "Deposit");
     PlayerTextDrawFont(playerid, atm_main[playerid][11], 1);
     PlayerTextDrawLetterSize(playerid, atm_main[playerid][11], 0.158333, 1.000000);
     PlayerTextDrawTextSize(playerid, atm_main[playerid][11], 400.000000, 17.000000);
@@ -352,7 +352,7 @@ stock ATM_CreateTD(playerid) {
     PlayerTextDrawSetProportional(playerid, atm_main[playerid][11], 1);
     PlayerTextDrawSetSelectable(playerid, atm_main[playerid][11], 0);
 
-    atm_main[playerid][12] = CreatePlayerTextDraw(playerid, 273.000000, 240.000000, "Deposit");
+    atm_main[playerid][12] = CreatePlayerTextDraw(playerid, 270.000000, 240.000000, "Withdraw");
     PlayerTextDrawFont(playerid, atm_main[playerid][12], 1);
     PlayerTextDrawLetterSize(playerid, atm_main[playerid][12], 0.158333, 1.000000);
     PlayerTextDrawTextSize(playerid, atm_main[playerid][12], 400.000000, 17.000000);

@@ -1659,6 +1659,162 @@ stock RefreshInv2(playerid, slot) {
     return true;
 }
 
+stock closeuse(playerid) {
+	for (new i = 0; i < 2; i++) {
+	    DestroyPlayerTD(playerid, kletka[playerid][i]);
+	}
+    for (new i = 0; i < 63; i++) {
+        DestroyPlayerTD(playerid,InvTextDraws[playerid][i]);
+    }
+    for (new i = 0; i < 72; i++) {
+        DestroyPlayerTD(playerid,Govnishe[playerid][i]);
+    }
+    for (new i = 0; i < 72; i++) {
+        DestroyPlayerTD(playerid,GovnisheKletki[playerid][i]);
+    }
+    for (new i = 0; i < 6; i++) {
+	    DestroyPlayerTD(playerid, InfoItems[playerid][i]);
+	}
+	for (new i = 0; i < 7; i++) {
+	    DestroyPlayerTD(playerid, TDinv[playerid][i]);
+	}
+	for (new i = 0; i < 8; i++) {
+	    DestroyPlayerTD(playerid, dropmenu[playerid][i]);
+	}
+	for (new i = 0; i < 4; i++) {
+	    PlayerTextDrawHide(playerid, TDinvTrash[playerid][i]);
+	}
+	CancelSelectTextDraw(playerid);
+	playerData[playerid][pSecondpage] = 0;
+	return true;
+}
+
+stock _GiveWeaponFromItem(playerid, itemIndex) {
+	if (weaponOn[playerid]) {
+		ResetPlayerWeapons(playerid);
+		ResetPlayerCustomWeapon(playerid);
+		weaponOn[playerid] = false;
+		SendCongratMessage(playerid, "{FFFFFF}คุณได้เก็บอาวุธเรียบร้อยแล้ว");
+	} else {
+		new variant[25];
+		strmid(variant, ItemsInfo[itemIndex][ItemPhoneColor], 0, sizeof(variant));
+
+		new itemName[128];
+		strmid(itemName, ItemsInfo[itemIndex][ItemName2], 0, sizeof(itemName));
+
+		new weaponID = -1;
+		new ammo     = 0;
+
+		if      (!strcmp(itemName, "Colt 45",        true)) { weaponID = WEAPON_COLT45;   }
+		else if (!strcmp(itemName, "Colt 45 Gold",   true)) { weaponID = WEAPON_COLT45;   }
+		else if (!strcmp(itemName, "Silenced",       true)) { weaponID = WEAPON_SILENCED; }
+		else if (!strcmp(itemName, "Desert Eagle",   true)) { weaponID = WEAPON_DEAGLE;   }
+		else if (!strcmp(itemName, "Desert Eagle+",  true)) { weaponID = WEAPON_DEAGLE;   }
+		else if (!strcmp(itemName, "Micro Uzi",      true)) { weaponID = WEAPON_UZI;      }
+		else if (!strcmp(itemName, "MP5",            true)) { weaponID = WEAPON_MP5;      }
+		else if (!strcmp(itemName, "Tec-9",          true)) { weaponID = WEAPON_TEC9;     }
+		else if (!strcmp(itemName, "AK-47",          true)) { weaponID = WEAPON_AK47;     }
+		else if (!strcmp(itemName, "AK-47 Elite",    true)) { weaponID = WEAPON_AK47;     }
+		else if (!strcmp(itemName, "M4",             true)) { weaponID = WEAPON_M4;       }
+		else if (!strcmp(itemName, "M4 Silenced",    true)) { weaponID = WEAPON_M4;       }
+		else if (!strcmp(itemName, "Shotgun",        true)) { weaponID = WEAPON_SHOTGUN;  }
+		else if (!strcmp(itemName, "Shotgun Slug",   true)) { weaponID = WEAPON_SHOTGUN;  }
+		else if (!strcmp(itemName, "Sawnoff Shotgun",true)) { weaponID = WEAPON_SAWEDOFF; }
+		else if (!strcmp(itemName, "Combat Shotgun", true)) { weaponID = WEAPON_SHOTGSPA; }
+		else if (!strcmp(itemName, "Sniper Rifle",   true)) { weaponID = WEAPON_SNIPER;   }
+		else if (!strcmp(itemName, "Sniper Mk.II",   true)) { weaponID = WEAPON_SNIPER;   }
+		else if (!strcmp(itemName, "Rifle",          true)) { weaponID = WEAPON_RIFLE;    }
+		else if (!strcmp(itemName, "Knife",          true)) { weaponID = WEAPON_KNIFE;     ammo = 1;  }
+		else if (!strcmp(itemName, "Knife+",         true)) { weaponID = WEAPON_KNIFE;     ammo = 1;  }
+		else if (!strcmp(itemName, "Baseball Bat",   true)) { weaponID = WEAPON_BAT;       ammo = 1;  }
+
+		if (weaponID == -1) return 1; // ไม่พบ mapping
+
+		new bool:isMelee = (weaponID == WEAPON_KNIFE || weaponID == WEAPON_BAT ||
+							weaponID == WEAPON_BRASSKNUCKLE || weaponID == WEAPON_KATANA ||
+							weaponID == WEAPON_CHAINSAW);
+		
+		if (!isMelee) {
+			for (new i = 0; i < MAX_INVENTORY_SLOTS; i++) {
+				new idx = playerData[playerid][pInventory][i];
+				if (idx <= 0) continue;
+
+				if (!strcmp(ItemsInfo[idx][ItemName2], "กระสุน", true)) {
+					new qty = playerData[playerid][pInventoryKolvo][i];
+					ammo += qty;
+				}
+			}
+
+			if (ammo <= 0) return SendErrorMessage(playerid, "{FFFFFF}คุณไม่มีกล่องกระสุน คุณสามารถคราฟกล่องกระสุนได้");
+		}
+
+		ResetPlayerWeapons(playerid);
+		ResetPlayerCustomWeapon(playerid);
+
+		new cwIndex = FindCustomWeaponByName(itemName);
+		if (cwIndex != -1) SetPlayerCustomWeapon(playerid, cwIndex);
+
+		GivePlayerWeapon(playerid, weaponID, ammo);
+		
+		g_PlayerLastAmmo[playerid] = ammo;
+		weaponOn[playerid] = true;
+
+		SendCongratMessage(playerid, "{FFFFFF}คุณใช้งานอาวุธ {FDCF28}%s {FFFFFF}(%d นัด)", itemName, ammo);
+	}
+	return 1;
+}
+
+hook OnPlayerUpdate(playerid) {
+    if (!playerData[playerid][IsLoggedIn]) return 1;
+
+    new weaponID = GetPlayerWeapon(playerid);
+    new ammo     = GetPlayerAmmo(playerid);
+    new wstate    = GetPlayerWeaponState(playerid);
+
+    if (wstate == -1) return 1;
+
+    new bool:isMelee = (weaponID == WEAPON_KNIFE || weaponID == WEAPON_BAT ||
+                        weaponID == WEAPON_BRASSKNUCKLE || weaponID == WEAPON_KATANA ||
+                        weaponID == WEAPON_CHAINSAW || weaponID == 0);
+
+    if (isMelee) {
+        g_PlayerLastAmmo[playerid] = -1;
+        return 1;
+    }
+
+    if (g_PlayerLastAmmo[playerid] == -1) {
+        g_PlayerLastAmmo[playerid] = ammo;
+        return 1;
+    }
+
+    new shotsFired = g_PlayerLastAmmo[playerid] - ammo;
+
+    if (shotsFired > 0) {
+        new remaining = shotsFired;
+
+        for (new i = 0; i < MAX_INVENTORY_SLOTS && remaining > 0; i++) {
+            new idx = playerData[playerid][pInventory][i];
+            if (idx <= 0) continue;
+
+            if (!strcmp(ItemsInfo[idx][ItemName2], "กระสุน", true)) {
+                new qty = playerData[playerid][pInventoryKolvo][i];
+
+                if (qty <= remaining) {
+                    remaining -= qty;
+                    CallLocalFunction("DeleteItem", "ddd", playerid, idx, qty);
+                } else {
+                    CallLocalFunction("DeleteItem", "ddd", playerid, idx, remaining);
+                    remaining = 0;
+                }
+            }
+        }
+        SaveInventoryKolvo(playerid);
+    }
+
+    g_PlayerLastAmmo[playerid] = ammo;
+    return 1;
+}
+
 stock UseItem(playerid, td, itemIndex, itemModel) {
     new IDS = PickInvent[playerid];
     if (IDS < 0 || IDS >= MAX_INVENTORY_SLOTS) return 0;
@@ -1685,21 +1841,44 @@ stock UseItem(playerid, td, itemIndex, itemModel) {
     }
 
     switch (itemModel) { // ใช้ itemModel สำหรับเช็ค case
+		// กด USE อาวุธ
+		case 321 .. 372: {
+			_GiveWeaponFromItem(playerid, itemIndex);
+			RefreshInv2(playerid, td);
+			closeuse(playerid);
+		}
+		// กด USE กล่องกระสุน
+		case 2041: {
+			for (new s = 0; s < MAX_ITEMS; s++) {
+				if (!strcmp(ItemsInfo[s][ItemName2], "กระสุน", true)) {
+					AddItem(playerid, s, 30);
+				}
+			}
+			CallLocalFunction("DeleteItem", "ddd", playerid, itemIndex, 1);
+			RefreshInv2(playerid, td);
+			closeuse(playerid);
+		}
         // กด USE ของกิน
 		case 2768: {
 			if (playerData[playerid][pHungry] >= 100) return SendErrorMessage(playerid, "{FFFFFF}ตอนนี้คุณยังไม่หิวอาหาร");
-			GivePlayerHungry(playerid, 25);
+
+			GivePlayerHungry(playerid, 10);
 			ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.1, 0, 0, 0, 0, 0, 1);
 			CallLocalFunction("DeleteItem", "ddd", playerid, itemIndex, 1);
-			SendCongratMessage(playerid, "{FFFFFF}คุณได้รับประทานอาหาร (ค่าอาหาร +25)");
+			SendCongratMessage(playerid, "{FFFFFF}คุณได้รับประทานอาหาร (ค่าอาหาร +10)");
+			RefreshInv2(playerid, td);
+			closeuse(playerid);
 		}
 		// กด USE ของกิน
 		case 2647: {
 			if (playerData[playerid][pThirsty] >= 100) return SendErrorMessage(playerid, "{FFFFFF}ตอนนี้คุณยังไม่หิวน้ำ");
-			GivePlayerThirsty(playerid, 30);
+
+			GivePlayerThirsty(playerid, 10);
 			ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.1, 0, 0, 0, 0, 0, 1);
 			CallLocalFunction("DeleteItem", "ddd", playerid, itemIndex, 1);
-			SendCongratMessage(playerid, "{FFFFFF}คุณได้ดื่มเครื่องดื่ม (ค่าพลังงาน +30)");
+			SendCongratMessage(playerid, "{FFFFFF}คุณได้ดื่มเครื่องดื่ม (ค่าพลังงาน +10)");
+			RefreshInv2(playerid, td);
+			closeuse(playerid);
 		}
 		// กด PUT ของตกแต่งตัวจะมาที่นี่
         case 19090..19091,19092,18636,19487,19352,19064,19065,19066,19200,19141,2908,19314,19094,19136,18952,19346,19137,19067..19069,19554,18953,18954,18968,18967,18969,18955,18956,18957,18959,18926,18927,18928,18929,18930,18931,18932,18933,19104..19109,18921..18925,19519,19274,18906..18910,18970..18973,18947,18948,18949,18950,18951,19521: {
@@ -1707,12 +1886,12 @@ stock UseItem(playerid, td, itemIndex, itemModel) {
 			CheckAks3(playerid, itemModel, PickInvent[playerid]);
 		}
 		// กด PUT ของตกแต่งตัวจะมาที่นี่
-		case 2102,2690,2045,19590,19631,2226,338,326,19591,1276,19317,19319,19318,19054,19055,19056,19057,19058,19847,2803,19878,2406,3026,19559,19636,2511,8492,19332,19333,19334,19335,19336,19337,19338: {
+		case 2102,2690,2045,19590,19631,2226,19591,1276,19317,19319,19318,19054,19055,19056,19057,19058,19847,2803,19878,2406,3026,19559,19636,2511,8492,19332,19333,19334,19335,19336,19337,19338: {
 			if (playerData[playerid][pSlotItem][5] != 0) return ShowDialogSlotItem(playerid, 3);
 			CheckAks(playerid, itemModel, PickInvent[playerid]);
 		}
 		// กด PUT ของตกแต่งตัวจะมาที่นี่
-		case 18963,19036,19037,19038,19472,19350,19085,11704,6865,18911..18920,368: {
+		case 18963,19036,19037,19038,19472,19350,19085,11704,6865,18911..18920: {
 			if (playerData[playerid][pSlotItem][1] != 0) return ShowDialogSlotItem(playerid, 1);
 			CheckAks2(playerid, itemModel, PickInvent[playerid]);
 		}
@@ -2237,7 +2416,7 @@ hook OnPlayerClickPlayerTD(playerid, PlayerText:playertextid) {
   		deletevy(playerid);
         updateslot6(playerid);
 		if (playerData[playerid][pInventoryKolvo][PickInvent[playerid]] >= 2) {
-			if (GetInvSet(playerid) >= MAX_SLOT_ITEMS) return RefreshInv2(playerid, PickInvent[playerid]), va_SendClientMessage(playerid, COLOR_RED, "ำ โเ๑ ํๅ ๕โเ๒เๅ๒ ์ๅ๑๒เ โ ่ํโๅํ๒เ๐ๅ");
+			if (GetInvSet(playerid) >= MAX_SLOT_ITEMS) return RefreshInv2(playerid, PickInvent[playerid]), SendErrorMessage(playerid, "{FFFFFF}คุณมีพื้นที่ในกระเป๋าไม่เพียงพอ!");
 			playerData[playerid][pInventoryKolvoDop] = playerData[playerid][pInventoryKolvo][PickInvent[playerid]];
 			if (playerData[playerid][pInventoryKolvo][PickInvent[playerid]] % 2 == 0) {
 			    playerData[playerid][pInventoryKolvo][PickInvent[playerid]] /= 2;
@@ -2326,7 +2505,7 @@ hook OnPlayerClickPlayerTD(playerid, PlayerText:playertextid) {
 	}
 
 	if (playertextid == dropmenu[playerid][2]) {
-        if (GetInvSet(playerid) >= MAX_SLOT_ITEMS) return RefreshInv2(playerid, PickInvent[playerid]), va_SendClientMessage(playerid, COLOR_RED, "ำ โเ๑ ํๅ ๕โเ๒เๅ๒ ์ๅ๑๒เ โ ่ํโๅํ๒เ๐ๅ");
+        if (GetInvSet(playerid) >= MAX_SLOT_ITEMS) return RefreshInv2(playerid, PickInvent[playerid]), SendErrorMessage(playerid, "{FFFFFF}คุณมีพื้นที่ในกระเป๋าไม่เพียงพอ!");
         playerData[playerid][pInventoryKolvoDop] = playerData[playerid][pInventoryKolvo][PickInvent[playerid]];
         if (playerData[playerid][pInventoryKolvo][PickInvent[playerid]] % 2 == 0) {
             playerData[playerid][pInventoryKolvo][PickInvent[playerid]] /= 2;
@@ -2666,4 +2845,18 @@ hook OnPlayerClickPlayerTD(playerid, PlayerText:playertextid) {
 		return 1;
 	}
     return 0;
+}
+
+hook OnPlayerWeaponChange(playerid, oldweapon, newweapon) {
+    new cw = GetPlayerCustomWeaponIndex(playerid);
+    if (cw != -1) {
+        if (g_WeaponTable[cw][CW_BaseWeaponID] != newweapon) {
+            ResetPlayerCustomWeapon(playerid);
+        }
+    }
+}
+
+hook OnPlayerDeath(playerid, killerid, reason) {
+    ResetPlayerCustomWeapon(playerid);
+    return 1;
 }

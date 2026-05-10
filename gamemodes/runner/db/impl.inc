@@ -53,10 +53,6 @@ public InitDB() {
 	DisableInteriorEnterExits();
 	EnableStuntBonusForAll(false);
 
-	// weapon-config
-	SetVehiclePassengerDamage(true);
-    SetDisableSyncBugs(true);
-
 	SendRconCommand("hostname "SERVER_NAME"");
 	SendRconCommand("gamemodetext "SERVER_MODE"");
 	SendRconCommand("language "SERVER_LANGUAGE"");

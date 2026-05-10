@@ -17,3 +17,5 @@ forward Custom_SetInvItem(playerid, slot, itemid, quantity);
 #define MAX_INVENTORY_SLOTS (72)
 
 new clickOnSkin[MAX_PLAYERS];
+new bool:weaponOn[MAX_PLAYERS] = {false, ...};
+new g_PlayerLastAmmo[MAX_PLAYERS] = {-1, ...};
