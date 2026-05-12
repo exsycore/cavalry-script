@@ -4,6 +4,16 @@
 
 #include <YSI_Coding\y_hooks>
 
+YCMD:gotopos(playerid, const params[], help) {
+    if (!GetPlayerLoggedIn(playerid)) return 1;
+    if (!IsPlayerAdminEx(playerid)) return 1;
+
+    new Float:x, Float:y, Float:z;
+    if (sscanf(params, "fff", x, y, z)) return SendSyntaxMessage(playerid, "/gotopos [x] [y] [z]");
+    SetPlayerPos(playerid, x, y, z);
+    return 1;
+}
+
 YCMD:arevive(playerid, const params[], help) {
     if (!GetPlayerLoggedIn(playerid)) return 1;
     if (!IsPlayerAdminEx(playerid)) return 1;
