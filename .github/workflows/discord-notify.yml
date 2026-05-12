@@ -21,10 +21,10 @@ jobs:
           BRANCH="${{ github.ref_name }}"
           if [ "$BRANCH" = "master" ]; then
             COLOR=5763719
-            TITLE="✅ Push to MASTER"
+            TITLE="Push to MASTER"
           else
             COLOR=3447003
-            TITLE="📝 Push to branch: $BRANCH"
+            TITLE="Push to branch: $BRANCH"
           fi
 
           curl -H "Content-Type: application/json" \
@@ -64,20 +64,20 @@ jobs:
 
           if [ "$IS_MERGED" = "true" ]; then
             COLOR=5763719
-            TITLE="🔀 Merged PR → master"
-            STATUS="Merged ✅"
+            TITLE="Merged PR → master"
+            STATUS="Merged"
           elif [ "$PR_ACTION" = "opened" ]; then
             COLOR=16776960
-            TITLE="🔔 New Pull Request → master"
-            STATUS="Opened 🆕"
+            TITLE="New Pull Request → master"
+            STATUS="Opened"
           elif [ "$PR_ACTION" = "reopened" ]; then
             COLOR=16753920
-            TITLE="🔁 PR Reopened → master"
-            STATUS="Reopened 🔁"
+            TITLE="PR Reopened → master"
+            STATUS="Reopened"
           elif [ "$PR_ACTION" = "closed" ]; then
             COLOR=15548997
-            TITLE="❌ PR Closed (not merged)"
-            STATUS="Closed ❌"
+            TITLE="PR Closed (not merged)"
+            STATUS="Closed"
           fi
 
           curl -H "Content-Type: application/json" \
@@ -88,12 +88,12 @@ jobs:
               \"color\": $COLOR,
               \"fields\": [
                 {
-                  \"name\": \"สถานะ\",
+                  \"name\": \"Status\",
                   \"value\": \"$STATUS\",
                   \"inline\": true
                 },
                 {
-                  \"name\": \"โดย\",
+                  \"name\": \"by\",
                   \"value\": \"\`${{ github.actor }}\`\",
                   \"inline\": true
                 },
@@ -103,8 +103,8 @@ jobs:
                   \"inline\": false
                 },
                 {
-                  \"name\": \"ลิงก์\",
-                  \"value\": \"[ดู Pull Request](${{ github.event.pull_request.html_url }})\",
+                  \"name\": \"Link\",
+                  \"value\": \"[Pull Request](${{ github.event.pull_request.html_url }})\",
                   \"inline\": false
                 }
               ]
