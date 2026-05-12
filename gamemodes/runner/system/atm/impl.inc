@@ -13,7 +13,6 @@ hook OnPlayerConnect(playerid) {
     ATM_Page[playerid]           = ATM_PAGE_NONE;
     ATM_InputAmount[playerid]    = 0;
     ATM_TransferTarget[playerid] = INVALID_PLAYER_ID;
-    ATM_CreateTD(playerid);
     return 1;
 }
 
@@ -51,7 +50,7 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
     return 1;
 }
 
-hook OnClickDynamicPlayerTD(playerid, PlayerText:playertextid) {
+hook OnPlayerClickPlayerTD(playerid, PlayerText:playertextid) {
     if (ATM_Page[playerid] == ATM_PAGE_NONE) return 1;
 
     if (playertextid == atm_exit_btn[playerid]) {
@@ -120,9 +119,11 @@ hook OnClickDynamicPlayerTD(playerid, PlayerText:playertextid) {
     return 0;
 }
 
-hook OnCancelDynTextDraw(playerid) {
-    if (ATM_Page[playerid] != ATM_PAGE_NONE) {
-        ATM_Close(playerid);
+hook OnPlayerClickTD(playerid, Text:clickedid) {
+    if (clickedid == Text:INVALID_TEXT_DRAW) {
+        if (ATM_Page[playerid] != ATM_PAGE_NONE) {
+            ATM_Close(playerid);
+        }
     }
     return 1;
 }
@@ -1027,197 +1028,90 @@ stock ATM_CreateTD(playerid) {
 }
 
 stock ATM_DestroyTD(playerid) {
-    for (new i = 0; i < 21; i++) {
-        if (IsValidDynamicPlayerTextDraw(playerid, atm_main[playerid][i])) {
-            PlayerTextDrawDestroy(playerid, atm_main[playerid][i]);
-            atm_main[playerid][i] = PlayerText:INVALID_TEXT_DRAW;
-        }
-    }
+    for (new i = 0; i < sizeof atm_main[]; i++)
+        DestroyPlayerTD(playerid, atm_main[playerid][i]);
 
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_cash_text[playerid])) {
-        PlayerTextDrawDestroy(playerid, atm_cash_text[playerid]);
-        atm_cash_text[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
-
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_balance_text[playerid])) {
-        PlayerTextDrawDestroy(playerid, atm_balance_text[playerid]);
-        atm_balance_text[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
-
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_withdraw_btn[playerid])) {
-        PlayerTextDrawDestroy(playerid, atm_withdraw_btn[playerid]);
-        atm_withdraw_btn[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
-
-    if (atm_deposit_btn[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, atm_deposit_btn[playerid]);
-        atm_deposit_btn[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
-
-    if (atm_quick_withdraw_btn_0[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, atm_quick_withdraw_btn_0[playerid]);
-        atm_quick_withdraw_btn_0[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
-
-    if (atm_quick_withdraw_btn_1[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, atm_quick_withdraw_btn_1[playerid]);
-        atm_quick_withdraw_btn_1[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
-
-    if (atm_quick_withdraw_btn_2[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, atm_quick_withdraw_btn_2[playerid]);
-        atm_quick_withdraw_btn_2[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
-
-    if (atm_quick_deposit_all_btn[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, atm_quick_deposit_all_btn[playerid]);
-        atm_quick_deposit_all_btn[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
-
-    if (atm_exit_btn[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, atm_exit_btn[playerid]);
-        atm_exit_btn[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
-
-    if (atm_num_7_btn[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, atm_num_7_btn[playerid]);
-        atm_num_7_btn[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
-
-    if (atm_num_8_btn[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, atm_num_8_btn[playerid]);
-        atm_num_8_btn[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
-
-    if (atm_num_9_btn[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, atm_num_9_btn[playerid]);
-        atm_num_9_btn[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
-
-    if (atm_num_4_btn[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, atm_num_4_btn[playerid]);
-        atm_num_4_btn[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
-
-    if (atm_num_5_btn[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, atm_num_5_btn[playerid]);
-        atm_num_5_btn[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
-
-    if (atm_num_6_btn[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, atm_num_6_btn[playerid]);
-        atm_num_6_btn[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
-
-    if (atm_num_1_btn[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, atm_num_1_btn[playerid]);
-        atm_num_1_btn[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
-
-    if (atm_num_2_btn[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, atm_num_2_btn[playerid]);
-        atm_num_2_btn[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
-
-    if (atm_num_3_btn[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, atm_num_3_btn[playerid]);
-        atm_num_3_btn[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
-
-    if (atm_num_0_btn[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, atm_num_0_btn[playerid]);
-        atm_num_0_btn[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
-
-    if (atm_num_clear_btn[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, atm_num_clear_btn[playerid]);
-        atm_num_clear_btn[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
-
-    for (new i = 0; i <= 10; i++) {
-        if (atm_page_input_0[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-            PlayerTextDrawDestroy(playerid, atm_page_input_0[playerid]);
-            atm_page_input_0[playerid] = PlayerText:INVALID_TEXT_DRAW;
-        }
-    }
-
-    if (atm_confirm_btn[playerid] != PlayerText:INVALID_TEXT_DRAW) {
-        PlayerTextDrawDestroy(playerid, atm_confirm_btn[playerid]);
-        atm_confirm_btn[playerid] = PlayerText:INVALID_TEXT_DRAW;
-    }
+    DestroyPlayerTD(playerid, atm_cash_text[playerid]);
+    DestroyPlayerTD(playerid, atm_balance_text[playerid]);
+    DestroyPlayerTD(playerid, atm_withdraw_btn[playerid]);
+    DestroyPlayerTD(playerid, atm_deposit_btn[playerid]);
+    DestroyPlayerTD(playerid, atm_quick_withdraw_btn_0[playerid]);
+    DestroyPlayerTD(playerid, atm_quick_withdraw_btn_1[playerid]);
+    DestroyPlayerTD(playerid, atm_quick_withdraw_btn_2[playerid]);
+    DestroyPlayerTD(playerid, atm_quick_deposit_all_btn[playerid]);
+    DestroyPlayerTD(playerid, atm_exit_btn[playerid]);
+    DestroyPlayerTD(playerid, atm_num_7_btn[playerid]);
+    DestroyPlayerTD(playerid, atm_num_8_btn[playerid]);
+    DestroyPlayerTD(playerid, atm_num_9_btn[playerid]);
+    DestroyPlayerTD(playerid, atm_num_4_btn[playerid]);
+    DestroyPlayerTD(playerid, atm_num_5_btn[playerid]);
+    DestroyPlayerTD(playerid, atm_num_6_btn[playerid]);
+    DestroyPlayerTD(playerid, atm_num_1_btn[playerid]);
+    DestroyPlayerTD(playerid, atm_num_2_btn[playerid]);
+    DestroyPlayerTD(playerid, atm_num_3_btn[playerid]);
+    DestroyPlayerTD(playerid, atm_num_0_btn[playerid]);
+    DestroyPlayerTD(playerid, atm_num_clear_btn[playerid]);
+    DestroyPlayerTD(playerid, atm_num_0[playerid]);
+    DestroyPlayerTD(playerid, atm_num_1[playerid]);
+    DestroyPlayerTD(playerid, atm_num_2[playerid]);
+    DestroyPlayerTD(playerid, atm_num_3[playerid]);
+    DestroyPlayerTD(playerid, atm_num_4[playerid]);
+    DestroyPlayerTD(playerid, atm_num_5[playerid]);
+    DestroyPlayerTD(playerid, atm_num_6[playerid]);
+    DestroyPlayerTD(playerid, atm_num_7[playerid]);
+    DestroyPlayerTD(playerid, atm_num_8[playerid]);
+    DestroyPlayerTD(playerid, atm_num_9[playerid]);
+    DestroyPlayerTD(playerid, atm_num_10[playerid]);
+    DestroyPlayerTD(playerid, atm_page_input_0[playerid]);
+    DestroyPlayerTD(playerid, atm_page_input_1[playerid]);
+    DestroyPlayerTD(playerid, atm_page_input_2[playerid]);
+    DestroyPlayerTD(playerid, atm_page_input_3[playerid]);
+    DestroyPlayerTD(playerid, atm_page_input_4[playerid]);
+    DestroyPlayerTD(playerid, atm_page_input_5[playerid]);
+    DestroyPlayerTD(playerid, atm_page_input_6[playerid]);
+    DestroyPlayerTD(playerid, atm_page_input_7[playerid]);
+    DestroyPlayerTD(playerid, atm_page_input_8[playerid]);
+    DestroyPlayerTD(playerid, atm_page_input_9[playerid]);
+    DestroyPlayerTD(playerid, atm_page_input_10[playerid]);
+    DestroyPlayerTD(playerid, atm_confirm_btn[playerid]);
     return 1;
 }
 
 stock ATM_ShowMain(playerid) {
     // ÍÑ¾à´·µÑÇàÅ¢ cash/balance ¡èÍ¹âªÇì
+    DestroyPlayerUI(playerid);
+    ATM_DestroyTD(playerid);
+    ATM_CreateTD(playerid);
+
     new str[32];
     format(str, sizeof str, "$%d", playerData[playerid][pMoney]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_cash_text[playerid]))
-        PlayerTextDrawSetString(playerid, atm_cash_text[playerid], str);
+    PlayerTextDrawSetString(playerid, atm_cash_text[playerid], str);
 
     format(str, sizeof str, "$%d", playerData[playerid][pBank]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_balance_text[playerid]))
-        PlayerTextDrawSetString(playerid, atm_balance_text[playerid], str);
+    PlayerTextDrawSetString(playerid, atm_balance_text[playerid], str);
 
     for (new i = 0; i < 20; i++) {
         if (i == 10) {
-            if (IsValidDynamicPlayerTextDraw(playerid, atm_cash_text[playerid]))
-                PlayerTextDrawShow(playerid, atm_cash_text[playerid]);
-            if (IsValidDynamicPlayerTextDraw(playerid, atm_balance_text[playerid]))
-                PlayerTextDrawShow(playerid, atm_balance_text[playerid]);
+            PlayerTextDrawShow(playerid, atm_cash_text[playerid]);
+            PlayerTextDrawShow(playerid, atm_balance_text[playerid]);
         } else if (i == 11) {
-            if (IsValidDynamicPlayerTextDraw(playerid, atm_withdraw_btn[playerid]))
-                PlayerTextDrawShow(playerid, atm_withdraw_btn[playerid]);
+            PlayerTextDrawShow(playerid, atm_withdraw_btn[playerid]);
         } else if (i == 12) {
-            if (IsValidDynamicPlayerTextDraw(playerid, atm_deposit_btn[playerid]))
-                PlayerTextDrawShow(playerid, atm_deposit_btn[playerid]);
+            PlayerTextDrawShow(playerid, atm_deposit_btn[playerid]);
         } else if (i == 14) {
-            if (IsValidDynamicPlayerTextDraw(playerid, atm_quick_withdraw_btn_0[playerid]))
-                PlayerTextDrawShow(playerid, atm_quick_withdraw_btn_0[playerid]);
+            PlayerTextDrawShow(playerid, atm_quick_withdraw_btn_0[playerid]);
         } else if (i == 15) {
-            if (IsValidDynamicPlayerTextDraw(playerid, atm_quick_withdraw_btn_1[playerid]))
-                PlayerTextDrawShow(playerid, atm_quick_withdraw_btn_1[playerid]);
+            PlayerTextDrawShow(playerid, atm_quick_withdraw_btn_1[playerid]);
         } else if (i == 16) {
-            if (IsValidDynamicPlayerTextDraw(playerid, atm_quick_withdraw_btn_2[playerid]))
-                PlayerTextDrawShow(playerid, atm_quick_withdraw_btn_2[playerid]);
+            PlayerTextDrawShow(playerid, atm_quick_withdraw_btn_2[playerid]);
         } else if (i == 17) {
-            if (IsValidDynamicPlayerTextDraw(playerid, atm_quick_deposit_all_btn[playerid]))
-                PlayerTextDrawShow(playerid, atm_quick_deposit_all_btn[playerid]);
+            PlayerTextDrawShow(playerid, atm_quick_deposit_all_btn[playerid]);
         } else if (i == 19) {
-            if (IsValidDynamicPlayerTextDraw(playerid, atm_exit_btn[playerid]))
-                PlayerTextDrawShow(playerid, atm_exit_btn[playerid]);
+            PlayerTextDrawShow(playerid, atm_exit_btn[playerid]);
         }
-        if (IsValidDynamicPlayerTextDraw(playerid, atm_main[playerid][i]))
-            PlayerTextDrawShow(playerid, atm_main[playerid][i]);
+        PlayerTextDrawShow(playerid, atm_main[playerid][i]);
     }
     SelectTextDraw(playerid, 0x303030FF);
-    return 1;
-}
-
-stock ATM_HideMain(playerid) {
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_withdraw_btn[playerid]))
-        PlayerTextDrawHide(playerid, atm_withdraw_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_deposit_btn[playerid]))
-        PlayerTextDrawHide(playerid, atm_deposit_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_quick_withdraw_btn_0[playerid]))
-        PlayerTextDrawHide(playerid, atm_quick_withdraw_btn_0[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_quick_withdraw_btn_1[playerid]))
-        PlayerTextDrawHide(playerid, atm_quick_withdraw_btn_1[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_quick_deposit_all_btn[playerid]))
-        PlayerTextDrawHide(playerid, atm_quick_deposit_all_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_exit_btn[playerid]))
-        PlayerTextDrawHide(playerid, atm_exit_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_quick_withdraw_btn_2[playerid]))
-        PlayerTextDrawHide(playerid, atm_quick_withdraw_btn_2[playerid]);
-
-    for (new i = 0; i < 21; i++) {
-        if (IsValidDynamicPlayerTextDraw(playerid, atm_main[playerid][i]))
-            PlayerTextDrawHide(playerid, atm_main[playerid][i]);
-    }
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_cash_text[playerid]))
-        PlayerTextDrawHide(playerid, atm_cash_text[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_balance_text[playerid]))
-        PlayerTextDrawHide(playerid, atm_balance_text[playerid]);
     return 1;
 }
 
@@ -1226,233 +1120,109 @@ stock ATM_ShowNumpad(playerid, mode) {
     ATM_InputAmount[playerid] = 0;
     ATM_Page[playerid]        = ATM_PAGE_NUMPAD;
 
+    // ATM_DestroyTD(playerid);
+    // ATM_CreateTD(playerid);
+
     // ÍÑ¾à´· label µÒÁ mode
     new modeLabel[32];
     if (mode == ATM_MODE_WITHDRAW)     modeLabel = "Withdraw amount";
     else if (mode == ATM_MODE_DEPOSIT) modeLabel = "Deposit amount";
     else                               modeLabel = "Transfer amount";
 
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_9[playerid]))
-        PlayerTextDrawSetString(playerid, atm_page_input_9[playerid], modeLabel);
+    PlayerTextDrawSetString(playerid, atm_page_input_9[playerid], modeLabel);
 
     // ÍÑ¾à´· label row
     if (mode == ATM_MODE_TRANSFER) {
-        if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_4[playerid]))
-            PlayerTextDrawSetString(playerid, atm_page_input_4[playerid], "To");
-        if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_5[playerid]))
-            PlayerTextDrawSetString(playerid, atm_page_input_5[playerid], "Balance");
+        PlayerTextDrawSetString(playerid, atm_page_input_4[playerid], "To");
+        PlayerTextDrawSetString(playerid, atm_page_input_5[playerid], "Balance");
 
         new tName[MAX_PLAYER_NAME + 1];
         GetPlayerName(ATM_TransferTarget[playerid], tName, sizeof tName);
-        if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_6[playerid]))
-            PlayerTextDrawSetString(playerid, atm_page_input_6[playerid], tName);
+        PlayerTextDrawSetString(playerid, atm_page_input_6[playerid], tName);
     } else {
-        if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_4[playerid]))
-            PlayerTextDrawSetString(playerid, atm_page_input_4[playerid], "Cash");
-        if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_5[playerid]))
-            PlayerTextDrawSetString(playerid, atm_page_input_5[playerid], "Balance");
+        PlayerTextDrawSetString(playerid, atm_page_input_4[playerid], "Cash");
+        PlayerTextDrawSetString(playerid, atm_page_input_5[playerid], "Balance");
 
         new str[32];
         format(str, sizeof str, "$%d", playerData[playerid][pMoney]);
-        if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_6[playerid]))
-            PlayerTextDrawSetString(playerid, atm_page_input_6[playerid], str);
+        PlayerTextDrawSetString(playerid, atm_page_input_6[playerid], str);
     }
     new str[32];
     format(str, sizeof str, "$%d", playerData[playerid][pBank]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_7[playerid]))
-        PlayerTextDrawSetString(playerid, atm_page_input_7[playerid], str);
+    PlayerTextDrawSetString(playerid, atm_page_input_7[playerid], str);
 
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_10[playerid]))
-        PlayerTextDrawSetString(playerid, atm_page_input_10[playerid], "$0");
+    PlayerTextDrawSetString(playerid, atm_page_input_10[playerid], "$0");
 
     for (new i = 6; i < 19; i++) {
         if (i == 10) {
-            if (IsValidDynamicPlayerTextDraw(playerid, atm_cash_text[playerid]))
-                PlayerTextDrawHide(playerid, atm_cash_text[playerid]);
-            if (IsValidDynamicPlayerTextDraw(playerid, atm_balance_text[playerid]))
-                PlayerTextDrawHide(playerid, atm_balance_text[playerid]);
+            DestroyPlayerTD(playerid, atm_cash_text[playerid]);
+            DestroyPlayerTD(playerid, atm_balance_text[playerid]);
         } else if (i == 11) {
-            if (IsValidDynamicPlayerTextDraw(playerid, atm_withdraw_btn[playerid]))
-                PlayerTextDrawHide(playerid, atm_withdraw_btn[playerid]);
+            DestroyPlayerTD(playerid, atm_withdraw_btn[playerid]);
         } else if (i == 12) {
-            if (IsValidDynamicPlayerTextDraw(playerid, atm_deposit_btn[playerid]))
-                PlayerTextDrawHide(playerid, atm_deposit_btn[playerid]);
+            DestroyPlayerTD(playerid, atm_deposit_btn[playerid]);
         } else if (i == 14) {
-            if (IsValidDynamicPlayerTextDraw(playerid, atm_quick_withdraw_btn_0[playerid]))
-                PlayerTextDrawHide(playerid, atm_quick_withdraw_btn_0[playerid]);
+            DestroyPlayerTD(playerid, atm_quick_withdraw_btn_0[playerid]);
         } else if (i == 15) {
-            if (IsValidDynamicPlayerTextDraw(playerid, atm_quick_withdraw_btn_1[playerid]))
-                PlayerTextDrawHide(playerid, atm_quick_withdraw_btn_1[playerid]);
+            DestroyPlayerTD(playerid, atm_quick_withdraw_btn_1[playerid]);
         } else if (i == 16) {
-            if (IsValidDynamicPlayerTextDraw(playerid, atm_quick_withdraw_btn_2[playerid]))
-                PlayerTextDrawHide(playerid, atm_quick_withdraw_btn_2[playerid]);
+            DestroyPlayerTD(playerid, atm_quick_withdraw_btn_2[playerid]);
         } else if (i == 17) {
-            if (IsValidDynamicPlayerTextDraw(playerid, atm_quick_deposit_all_btn[playerid]))
-                PlayerTextDrawHide(playerid, atm_quick_deposit_all_btn[playerid]);
+            DestroyPlayerTD(playerid, atm_quick_deposit_all_btn[playerid]);
         }
-        if (IsValidDynamicPlayerTextDraw(playerid, atm_main[playerid][i]))
-            PlayerTextDrawHide(playerid, atm_main[playerid][i]);
+        DestroyPlayerTD(playerid, atm_main[playerid][i]);
     }
 
     // âªÇì page_input panel
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_0[playerid]))
-        PlayerTextDrawShow(playerid, atm_page_input_0[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_1[playerid]))
-        PlayerTextDrawShow(playerid, atm_page_input_1[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_2[playerid]))
-        PlayerTextDrawShow(playerid, atm_page_input_2[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_3[playerid]))
-        PlayerTextDrawShow(playerid, atm_page_input_3[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_4[playerid]))
-        PlayerTextDrawShow(playerid, atm_page_input_4[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_5[playerid]))
-        PlayerTextDrawShow(playerid, atm_page_input_5[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_6[playerid]))
-        PlayerTextDrawShow(playerid, atm_page_input_6[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_7[playerid]))
-        PlayerTextDrawShow(playerid, atm_page_input_7[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_8[playerid]))
-        PlayerTextDrawShow(playerid, atm_page_input_8[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_9[playerid]))
-        PlayerTextDrawShow(playerid, atm_page_input_9[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_10[playerid]))
-        PlayerTextDrawShow(playerid, atm_page_input_10[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_confirm_btn[playerid]))
-        PlayerTextDrawShow(playerid, atm_confirm_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_main[playerid][20]))
-        PlayerTextDrawShow(playerid, atm_main[playerid][20]); // "Confirm" text
+    PlayerTextDrawShow(playerid, atm_page_input_0[playerid]);
+    PlayerTextDrawShow(playerid, atm_page_input_1[playerid]);
+    PlayerTextDrawShow(playerid, atm_page_input_2[playerid]);
+    PlayerTextDrawShow(playerid, atm_page_input_3[playerid]);
+    PlayerTextDrawShow(playerid, atm_page_input_4[playerid]);
+    PlayerTextDrawShow(playerid, atm_page_input_5[playerid]);
+    PlayerTextDrawShow(playerid, atm_page_input_6[playerid]);
+    PlayerTextDrawShow(playerid, atm_page_input_7[playerid]);
+    PlayerTextDrawShow(playerid, atm_page_input_8[playerid]);
+    PlayerTextDrawShow(playerid, atm_page_input_9[playerid]);
+    PlayerTextDrawShow(playerid, atm_page_input_10[playerid]);
+    PlayerTextDrawShow(playerid, atm_confirm_btn[playerid]);
+    PlayerTextDrawShow(playerid, atm_main[playerid][20]); // "Confirm" text
 
     // âªÇì numpad
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_7_btn[playerid]))
-        PlayerTextDrawShow(playerid, atm_num_7_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_8_btn[playerid]))
-        PlayerTextDrawShow(playerid, atm_num_8_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_9_btn[playerid]))
-        PlayerTextDrawShow(playerid, atm_num_9_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_4_btn[playerid]))
-        PlayerTextDrawShow(playerid, atm_num_4_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_5_btn[playerid]))
-        PlayerTextDrawShow(playerid, atm_num_5_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_6_btn[playerid]))
-        PlayerTextDrawShow(playerid, atm_num_6_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_1_btn[playerid]))
-        PlayerTextDrawShow(playerid, atm_num_1_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_2_btn[playerid]))
-        PlayerTextDrawShow(playerid, atm_num_2_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_3_btn[playerid]))
-        PlayerTextDrawShow(playerid, atm_num_3_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_0_btn[playerid]))
-        PlayerTextDrawShow(playerid, atm_num_0_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_clear_btn[playerid]))
-        PlayerTextDrawShow(playerid, atm_num_clear_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_0[playerid]))
-        PlayerTextDrawShow(playerid, atm_num_0[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_1[playerid]))
-        PlayerTextDrawShow(playerid, atm_num_1[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_2[playerid]))
-        PlayerTextDrawShow(playerid, atm_num_2[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_3[playerid]))
-        PlayerTextDrawShow(playerid, atm_num_3[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_4[playerid]))
-        PlayerTextDrawShow(playerid, atm_num_4[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_5[playerid]))
-        PlayerTextDrawShow(playerid, atm_num_5[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_6[playerid]))
-        PlayerTextDrawShow(playerid, atm_num_6[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_7[playerid]))
-        PlayerTextDrawShow(playerid, atm_num_7[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_8[playerid]))
-        PlayerTextDrawShow(playerid, atm_num_8[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_9[playerid]))
-        PlayerTextDrawShow(playerid, atm_num_9[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_10[playerid]))
-        PlayerTextDrawShow(playerid, atm_num_10[playerid]);
+    PlayerTextDrawShow(playerid, atm_num_7_btn[playerid]);
+    PlayerTextDrawShow(playerid, atm_num_8_btn[playerid]);
+    PlayerTextDrawShow(playerid, atm_num_9_btn[playerid]);
+    PlayerTextDrawShow(playerid, atm_num_4_btn[playerid]);
+    PlayerTextDrawShow(playerid, atm_num_5_btn[playerid]);
+    PlayerTextDrawShow(playerid, atm_num_6_btn[playerid]);
+    PlayerTextDrawShow(playerid, atm_num_1_btn[playerid]);
+    PlayerTextDrawShow(playerid, atm_num_2_btn[playerid]);
+    PlayerTextDrawShow(playerid, atm_num_3_btn[playerid]);
+    PlayerTextDrawShow(playerid, atm_num_0_btn[playerid]);
+    PlayerTextDrawShow(playerid, atm_num_clear_btn[playerid]);
+    PlayerTextDrawShow(playerid, atm_num_0[playerid]);
+    PlayerTextDrawShow(playerid, atm_num_1[playerid]);
+    PlayerTextDrawShow(playerid, atm_num_2[playerid]);
+    PlayerTextDrawShow(playerid, atm_num_3[playerid]);
+    PlayerTextDrawShow(playerid, atm_num_4[playerid]);
+    PlayerTextDrawShow(playerid, atm_num_5[playerid]);
+    PlayerTextDrawShow(playerid, atm_num_6[playerid]);
+    PlayerTextDrawShow(playerid, atm_num_7[playerid]);
+    PlayerTextDrawShow(playerid, atm_num_8[playerid]);
+    PlayerTextDrawShow(playerid, atm_num_9[playerid]);
+    PlayerTextDrawShow(playerid, atm_num_10[playerid]);
 
     SelectTextDraw(playerid, 0x303030FF);
     return 1;
 }
 
-stock ATM_HideNumpad(playerid) {
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_0[playerid]))
-        PlayerTextDrawHide(playerid, atm_page_input_0[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_1[playerid]))
-        PlayerTextDrawHide(playerid, atm_page_input_1[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_2[playerid]))
-        PlayerTextDrawHide(playerid, atm_page_input_2[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_3[playerid]))
-        PlayerTextDrawHide(playerid, atm_page_input_3[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_4[playerid]))
-        PlayerTextDrawHide(playerid, atm_page_input_4[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_5[playerid]))
-        PlayerTextDrawHide(playerid, atm_page_input_5[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_6[playerid]))
-        PlayerTextDrawHide(playerid, atm_page_input_6[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_7[playerid]))
-        PlayerTextDrawHide(playerid, atm_page_input_7[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_8[playerid]))
-        PlayerTextDrawHide(playerid, atm_page_input_8[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_9[playerid]))
-        PlayerTextDrawHide(playerid, atm_page_input_9[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_10[playerid]))
-        PlayerTextDrawHide(playerid, atm_page_input_10[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_confirm_btn[playerid]))
-        PlayerTextDrawHide(playerid, atm_confirm_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_main[playerid][20]))
-        PlayerTextDrawHide(playerid, atm_main[playerid][20]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_7_btn[playerid]))
-        PlayerTextDrawHide(playerid, atm_num_7_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_8_btn[playerid]))
-        PlayerTextDrawHide(playerid, atm_num_8_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_9_btn[playerid]))
-        PlayerTextDrawHide(playerid, atm_num_9_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_4_btn[playerid]))
-        PlayerTextDrawHide(playerid, atm_num_4_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_5_btn[playerid]))
-        PlayerTextDrawHide(playerid, atm_num_5_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_6_btn[playerid]))
-        PlayerTextDrawHide(playerid, atm_num_6_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_1_btn[playerid]))
-        PlayerTextDrawHide(playerid, atm_num_1_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_2_btn[playerid]))
-        PlayerTextDrawHide(playerid, atm_num_2_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_3_btn[playerid]))
-        PlayerTextDrawHide(playerid, atm_num_3_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_0_btn[playerid]))
-        PlayerTextDrawHide(playerid, atm_num_0_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_clear_btn[playerid]))
-        PlayerTextDrawHide(playerid, atm_num_clear_btn[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_0[playerid]))
-        PlayerTextDrawHide(playerid, atm_num_0[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_1[playerid]))
-        PlayerTextDrawHide(playerid, atm_num_1[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_2[playerid]))
-        PlayerTextDrawHide(playerid, atm_num_2[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_3[playerid]))
-        PlayerTextDrawHide(playerid, atm_num_3[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_4[playerid]))
-        PlayerTextDrawHide(playerid, atm_num_4[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_5[playerid]))
-        PlayerTextDrawHide(playerid, atm_num_5[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_6[playerid]))
-        PlayerTextDrawHide(playerid, atm_num_6[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_7[playerid]))
-        PlayerTextDrawHide(playerid, atm_num_7[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_8[playerid]))
-        PlayerTextDrawHide(playerid, atm_num_8[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_9[playerid]))
-        PlayerTextDrawHide(playerid, atm_num_9[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_num_10[playerid]))
-        PlayerTextDrawHide(playerid, atm_num_10[playerid]);
-    return 1;
-}
-
 stock ATM_Close(playerid) {
-    ATM_HideMain(playerid);
-    ATM_HideNumpad(playerid);
-    ATM_Page[playerid]          = ATM_PAGE_NONE;
-    ATM_InputAmount[playerid]   = 0;
-    ATM_TransferTarget[playerid]= INVALID_PLAYER_ID;
+    ATM_DestroyTD(playerid);
+    ATM_Page[playerid]           = ATM_PAGE_NONE;
+    ATM_InputAmount[playerid]    = 0;
+    ATM_TransferTarget[playerid] = INVALID_PLAYER_ID;
     CancelSelectTextDraw(playerid);
+    ShowPlayerUI(playerid);
     return 1;
 }
 
@@ -1463,19 +1233,15 @@ stock ATM_NumpadPress(playerid, digit) {
 
     new str[32];
     format(str, sizeof str, "$%d", ATM_InputAmount[playerid]);
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_10[playerid])) {
-        PlayerTextDrawSetString(playerid, atm_page_input_10[playerid], str);
-        PlayerTextDrawShow(playerid, atm_page_input_10[playerid]);
-    }
+    PlayerTextDrawSetString(playerid, atm_page_input_10[playerid], str);
+    PlayerTextDrawShow(playerid, atm_page_input_10[playerid]);
     return 1;
 }
 
 stock ATM_NumpadClear(playerid) {
     ATM_InputAmount[playerid] = 0;
-    if (IsValidDynamicPlayerTextDraw(playerid, atm_page_input_10[playerid])) {
-        PlayerTextDrawSetString(playerid, atm_page_input_10[playerid], "$0");
-        PlayerTextDrawShow(playerid, atm_page_input_10[playerid]);
-    }
+    PlayerTextDrawSetString(playerid, atm_page_input_10[playerid], "$0");
+    PlayerTextDrawShow(playerid, atm_page_input_10[playerid]);
     return 1;
 }
 

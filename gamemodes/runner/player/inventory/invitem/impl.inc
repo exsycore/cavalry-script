@@ -1689,7 +1689,7 @@ stock closeuse(playerid) {
 	return true;
 }
 
-stock _GiveWeaponFromItem(playerid, itemIndex) {
+stock _GiveWeaponFromItem(playerid, itemIndex, slot) {
 	if (weaponOn[playerid]) {
 		ResetPlayerWeapons(playerid);
 		ResetPlayerCustomWeapon(playerid);
@@ -1750,6 +1750,8 @@ stock _GiveWeaponFromItem(playerid, itemIndex) {
 
 		ResetPlayerWeapons(playerid);
 		ResetPlayerCustomWeapon(playerid);
+
+		playerData[playerid][pEquippedWeaponSlot] = slot;
 
 		new cwIndex = FindCustomWeaponByName(itemName);
 		if (cwIndex != -1) SetPlayerCustomWeapon(playerid, cwIndex);
@@ -1843,7 +1845,7 @@ stock UseItem(playerid, td, itemIndex, itemModel) {
     switch (itemModel) { // ใช้ itemModel สำหรับเช็ค case
 		// กด USE อาวุธ
 		case 321 .. 372: {
-			_GiveWeaponFromItem(playerid, itemIndex);
+			_GiveWeaponFromItem(playerid, itemIndex, IDS);
 			RefreshInv2(playerid, td);
 			closeuse(playerid);
 		}
@@ -1855,8 +1857,8 @@ stock UseItem(playerid, td, itemIndex, itemModel) {
 				}
 			}
 			CallLocalFunction("DeleteItem", "ddd", playerid, itemIndex, 1);
-			RefreshInv2(playerid, td);
-			closeuse(playerid);
+			// RefreshInv2(playerid, td);
+			// closeuse(playerid);
 		}
         // กด USE ของกิน
 		case 2768: {
@@ -1866,8 +1868,8 @@ stock UseItem(playerid, td, itemIndex, itemModel) {
 			ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.1, 0, 0, 0, 0, 0, 1);
 			CallLocalFunction("DeleteItem", "ddd", playerid, itemIndex, 1);
 			SendCongratMessage(playerid, "{FFFFFF}คุณได้รับประทานอาหาร (ค่าอาหาร +10)");
-			RefreshInv2(playerid, td);
-			closeuse(playerid);
+			// RefreshInv2(playerid, td);
+			// closeuse(playerid);
 		}
 		// กด USE ของกิน
 		case 2647: {
@@ -1877,8 +1879,8 @@ stock UseItem(playerid, td, itemIndex, itemModel) {
 			ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.1, 0, 0, 0, 0, 0, 1);
 			CallLocalFunction("DeleteItem", "ddd", playerid, itemIndex, 1);
 			SendCongratMessage(playerid, "{FFFFFF}คุณได้ดื่มเครื่องดื่ม (ค่าพลังงาน +10)");
-			RefreshInv2(playerid, td);
-			closeuse(playerid);
+			// RefreshInv2(playerid, td);
+			// closeuse(playerid);
 		}
 		// กด PUT ของตกแต่งตัวจะมาที่นี่
         case 19090..19091,19092,18636,19487,19352,19064,19065,19066,19200,19141,2908,19314,19094,19136,18952,19346,19137,19067..19069,19554,18953,18954,18968,18967,18969,18955,18956,18957,18959,18926,18927,18928,18929,18930,18931,18932,18933,19104..19109,18921..18925,19519,19274,18906..18910,18970..18973,18947,18948,18949,18950,18951,19521: {

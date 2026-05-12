@@ -303,6 +303,41 @@ YCMD:adminmenu(playerid, string:params[], help) {
                         case 8: { // เสกไอเทมเข้าประเป๋า
                             Command_ReProcess(playerid, "/itemsinfo", 0);
                         }
+                        case 9: {
+                            inline InputGiveCar(res3, list3, string:in3[]) {
+                                #pragma unused list3
+                                if (!res3) @return Command_ReProcess(playerid, "/adminmenu", 0);
+
+                                new userId, model, c1, c2;
+                                if (sscanf(in3, "uddd", userId, model, c1, c2)) {
+                                    SendErrorMessage(playerid, "{FFFFFF}รูปแบบไม่ถูกต้อง เช่น: 0 522 2 2");
+                                    @return Command_ReProcess(playerid, "/adminmenu", 0);
+                                }
+                                new str[64];
+                                format(str, sizeof str, "/givecar %d %d %d %d", userId, model, c1, c2);
+                                Command_ReProcess(playerid, str, 0);
+                            }
+                            Dialog_ShowCallback(playerid, using inline InputGiveCar, DIALOG_STYLE_INPUT,
+                                "{FFFFFF}เสกรถเข้าตัว",
+                                "{FFFFFF}กรอก: {FFFF00}[ไอดี] [ไอดีรถ] [สี1] [สี2]\n{AAAAAA}ตัวอย่าง: 0 522 2 2",
+                                "{FFFFFF}ยืนยัน", "{FFFFFF}กลับ");
+                        }
+                        case 10: {
+                            SetTimer("AutoDespawn_Execute", 100, false);
+                        }
+                        case 11: {
+                            for (new i = 0; i < MAX_DROP_ITEMS; i++) {
+                                if (IsValidDynamicPickup(dropData[i][dObjectID]))
+                                    DestroyDynamicPickup(dropData[i][dObjectID]);
+
+                                if (IsValidDynamic3DTextLabel(dropData[i][d3DText]))
+                                    DestroyDynamic3DTextLabel(dropData[i][d3DText]);
+
+                                dropData[i][dExists] = false;
+                            }
+                            mysql_tquery(get_handle(), "TRUNCATE TABLE " DROP_ITEMS_TABLE "");
+                            SendClientMessageToAll(COLOR_RED, "[!] {FFFFFF}ไอเทมที่ตกพื้นทั้งหมดถูกลบเรียบร้อยแล้ว");
+                        }
                     }
                 }
                 Dialog_ShowCallback(playerid, using inline GeneralAdmin, DIALOG_STYLE_LIST,
@@ -315,7 +350,10 @@ YCMD:adminmenu(playerid, string:params[], help) {
                     {FFFFFF}ชุบชีวิตผู้เล่น\n\
                     {FFFFFF}ให้ยศแอดมิน\n\
                     {FFFFFF}เสกสกินเข้ากระเป๋า\n\
-                    {FFFFFF}เสกไอเทมเข้าประเป๋า",
+                    {FFFFFF}เสกไอเทมเข้าประเป๋า\n\
+                    {FFFFFF}เสกรถเข้าตัว\n\
+                    {FFFFFF}รีรถส่วนตัวทั้งเซิร์ฟ\n\
+                    {FFFFFF}รีไอเทมที่ดรอปทั้งเซิร์ฟ",
                     "{FFFFFF}เลือก", "{FFFFFF}กลับ");
             }
             case 1: { // หมวดหมู่แก๊ง (ปล่อยว่าง)
@@ -465,6 +503,9 @@ YCMD:adminmenu(playerid, string:params[], help) {
             case 7: { // หมวดหมู่ Car Shop
                 Command_ReProcess(playerid, "/adealership", 0);
             }
+            case 8: { // หมวดหมู่ Pump
+                Command_ReProcess(playerid, "/apump", 0);
+            }
         }
     }
     Dialog_ShowCallback(playerid, using inline AdminMenu, DIALOG_STYLE_LIST,
@@ -476,7 +517,8 @@ YCMD:adminmenu(playerid, string:params[], help) {
         {FFFFFF}หมวดหมู่ ATM\n\
         {FFFFFF}หมวดหมู่หน่วยงาน\n\
         {FFFFFF}หมวดหมู่ Garage/Pickcar/Pawncar\n\
-        {FFFFFF}หมวดหมู่ Car Shop",
+        {FFFFFF}หมวดหมู่ Car Shop\n\
+        {FFFFFF}หมวดหมู่ Pump",
         "{FFFFFF}เลือก", "{FFFFFF}ปิด");
     return 1;
 }

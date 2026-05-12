@@ -10,7 +10,6 @@ hook OnGameModeInit() {
 }
 
 hook OnPlayerConnect(playerid) {
-	LoadGarageUI(playerid);
 	return true;
 }
 
@@ -31,14 +30,16 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
 	return true;
 }
 
-hook OnCancelDynTextDraw(playerid) {
-	if (IsOpenGarageUI[playerid]) {
-		OpenGarageUI(playerid, false);
+hook OnPlayerClickTD(playerid, Text:clickedid) {
+	if (clickedid == Text:INVALID_TEXT_DRAW) {
+		if (IsOpenGarageUI[playerid]) {
+			OpenGarageUI(playerid, false);
+		}
 	}
 	return 1;
 }
 
-hook OnClickDynamicPlayerTD(playerid, PlayerText:playertextid) {
+hook OnPlayerClickPlayerTD(playerid, PlayerText:playertextid) {
 	if (IsOpenGarageUI[playerid]) {
 		for (new i = 0; i < GARAGE_PER_PAGE; i++) {
 			if (playertextid == Garage_Slot[playerid][i]) {
@@ -81,25 +82,9 @@ public OpenGarageUI(playerid, bool:enable) {
 		mysql_tquery(get_handle(), query, "RefreshUIGarage", "dd", playerid, LIST_VEHICLES);
     } else {
         IsOpenGarageUI[playerid] = false;
-
+		DestroyUIGarage(playerid);
         CancelSelectTextDraw(playerid);
-
-		for (new i = 0; i < 8; i ++) {
-			if (IsValidDynamicPlayerTextDraw(playerid, Garage_Slot[playerid][i]))
-				PlayerTextDrawHide(playerid, Garage_Slot[playerid][i]);
-		}
-		for (new i = 0; i < 9; i ++) {
-			if (IsValidDynamicPlayerTextDraw(playerid, Garage_UI[playerid][i]))
-				PlayerTextDrawHide(playerid, Garage_UI[playerid][i]);
-		}
-		for (new i = 0; i < 1; i ++) {
-			if (IsValidDynamicPlayerTextDraw(playerid, close_btn[playerid][i]))
-				PlayerTextDrawHide(playerid, close_btn[playerid][i]);
-		}
-		for (new i = 0; i < 4; i ++) {
-			if (IsValidDynamicPlayerTextDraw(playerid, Garage_UI_Page[playerid][i]))
-				PlayerTextDrawHide(playerid, Garage_UI_Page[playerid][i]);
-		}
+		ShowPlayerUI(playerid);
     }
     return true;
 }
@@ -168,8 +153,6 @@ public OnPlayerSpawnVehicle(playerid) {
 		cache_get_value_name_float(0, "health", health);
 
 		if (spawned) return SendErrorMessage(playerid, "คุณเรียกรถมาไว้แล้วคันหนึ่ง หากต้องการเรียกอีกคันหนึ่งโปรดเก็บอีกคันก่อน");
-
-		if (health < 250) return SendErrorMessage(playerid, "รถของคุณพัง ไม่สามารถเรียกรถได้");
 
 		vehicleid = CreateVehicle(modelid, vx, vy + 2.0, vz, va, color1, color2, -1);
 		SetVehicleNumberPlate(vehicleid, plate);
@@ -413,26 +396,16 @@ public RefreshUIGarage(playerid, threadid) {
 
 	switch (threadid) {
 		case LIST_VEHICLES: {
-			for (new i = 0; i < 8; i ++) {
-				if (IsValidDynamicPlayerTextDraw(playerid, Garage_Slot[playerid][i]))
-					PlayerTextDrawHide(playerid, Garage_Slot[playerid][i]);
-			}
-			for (new i = 0; i < 9; i ++) {
-				if (IsValidDynamicPlayerTextDraw(playerid, Garage_UI[playerid][i]))
-					PlayerTextDrawHide(playerid, Garage_UI[playerid][i]);
-			}
-			for (new i = 0; i < 1; i ++) {
-				if (IsValidDynamicPlayerTextDraw(playerid, close_btn[playerid][i]))
-					PlayerTextDrawHide(playerid, close_btn[playerid][i]);
-			}
-			for (new i = 0; i < 4; i ++) {
-				if (IsValidDynamicPlayerTextDraw(playerid, Garage_UI_Page[playerid][i]))
-					PlayerTextDrawHide(playerid, Garage_UI_Page[playerid][i]);
-			}
-
 		    if (!rows) {
 		        SendErrorMessage(playerid, "คุณไม่มีรถส่วนตัวเลย");
+				for (new i = 0; i < GARAGE_PER_PAGE; i++)
+					GarageSlotIndex[playerid][i] = -1;
+					
 		    } else {
+				DestroyPlayerUI(playerid);
+				DestroyUIGarage(playerid);
+				CreateGarageUI(playerid);
+
 				SelectTextDraw(playerid, 0xFFFFFF60);
 
 				new page = GarageUIPage[playerid];
@@ -442,16 +415,13 @@ public RefreshUIGarage(playerid, threadid) {
 				}
 
 				for (new i = 0; i < 9; i ++) {
-					if (IsValidDynamicPlayerTextDraw(playerid, Garage_UI[playerid][i]))
-						PlayerTextDrawShow(playerid, Garage_UI[playerid][i]);
+					PlayerTextDrawShow(playerid, Garage_UI[playerid][i]);
 				}
 				for (new i = 0; i < 1; i ++) {
-					if (IsValidDynamicPlayerTextDraw(playerid, close_btn[playerid][i]))
-						PlayerTextDrawShow(playerid, close_btn[playerid][i]);
+					PlayerTextDrawShow(playerid, close_btn[playerid][i]);
 				}
 				for (new i = 0; i < 4; i ++) {
-					if (IsValidDynamicPlayerTextDraw(playerid, Garage_UI_Page[playerid][i]))
-						PlayerTextDrawShow(playerid, Garage_UI_Page[playerid][i]);
+					PlayerTextDrawShow(playerid, Garage_UI_Page[playerid][i]);
 				}
 
 		        new start = page * GARAGE_PER_PAGE;
@@ -468,20 +438,16 @@ public RefreshUIGarage(playerid, threadid) {
 					cache_get_value_name_bool(i, "spawned", spawned);
 
 					if (spawned) {
-						if (IsValidDynamicPlayerTextDraw(playerid, Garage_Slot[playerid][s])) {
-							PlayerTextDrawBackgroundColor(playerid, Garage_Slot[playerid][s], 0xFF505080);
-							PlayerTextDrawSetPreviewModel(playerid, Garage_Slot[playerid][s], modelid);
-							PlayerTextDrawShow(playerid, Garage_Slot[playerid][s]);
-						}
+						PlayerTextDrawBackgroundColor(playerid, Garage_Slot[playerid][s], 0xFF505080);
+						PlayerTextDrawSetPreviewModel(playerid, Garage_Slot[playerid][s], modelid);
+						PlayerTextDrawShow(playerid, Garage_Slot[playerid][s]);
 					} else {
-						if (IsValidDynamicPlayerTextDraw(playerid, Garage_Slot[playerid][s])) {
-							PlayerTextDrawBackgroundColor(playerid, Garage_Slot[playerid][s], 808464639);
-							PlayerTextDrawSetPreviewModel(playerid, Garage_Slot[playerid][s], modelid);
-							PlayerTextDrawShow(playerid, Garage_Slot[playerid][s]);
-						}
+						PlayerTextDrawBackgroundColor(playerid, Garage_Slot[playerid][s], 808464639);
+						PlayerTextDrawSetPreviewModel(playerid, Garage_Slot[playerid][s], modelid);
+						PlayerTextDrawShow(playerid, Garage_Slot[playerid][s]);
 					}
 
-					GarageSlotIndex[playerid][s] = s; // Or map to real vehicle ID if needed
+					GarageSlotIndex[playerid][s] = i; // Or map to real vehicle ID if needed
 
 					s++;
 				}

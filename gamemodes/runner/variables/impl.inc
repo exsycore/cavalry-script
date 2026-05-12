@@ -16,6 +16,7 @@ stock ResetArrays(playerid) {
     playerData[playerid][pInDeath]      = 0;
     playerData[playerid][pInjuredTimer] = -1;
     playerData[playerid][pInjuredTime]  = 0;
+    playerData[playerid][pEquippedWeaponSlot] = -1;
 
     playerData[playerid][pDolboeb] = 0;
     playerData[playerid][pDopKletki] = 0;

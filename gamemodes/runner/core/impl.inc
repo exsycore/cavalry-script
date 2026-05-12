@@ -40,13 +40,11 @@ hook OnPlayerConnect(playerid) {
     PlayerTextDrawSetProportional(playerid, buildVersionName[playerid], 1);
     PlayerTextDrawSetSelectable(playerid, buildVersionName[playerid], 0);
 
-    if (IsValidDynamicPlayerTextDraw(playerid, buildVersionName[playerid]))
-        PlayerTextDrawShow(playerid, buildVersionName[playerid]);
+    PlayerTextDrawShow(playerid, buildVersionName[playerid]);
     return 1;
 }
 
 hook OnPlayerDisconnect(playerid, reason) {
-    if (IsValidDynamicPlayerTextDraw(playerid, buildVersionName[playerid]))
-        PlayerTextDrawDestroy(playerid, buildVersionName[playerid]);
+    PlayerTextDrawDestroy(playerid, buildVersionName[playerid]);
     return 1;
 }

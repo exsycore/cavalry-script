@@ -11,3 +11,4 @@ forward public setRealTime(hour);
 
 #include "anticheat-nex\header"
 #include "voicechat\header"
+#include "object\header"

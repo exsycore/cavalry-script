@@ -31,3 +31,4 @@ hook setRealTime(hour) {
 
 #include "anticheat-nex\impl"
 #include "voicechat\impl"
+#include "object\impl"

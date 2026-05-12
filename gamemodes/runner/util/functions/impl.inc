@@ -29,6 +29,10 @@ stock GivePlayerMoneyEx(playerid, money) {
     ResetPlayerMoney(playerid);
     GivePlayerMoney(playerid, playerData[playerid][pMoney]);
 
+    new str[64];
+    format(str, sizeof str, "%s$%d", (money >= 0) ? ("~g~+") : ("~r~-"), (money >= 0) ? (money) : (-money));
+    GameTextForPlayer(playerid, str, 2000, 5);
+
     Query(get_handle(), "UPDATE "PLAYER_TABLE" SET `playerMoney` = '%d' WHERE `playerID` = '%d'",
         playerData[playerid][pMoney],
         playerData[playerid][pID]);

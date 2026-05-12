@@ -6,9 +6,22 @@ forward public LoadPlayerVehicle(playerid);
 forward public SetPlayerVehicle(playerid);
 forward public UpdateFuel(playerid);
 
+forward AutoDespawn_WarnTwoMin();
+forward AutoDespawn_WarnOneMin();
+forward AutoDespawn_Execute();
+
+#define AUTO_DESPAWN_INTERVAL   (60 * 60 * 1000)    // 1 ชั่วโมง (ms)
+#define WARN_TWO_MIN            (2 * 60 * 1000)     // แจ้งเตือน 2 นาทีก่อน
+#define WARN_ONE_MIN            (1 * 60 * 1000)     // แจ้งเตือน 1 นาทีก่อน
+
+new g_AutoDespawnTimer = -1;
+new g_WarnTwoMinTimer  = -1;
+new g_WarnOneMinTimer  = -1;
+
 #define MAX_PLATE_LENGTH (7)
-#define MAX_PLAYER_VEHICLE (50)
+#define MAX_PLAYER_VEHICLE (500)
 #define VEHICLE_TABLE "vehicles"
+#define DEFAULT_VEHICLE_BROKEN (250)
 
 // Speed conversion factor (SA-MP velocity to km/h)
 #define VELOCITY_TO_KMH (181.5)

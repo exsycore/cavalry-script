@@ -147,6 +147,7 @@ stock LoadPlayerData(playerid) {
 	cache_get_value_name_int(0, "playerRank", playerData[playerid][pRank]);
 	cache_get_value_name_int(0, "playerGang", playerData[playerid][pGang]);
 	cache_get_value_name_int(0, "playerGangRank", playerData[playerid][pGangRank]);
+	cache_get_value_name_int(0, "playerPassport", playerData[playerid][pPassport]);
 
 	// ================================== INVENTORY ======================================
 	cache_get_value_name_float(0, "InvPos_X", playerData[playerid][pInvPos_X]);
@@ -227,6 +228,7 @@ stock UpdatePlayerData(playerid) {
 	acc_int_strcat(query, sizeof(query), "playerRank", playerData[playerid][pRank]);
 	acc_int_strcat(query, sizeof(query), "playerGang", playerData[playerid][pGang]);
 	acc_int_strcat(query, sizeof(query), "playerGangRank", playerData[playerid][pGangRank]);
+	acc_int_strcat(query, sizeof(query), "playerPassport", playerData[playerid][pPassport]);
 
 	// ================================== INVENTORY ======================================
 	acc_float_strcat(query, sizeof(query), "InvPos_X", playerData[playerid][pInvPos_X]);
@@ -255,10 +257,10 @@ stock accountCreate(playerid, const hash[]) {
 	"INSERT INTO "PLAYER_TABLE" \
 	(`playerName`, `playerPassword`, `playerRegDate`, `Skin`, `pPosX`, `pPosY`, `pPosZ`, `pPosA`, `playerHealth`, `playerArmour`\
 	,`playerExp`, `playerLevel`, `playerGender`, `playerHungry`, `playerThirsty`, `playerInDeath`, `playerInjuredTime`, `playerFaction`\
-	,`playerRank`, `playerMoney`, `playerRedMoney`, `playerBank`) \
+	,`playerRank`, `playerMoney`, `playerRedMoney`, `playerBank`, `playerPassport`) \
 	VALUES \
 	('%e', '%e', '%e', '%d', '%.2f', '%.2f', '%.2f', '%.2f', '%.2f', '%.2f', '%.2f', '%i', '%i', '%.2f', '%.2f', '%d', '%d', '%d', '%d',\
-	'%d', '%d', '%d')"
+	'%d', '%d', '%d', '%d')"
 		, GetPlayerNameEx(playerid)
 		, hash
 		, ReturnDate()
@@ -281,6 +283,7 @@ stock accountCreate(playerid, const hash[]) {
 		, DEFAULT_MONEY
 		, DEFAULT_RED_MONEY
 		, DEFAULT_PLAYER_BANK
+		, DEFAULT_PLAYER_PASSPORT
 	);
 	mysql_tquery(get_handle(), query, "OnPlayerRegister", "d", playerid);
 	return 1;
@@ -492,6 +495,21 @@ hook OnPlayerSpawn(playerid) {
 hook OnLoginFinished(playerid) {
 	LoadPlayerData(playerid);
 	ClearPlayerChat(playerid, 20);
+
+	if (playerData[playerid][pPassport] == DEFAULT_PLAYER_PASSPORT) {
+		inline Response(res, list, string:in[]) {
+			#pragma unused in, list
+			if (res) @return DelayedKick(playerid);
+			else @return DelayedKick(playerid);
+		}
+		Dialog_ShowCallback(playerid, using inline Response, DIALOG_STYLE_MSGBOX,
+			"{FFFFFF}ระบบ Passport",
+			"{FF0000}แจ้งเตือน: {FFFFFF}คุณไม่มี Passport เพื่อเข้าสู่เมือง Cavalry City\n{FFFFFF}ติดต่อแอดมินที่ดิสคอร์ด: Link",
+			"{FFFFFF}ตกลง",
+			"");
+		DelayedKick(playerid);
+		return 1;
+	}
 	
 	if (playerData[playerid][LoginTimer]) {
 		KillTimer(playerData[playerid][LoginTimer]);

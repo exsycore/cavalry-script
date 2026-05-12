@@ -42,6 +42,7 @@
 #define DEFAULT_PLAYER_FACTION (-1)
 #define DEFAULT_PLAYER_RANK (0)
 
+#define DEFAULT_PLAYER_PASSPORT (0)
 
 // ===================================================================================
 
@@ -61,7 +62,6 @@
 #define PRESS_QSPACE(256)
 #define PRESS_E (64)
 #define PRESS_Q (256)
-#define PRESS_E (64)
 
 #define OO_TYPE(%6,%7)%0[%1] (_:@vb:@va:%6:%7@%0[%1]
 #define @va:%6:%7@%0[%1][@%2] %7%0[%1])[E_%6_%0_%2]

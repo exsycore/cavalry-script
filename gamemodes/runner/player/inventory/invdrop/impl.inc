@@ -117,28 +117,30 @@ stock bool:DropItemsRefresh(did) {
     if (did == -1 || !dropData[did][dExists])
         return false;
 
-    if (IsValidDynamicObject(dropData[did][dObjectID]))
-        DestroyDynamicObject(dropData[did][dObjectID]);
+    if (IsValidDynamicPickup(dropData[did][dObjectID]))
+        DestroyDynamicPickup(dropData[did][dObjectID]);
 
     if (IsValidDynamic3DTextLabel(dropData[did][d3DText]))
         DestroyDynamic3DTextLabel(dropData[did][d3DText]);
-    
-    dropData[did][dObjectID] = CreateDynamicObject(dropData[did][dModelID]
+
+    new modelid = (dropData[did][dModelID] >= 1 && dropData[did][dModelID] <= 311)
+        ? 1275
+        : dropData[did][dModelID];
+
+    dropData[did][dObjectID] = CreateDynamicPickup(modelid
+        , 23
         , dropData[did][dPos][0]
         , dropData[did][dPos][1]
-        , dropData[did][dPos][2]
-        , 0.0
-        , 0.0
-        , 0.0
+        , dropData[did][dPos][2] + 1.0
     );
+
     new string[128];
-    string[0] = EOS;
     format(string, sizeof(string), DROP_3DTEXT, dropData[did][dName], dropData[did][dCount]);
     dropData[did][d3DText] = CreateDynamic3DTextLabel(string
         , -1
         , dropData[did][dPos][0]
         , dropData[did][dPos][1]
-        , dropData[did][dPos][2]
+        , dropData[did][dPos][2] + 1.0
         , 8.0
     );
     return true;
@@ -218,19 +220,51 @@ stock bool:DropItemsDelete(did) {
     if (dropData[did][dID] != -1 && dropData[did][dExists]) {
         new query[256];
 
-        if (IsValidDynamicObject(dropData[did][dObjectID]))
-            DestroyDynamicObject(dropData[did][dObjectID]);
+        if (IsValidDynamicPickup(dropData[did][dObjectID]))
+            DestroyDynamicPickup(dropData[did][dObjectID]);
 
         if (IsValidDynamic3DTextLabel(dropData[did][d3DText]))
             DestroyDynamic3DTextLabel(dropData[did][d3DText]);
-        
-        mysql_format(get_handle(), query, sizeof(query), "DELETE FROM "DROP_ITEMS_TABLE" WHERE `id` = '%d'", dropData[did][dID]);
+
+        mysql_format(get_handle(), query, sizeof(query), "DELETE FROM " DROP_ITEMS_TABLE " WHERE `id` = '%d'", dropData[did][dID]);
         mysql_tquery(get_handle(), query);
 
         dropData[did][dExists] = false;
         return true;
     }
     return false;
+}
+
+public ClearItemsDrops() {
+    SetTimer("DropItemsWarning1", 0, false);
+    SetTimer("DropItemsWarning2", ONE_MINUTE_MS, false);
+    SetTimer("DoClearItemsDrops", TWO_MINUTES_MS, false);
+    return 1;
+}
+
+public DropItemsWarning1() {
+    SendClientMessageToAll(COLOR_RED, "[!] {FFFFFF}ไอเทมที่ตกพื้นทั้งหมดจะถูกลบใน 2 นาที กรุณาเก็บไอเทมของคุณ");
+    return 1;
+}
+
+public DropItemsWarning2() {
+    SendClientMessageToAll(COLOR_RED, "[!] {FFFFFF}ไอเทมที่ตกพื้นทั้งหมดจะถูกลบใน 1 นาที");
+    return 1;
+}
+
+public DoClearItemsDrops() {
+    for (new i = 0; i < MAX_DROP_ITEMS; i++) {
+        if (IsValidDynamicPickup(dropData[i][dObjectID]))
+            DestroyDynamicPickup(dropData[i][dObjectID]);
+
+        if (IsValidDynamic3DTextLabel(dropData[i][d3DText]))
+            DestroyDynamic3DTextLabel(dropData[i][d3DText]);
+
+        dropData[i][dExists] = false;
+    }
+    mysql_tquery(get_handle(), "TRUNCATE TABLE " DROP_ITEMS_TABLE "");
+    SendClientMessageToAll(COLOR_RED, "[!] {FFFFFF}ไอเทมที่ตกพื้นทั้งหมดถูกลบเรียบร้อยแล้ว");
+    return 1;
 }
 
 stock Equipment(playerid) {
@@ -359,6 +393,7 @@ public OnDropItemsCreated(id) {
 /* ######################################################### */
 
 hook OnGameModeInit() {
+    SetTimer("ClearItemsDrops", ONE_HOUR_MS, true);
     mysql_tquery(get_handle(), "SELECT * FROM "DROP_ITEMS_TABLE"", "OnDropItemsLoad");
     return 1;
 }

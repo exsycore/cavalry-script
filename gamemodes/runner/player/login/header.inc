@@ -54,6 +54,8 @@ enum PLAYER_DATA {
     pRank,
     pGang,
     pGangRank,
+    pEquippedWeaponSlot,
+    pPassport,
 
     // ============================ [INVENTORY] ===============================
 

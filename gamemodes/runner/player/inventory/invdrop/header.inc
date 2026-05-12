@@ -8,6 +8,15 @@
 forward OnDropItemsLoad();   /// Load drop items if having in database
 forward OnDropItemsCreated(id);  /// Create to save in database
 
+forward ClearItemsDrops();
+forward DropItemsWarning1();
+forward DropItemsWarning2();
+forward DoClearItemsDrops();
+
+#define ONE_HOUR_MS     (3600000)
+#define TWO_MINUTES_MS  (120000)
+#define ONE_MINUTE_MS   (60000)
+
 #define MAX_DROP_ITEMS (300)    /// Max drop items can having in server
 #define DROP_ITEMS_TABLE "dropitems"    /// DropItems table name
 

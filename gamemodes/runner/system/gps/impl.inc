@@ -1,5 +1,5 @@
-#if defined _inc_gps_impl
-    #undef _inc_gps_impl
+#if defined _inc_impl
+    #undef _inc_impl
 #endif
 
 #include <YSI_Coding\y_hooks>

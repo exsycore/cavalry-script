@@ -8,3 +8,4 @@
 #include "gps\impl"
 #include "ui\impl"
 #include "carshop\impl"
+#include "pump\impl"

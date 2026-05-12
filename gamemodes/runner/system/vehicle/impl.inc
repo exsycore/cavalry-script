@@ -4,14 +4,22 @@
 
 #include <YSI_Coding\y_hooks>
 
-hook OnPlayerSpawn(playerid) {
-	return true;
+stock LoadPlayerVehicleFromDB(playerid) {
+    new query[128];
+    mysql_format(get_handle(), query, sizeof query,
+        "SELECT * FROM "VEHICLE_TABLE" WHERE `ownerid` = '%d'",
+        playerData[playerid][pID]);
+    mysql_tquery(get_handle(), query, "LoadPlayerVehicle", "i", playerid);
+}
+
+hook OnLoginFinished(playerid) {
+	LoadPlayerVehicleFromDB(playerid);
+	return 1;
 }
 
 hook OnGameModeInit() {
-    mysql_tquery(get_handle(), "SELECT * FROM "VEHICLE_TABLE"", "LoadPlayerVehicle");
-
-	return true;
+	StartAutoDespawnCycle();
+	return 1;
 }
 
 hook OnPlayerEnterVehicle(playerid, vehicleid, ispssenger) {
@@ -46,12 +54,16 @@ hook OnPlayerDisconnect(playerid, reason)
 			}
 		}
 	}
-
+	mysql_tquery(get_handle(), "UPDATE " VEHICLE_TABLE " SET `spawned` = 0, `lock` = 0");
 	return true;
 }
 
 hook OnGameModeExit()
 {
+	if (g_AutoDespawnTimer  != -1) KillTimer(g_AutoDespawnTimer);
+    if (g_WarnTwoMinTimer   != -1) KillTimer(g_WarnTwoMinTimer);
+    if (g_WarnOneMinTimer   != -1) KillTimer(g_WarnOneMinTimer);
+
 	foreach (new p : Player)
 	{
 		foreach (new i : Vehicle)
@@ -71,10 +83,9 @@ hook OnGameModeExit()
 	return true;
 }
 
-hook OnPlayerUpdate(playerid)
+hook OnPlayerSpawn(playerid)
 {
-	SetTimerEx("UpdateFuel", 200, false, "i", playerid);
-
+	SetTimerEx("UpdateFuel", 200, true, "i", playerid);
 	return true;
 }
 
@@ -83,7 +94,12 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
 		if (IsPlayerInAnyVehicle(playerid)) {
 			new id = GetPlayerVehicleID(playerid);
 			if (IsVehicleOwner(playerid, id)) {
-				if (!GetEngineStatus(playerid)) {
+				if (Player.Vehicle[playerid][id][@fuel] <= 0)
+					return SendErrorMessage(playerid, "{FFFFFF}รถของคุณไม่มีน้ำมัน");
+				if (Player.Vehicle[playerid][id][@health] <= DEFAULT_VEHICLE_BROKEN)
+					return SendErrorMessage(playerid, "{FFFFFF}รถของคุณมีความเสียหายมากเกินไป");
+
+				if (!GetEngineStatus(id)) {
 					SetEngineStatus(id, true);
 				} else {
 					SetEngineStatus(id, false);
@@ -100,50 +116,64 @@ public UpdateFuel(playerid) {
 		new
 			vehicleid = GetPlayerVehicleID(playerid),
 			Float:value = floatmul(floatdiv(GetVehicleSpeed(vehicleid), 200.0), 0.01);
+		
+		if (Player.Vehicle[playerid][vehicleid][@health] <= DEFAULT_VEHICLE_BROKEN) {
+			Player.Vehicle[playerid][vehicleid][@health] = DEFAULT_VEHICLE_BROKEN;
+			RepairVehicle(vehicleid);
+			SetVehicleHealth(vehicleid, DEFAULT_VEHICLE_BROKEN);
+			
+			if (GetEngineStatus(vehicleid))
+				SetEngineStatus(vehicleid, false);
+			return 1;
+		}
 
 		if (GetEngineStatus(vehicleid) && IsVehicleOwner(playerid, vehicleid)) {
+
+			new Float:vHealth;
+			GetVehicleHealth(vehicleid, vHealth);
+			Player.Vehicle[playerid][vehicleid][@health] = vHealth;
+
 			if (Player.Vehicle[playerid][vehicleid][@fuel] > 0) {
 				Player.Vehicle[playerid][vehicleid][@fuel] -= value;
 			} else {
 				SetEngineStatus(vehicleid, false);
 				Player.Vehicle[playerid][vehicleid][@fuel] = 0;
 			}
+
+			Query(get_handle(), "UPDATE "VEHICLE_TABLE" SET `health` = '%.2f', `fuel` = '%.2f' WHERE `id` = '%d'"
+				, Player.Vehicle[playerid][vehicleid][@health]
+				, Player.Vehicle[playerid][vehicleid][@fuel]
+				, Player.Vehicle[playerid][vehicleid][@id]);
 		}
 	}
 	return 1;
 }
 
-public LoadPlayerVehicle(playerid)
-{
-	new
-	    rows;
-	cache_get_row_count(rows);
+public LoadPlayerVehicle(playerid) {
+    new rows;
+    cache_get_row_count(rows);
 
-	for (new i = 0; i < rows && i < MAX_PLAYER_VEHICLE; i ++)
-	{
-		Player.Vehicle[playerid][i][@exists] = true;
+    for (new i = 0; i < rows && i < MAX_PLAYER_VEHICLE; i++) {
+        Player.Vehicle[playerid][i][@exists] = true;
 
-		cache_get_value_name_int(i, "id", Player.Vehicle[playerid][i][@id]);
-		cache_get_value_name_int(i, "ownerid", Player.Vehicle[playerid][i][@ownerid]);
-		cache_get_value_name(i, "owner", Player.Vehicle[playerid][i][@owner]);
-		cache_get_value_name(i, "plate", Player.Vehicle[playerid][i][@plate]);
-		cache_get_value_name_int(i, "modelid", Player.Vehicle[playerid][i][@modelid]);
-		cache_get_value_name_int(i, "color1", Player.Vehicle[playerid][i][@color1]);
-		cache_get_value_name_int(i, "color2", Player.Vehicle[playerid][i][@color2]);
-
-		cache_get_value_name_bool(i, "spawned", Player.Vehicle[playerid][i][@spawned]);
-		cache_get_value_name_bool(i, "lock", Player.Vehicle[playerid][i][@lock]);
-
-		cache_get_value_name_float(i, "posx", Player.Vehicle[playerid][i][@posx]);
-		cache_get_value_name_float(i, "posy", Player.Vehicle[playerid][i][@posy]);
-		cache_get_value_name_float(i, "posz", Player.Vehicle[playerid][i][@posz]);
-		cache_get_value_name_float(i, "posa", Player.Vehicle[playerid][i][@posa]);
-		cache_get_value_name_float(i, "fuel", Player.Vehicle[playerid][i][@fuel]);
-		cache_get_value_name_float(i, "health", Player.Vehicle[playerid][i][@health]);
-	}
-	printf("[SYSTEM][DB] %i Vehicle owner loaded.", rows);
-
-	return true;
+        cache_get_value_name_int(i,   "id",      Player.Vehicle[playerid][i][@id]);
+        cache_get_value_name_int(i,   "ownerid", Player.Vehicle[playerid][i][@ownerid]);
+        cache_get_value_name(i,       "owner",   Player.Vehicle[playerid][i][@owner]);
+        cache_get_value_name(i,       "plate",   Player.Vehicle[playerid][i][@plate]);
+        cache_get_value_name_int(i,   "modelid", Player.Vehicle[playerid][i][@modelid]);
+        cache_get_value_name_int(i,   "color1",  Player.Vehicle[playerid][i][@color1]);
+        cache_get_value_name_int(i,   "color2",  Player.Vehicle[playerid][i][@color2]);
+        cache_get_value_name_bool(i,  "spawned", Player.Vehicle[playerid][i][@spawned]);
+        cache_get_value_name_bool(i,  "lock",    Player.Vehicle[playerid][i][@lock]);
+        cache_get_value_name_float(i, "posx",    Player.Vehicle[playerid][i][@posx]);
+        cache_get_value_name_float(i, "posy",    Player.Vehicle[playerid][i][@posy]);
+        cache_get_value_name_float(i, "posz",    Player.Vehicle[playerid][i][@posz]);
+        cache_get_value_name_float(i, "posa",    Player.Vehicle[playerid][i][@posa]);
+        cache_get_value_name_float(i, "fuel",    Player.Vehicle[playerid][i][@fuel]);
+        cache_get_value_name_float(i, "health",  Player.Vehicle[playerid][i][@health]);
+    }
+    printf("[SYSTEM][DB] Player %d — %d vehicle(s) loaded.", playerid, rows);
+    return true;
 }
 
 public SetPlayerVehicle(playerid)
@@ -161,6 +191,53 @@ public SetPlayerVehicle(playerid)
 	}
 
 	return true;
+}
+
+stock StartAutoDespawnCycle() {
+    if (g_AutoDespawnTimer  != -1) KillTimer(g_AutoDespawnTimer);
+    if (g_WarnTwoMinTimer   != -1) KillTimer(g_WarnTwoMinTimer);
+    if (g_WarnOneMinTimer   != -1) KillTimer(g_WarnOneMinTimer);
+
+    g_WarnTwoMinTimer = SetTimer("AutoDespawn_WarnTwoMin",  AUTO_DESPAWN_INTERVAL - WARN_TWO_MIN, false);
+
+    g_WarnOneMinTimer = SetTimer("AutoDespawn_WarnOneMin",  AUTO_DESPAWN_INTERVAL - WARN_ONE_MIN, false);
+
+    g_AutoDespawnTimer = SetTimer("AutoDespawn_Execute",    AUTO_DESPAWN_INTERVAL,                false);
+}
+
+public  AutoDespawn_WarnTwoMin() {
+    SendClientMessageToAll(0xFFAA00FF, "[!] {FFFFFF}รถส่วนตัวทั้งหมดจะถูก Despawn ใน {FF0000}2 นาที {FFFFFF}กรุณาล็อคก่อน!");
+    g_WarnTwoMinTimer = -1;
+}
+
+public  AutoDespawn_WarnOneMin() {
+    SendClientMessageToAll(0xFF5500FF, "[!] {FFFFFF}รถส่วนตัวทั้งหมดจะถูก Despawn ใน {FF0000}1 นาที{FFFFFF}!");
+    g_WarnOneMinTimer = -1;
+}
+
+public  AutoDespawn_Execute() {
+    g_AutoDespawnTimer = -1;
+
+    new count = 0;
+
+    foreach (new p : Player) {
+        foreach (new i : Vehicle) {
+            if (!Player.Vehicle[p][i][@exists])  continue;
+            if (!Player.Vehicle[p][i][@spawned]) continue;
+            if (Player.Vehicle[p][i][@lock]) continue;
+
+            if (strcmp(Player.Vehicle[p][i][@owner], ReturnPlayerName(p)) != 0) continue;
+
+            DespawnVehicleOwner(p, i);
+            count++;
+        }
+    }
+
+    new msg[128];
+    format(msg, sizeof msg, "[!] {FFFFFF}ระบบ Despawn รถส่วนตัวอัตโนมัติ — Despawn รถไปทั้งหมด {FF0000}%d {FFFFFF}คัน", count);
+    SendClientMessageToAll(0xFF0000FF, msg);
+
+    StartAutoDespawnCycle();
 }
 
 stock GetEngineStatus(vehicleid) {
@@ -316,6 +393,55 @@ stock ResetVehicle(playerid, vehicleid)
 stock IsVehicleOwner(playerid, vehicleid)
 {
 	return (Player.Vehicle[playerid][vehicleid][@ownerid] == playerData[playerid][pID]) && (Player.Vehicle[playerid][vehicleid][@ownerid] != 0);
+}
+
+stock GetVehicleOwnerPlayerID(vehicleid)
+{
+    foreach (new p : Player)
+    {
+        foreach (new i : Vehicle)
+        {
+            if (!Player.Vehicle[p][i][@exists])  continue;
+            if (!Player.Vehicle[p][i][@spawned]) continue;
+            if (i == vehicleid) return p;
+        }
+    }
+    return INVALID_PLAYER_ID;
+}
+
+stock AddVehicleFuel(vehicleid, Float:fuel)
+{
+    new ownerid = GetVehicleOwnerPlayerID(vehicleid);
+    if (ownerid == INVALID_PLAYER_ID) return 0;
+
+    Player.Vehicle[ownerid][vehicleid][@fuel] += fuel;
+
+    if (Player.Vehicle[ownerid][vehicleid][@fuel] <= 0.0)
+        Player.Vehicle[ownerid][vehicleid][@fuel] = 0.0;
+
+    if (Player.Vehicle[ownerid][vehicleid][@fuel] >= 100.0)
+        Player.Vehicle[ownerid][vehicleid][@fuel] = 100.0;
+
+    Query(get_handle(), "UPDATE "VEHICLE_TABLE" SET `fuel` = '%.2f' WHERE `id` = '%d'"
+        , Player.Vehicle[ownerid][vehicleid][@fuel]
+        , Player.Vehicle[ownerid][vehicleid][@id]);
+    return 1;
+}
+
+stock GetVehicleFuel(vehicleid)
+{
+    new ownerid = GetVehicleOwnerPlayerID(vehicleid);
+    if (ownerid == INVALID_PLAYER_ID) return -1;
+
+    return floatround(Player.Vehicle[ownerid][vehicleid][@fuel]);
+}
+
+stock Float:GetVehicleFuelF(vehicleid)
+{
+    new ownerid = GetVehicleOwnerPlayerID(vehicleid);
+    if (ownerid == INVALID_PLAYER_ID) return -1.0;
+
+    return Player.Vehicle[ownerid][vehicleid][@fuel];
 }
 
 stock GetLockStatus(vehicleid) {

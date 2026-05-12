@@ -46,7 +46,7 @@ forward OnSelectVehicle(playerid, threadid);
 forward OpenGarageUI(playerid, bool:enable);
 forward RefreshUIGarage(playerid, threadid);
 
-stock LoadGarageUI(playerid) {
+stock CreateGarageUI(playerid) {
     Garage_UI[playerid][0] = CreatePlayerTextDraw(playerid, 188.000, 124.000, "LD_SPAC:white");
     PlayerTextDrawTextSize(playerid, Garage_UI[playerid][0], 269.000, 206.000);
     PlayerTextDrawAlignment(playerid, Garage_UI[playerid][0], 1);
@@ -310,16 +310,16 @@ stock LoadGarageUI(playerid) {
 
 stock DestroyUIGarage(playerid) {
     for (new i = 0; i < 8; i ++) {
-        PlayerTextDrawDestroy(playerid, Garage_Slot[playerid][i]);
+        DestroyPlayerTD(playerid, Garage_Slot[playerid][i]);
     }
 	for (new i = 0; i < 9; i ++) {
-        PlayerTextDrawDestroy(playerid, Garage_UI[playerid][i]);
+        DestroyPlayerTD(playerid, Garage_UI[playerid][i]);
     }
 	for (new i = 0; i < 1; i ++) {
-        PlayerTextDrawDestroy(playerid, close_btn[playerid][i]);
+        DestroyPlayerTD(playerid, close_btn[playerid][i]);
     }
 	for (new i = 0; i < 4; i ++) {
-        PlayerTextDrawDestroy(playerid, Garage_UI_Page[playerid][i]);
+        DestroyPlayerTD(playerid, Garage_UI_Page[playerid][i]);
     }
     return 1;
 }

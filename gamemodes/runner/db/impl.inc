@@ -24,6 +24,7 @@ hook OnGameModeInit() {
 		SendRconCommand("exit");
 		return 1;
 	}
+	mysql_log(ALL);
 
 	SetTimer("InitDB", 100, false);
 	// SendRconCommand("website "SERVER_WEBSITE"");

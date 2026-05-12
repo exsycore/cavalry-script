@@ -4975,7 +4975,7 @@ static ScriptInit()
 
 	if (s_HealthBarBorder == Text:INVALID_TEXT_DRAW) {
 		// printf("(wc) WARN: Unable to create healthbar border textdraw");
-		printf("(wc) EDIT: Server is using a custom healthbar");
+		// printf("(wc) EDIT: Server is using a custom healthbar");
 	} else {
 		s_InternalTextDraw[s_HealthBarBorder] = true;
 
@@ -4989,7 +4989,7 @@ static ScriptInit()
 
 	if (s_HealthBarBackground == Text:INVALID_TEXT_DRAW) {
 		// printf("(wc) WARN: Unable to create healthbar background textdraw");
-		printf("(wc) EDIT: Server is using a custom healthbar background");
+		// printf("(wc) EDIT: Server is using a custom healthbar background");
 	} else {
 		s_InternalTextDraw[s_HealthBarBackground] = true;
 

@@ -185,6 +185,8 @@ stock DauningStreet2(playerid) {
 }
 
 stock bool:ShowInventory(playerid) {
+    DestroyPlayerUI(playerid);
+
     DestroyPlayerTD(playerid, kletka[playerid][0]);
     DestroyPlayerTD(playerid, kletka[playerid][1]);
 
@@ -398,6 +400,7 @@ stock HideInventory(playerid) {
 	SetPVarInt(playerid, "isInventory", 0);
     PlayerTextDrawSetString(playerid, InvTextDraws[playerid][48], "~<~");
     CancelSelectTextDraw(playerid);
+    ShowPlayerUI(playerid);
     return true;
 }
 
@@ -408,9 +411,9 @@ stock bool:DelayedRefreshInv(playerid) {
 }
 
 stock DestroyPlayerTD(playerid, &PlayerText:td) {
-	if (td != PlayerText:INVALID_TEXT_DRAW) {
+	if (td != PlayerText:-1) {
 		PlayerTextDrawDestroy(playerid, td);
-		td = PlayerText:INVALID_TEXT_DRAW;
+		td = PlayerText:-1;
 	}
 	return true;
 }

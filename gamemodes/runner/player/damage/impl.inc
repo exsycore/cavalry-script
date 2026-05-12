@@ -186,6 +186,22 @@ public OnPlayerChangeWeapon(playerid, oldweapon, newweapon) {
             ResetPlayerCustomWeapon(playerid);
         }
     } else {
+        new equippedSlot = playerData[playerid][pEquippedWeaponSlot]; // slot ที่กด use ล่าสุด
+
+        if (equippedSlot >= 0 && equippedSlot < MAX_INVENTORY_SLOTS) {
+            new idx = playerData[playerid][pInventory][equippedSlot];
+            if (idx > 0) {
+                new itemName[128];
+                strmid(itemName, ItemsInfo[idx][ItemName2], 0, sizeof(itemName));
+
+                new cwIndex = FindCustomWeaponByName(itemName);
+                if (cwIndex != -1 && g_WeaponTable[cwIndex][CW_BaseWeaponID] == newweapon) {
+                    SetPlayerCustomWeapon(playerid, cwIndex);
+                    return 1;
+                }
+            }
+        }
+
         for (new i = 0; i < MAX_INVENTORY_SLOTS; i++) {
             new idx = playerData[playerid][pInventory][i];
             if (idx <= 0) continue;

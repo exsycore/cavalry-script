@@ -15,6 +15,7 @@
 #include <crashdetect>      /// crash info for server
 #include <sscanf2>          /// scanf similar c language
 #include <a_mysql>          /// mysql for store data of player to database
+#include <YSF>
 #include <streamer>         /// infinite object
 #include <Pawn.RakNet>      /// client RPC
 #include <sampvoice>        /// voice chat in SA:MP
