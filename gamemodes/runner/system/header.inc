@@ -7,5 +7,6 @@
 #include "atm\header"
 #include "gps\header"
 #include "ui\header"
+#include "actor_newbie\header"
 // #include "carshop\header"
 // #include "pump\header"
