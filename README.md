@@ -1,128 +1,110 @@
 <div align="center">
 
 ```
- ██████╗ █████╗ ██╗   ██╗ █████╗ ██╗     ██████╗ ██╗   ██╗
-██╔════╝██╔══██╗██║   ██║██╔══██╗██║     ██╔══██╗╚██╗ ██╔╝
-██║     ███████║██║   ██║███████║██║     ██████╔╝ ╚████╔╝ 
-██║     ██╔══██║╚██╗ ██╔╝██╔══██║██║     ██╔══██╗  ╚██╔╝  
-╚██████╗██║  ██║ ╚████╔╝ ██║  ██║███████╗██║  ██║   ██║   
- ╚═════╝╚═╝  ╚═╝  ╚═══╝  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝   ╚═╝  
+ ??????? ?????? ???   ??? ?????? ???     ??????? ???   ???
+???????????????????   ??????????????     ???????????? ????
+???     ???????????   ??????????????     ???????? ???????
+???     ???????????? ???????????????     ????????  ?????
+???????????  ??? ??????? ???  ??????????????  ???   ???
+ ??????????  ???  ?????  ???  ??????????????  ???   ???
 ```
 
-**SA:MP Roleplay Gamemode Script**
+<img src="https://img.shields.io/badge/SA%3AMP-0.3.7-c0392b?style=flat-square"/>
+<img src="https://img.shields.io/badge/Language-Pawn-e67e22?style=flat-square"/>
+<img src="https://img.shields.io/badge/Database-MySQL-3498db?style=flat-square"/>
+<img src="https://img.shields.io/badge/Status-In%20Development-f39c12?style=flat-square"/>
+<img src="https://img.shields.io/badge/License-Private-2c3e50?style=flat-square"/>
 
-![SA:MP](https://img.shields.io/badge/SA%3AMP-0.3.7-red?style=for-the-badge&logo=data:image/png;base64,iVBORw0KGgo=)
-![Language](https://img.shields.io/badge/Language-Pawn-orange?style=for-the-badge)
-![License](https://img.shields.io/badge/License-Private-black?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-In%20Development-yellow?style=for-the-badge)
+<br/>
+<sub>A San Andreas Multiplayer roleplay gamemode � built from scratch.</sub>
 
 </div>
 
 ---
 
-## 📋 สารบัญ
+## Overview
 
-- [เกี่ยวกับโปรเจค](#-เกี่ยวกับโปรเจค)
-- [Dependencies](#-dependencies)
-- [ระบบที่มีในเซิร์ฟเวอร์](#-ระบบที่มีในเซิร์ฟเวอร์)
-- [การติดตั้ง](#-การติดตั้ง)
-- [ทีมพัฒนา](#-ทีมพัฒนา)
+**Cavalry** is a full-featured SA:MP roleplay gamemode written in Pawn.  
+Designed with a modular architecture using YSI4, MySQL, and Streamer as its core foundation.
 
 ---
 
-## 🎮 เกี่ยวกับโปรเจค
+## Dependencies
 
-**Cavalry Script** คือ Gamemode สำหรับเซิร์ฟเวอร์ SA:MP แนว Roleplay  
-พัฒนาด้วยภาษา Pawn โดยใช้ระบบ YSI และ MySQL เป็นฐาน
-
----
-
-## 📦 Dependencies
-
-| Library | รายละเอียด |
-|---|---|
-| [YSI](https://github.com/pawn-lang/YSI-Includes) | Hooks, Iterators, Inline callbacks |
-| [mysql-plugin](https://github.com/pBlueG/SA-MP-MySQL) | ระบบฐานข้อมูล MySQL |
-| [sscanf2](https://github.com/Y-Less/sscanf) | Parse command parameters |
-| [streamer](https://github.com/samp-incognito/samp-streamer-plugin) | Dynamic objects / areas |
+| Package | Version | Purpose |
+|---|---|---|
+| [YSI](https://github.com/pawn-lang/YSI-Includes) | latest | Hooks / Iterators / Inline callbacks |
+| [mysql-plugin](https://github.com/pBlueG/SA-MP-MySQL) | R41-4 | Database layer |
+| [sscanf2](https://github.com/Y-Less/sscanf) | latest | Command parameter parsing |
+| [streamer](https://github.com/samp-incognito/samp-streamer-plugin) | 2.9.4 | Dynamic objects / areas / labels |
+| .. etc
 
 ---
 
-## ⚙️ ระบบที่มีในเซิร์ฟเวอร์
+## Systems
 
-### 🚗 ระบบยานพาหนะ
-- [x] ซื้อ/ขายรถ (Dealership)
-- [x] เรียกรถ / เก็บรถ / กู้คืนรถ
-- [x] ล็อก / ปลดล็อกรถ
-- [x] เปลี่ยนป้ายทะเบียน
-- [x] บันทึก Mods / สีรถ
-- [x] สตาร์ท / ดับเครื่องยนต์
+### Vehicle
+- [x] Dealership � buy & sell vehicles
+- [ ] Spawn / Store / Recover
+- [x] Lock & Unlock
+- [x] Number plate customization
+- [x] Mod & color persistence
+- [x] Engine toggle
 
-### 👤 ระบบผู้เล่น
-- [ ] ระบบลงทะเบียน / เข้าสู่ระบบ
-- [ ] ระบบตัวละคร
-- [ ] ระบบ Inventory
-- [ ] ระบบสกิล / Stat
+### Player
+- [x] Registration & Login
+- [ ] Character system
+- [x] Inventory
+- [x] Stats & Skills
 
-### 💼 ระบบอาชีพ
-- [ ] <!-- ใส่อาชีพที่มีในเซิร์ฟ -->
-- [ ] <!-- ใส่อาชีพที่มีในเซิร์ฟ -->
-- [ ] <!-- ใส่อาชีพที่มีในเซิร์ฟ -->
+### Jobs
+- [ ] `<!-- add job name -->`
+- [ ] `<!-- add job name -->`
+- [ ] `<!-- add job name -->`
 
-### 🏢 ระบบองค์กร / แก๊ง
-- [ ] <!-- ใส่ระบบองค์กรที่มีในเซิร์ฟ -->
-- [ ] <!-- ใส่ระบบแก๊งที่มีในเซิร์ฟ -->
+### Faction & Gang
+- [ ] `<!-- add faction -->`
+- [ ] `<!-- add gang -->`
 
-### 🏠 ระบบอสังหาริมทรัพย์
-- [ ] ซื้อ/ขายบ้าน
-- [ ] ซื้อ/ขายธุรกิจ
+### Property
+- [ ] House ownership
+- [ ] Business ownership
 
-### 💰 ระบบเศรษฐกิจ
-- [ ] ระบบธนาคาร
-- [ ] ระบบ ATM
-- [ ] <!-- ใส่ระบบเศรษฐกิจที่มีในเซิร์ฟ -->
+### Economy
+- [ ] Bank system
+- [ ] ATM
+- [ ] `<!-- add economy system -->`
 
-### 🛠️ ระบบ Admin
-- [x] จัดการ Vehicle Spots (Spawn / Store / Recover)
-- [ ] <!-- ใส่ระบบ admin เพิ่มเติม -->
+### Admin
+- [x] Vehicle spot management (Spawn / Store / Recover)
+- [ ] `<!-- add admin system -->`
 
 ---
 
-## 🚀 การติดตั้ง
+## Installation
 
 ```bash
-# 1. Clone โปรเจค
+# Clone the repository
 git clone https://github.com/exsycore/cavalry-script.git
+cd cavalry-script
 
-# 3. แก้ไขค่าใน config
+# Configure credentials
 nano gamemodes/config.inc
 
-# 4. Compile และรัน
+# Compile & run
 samp-server
 ```
-
-### ⚙️ ตั้งค่า Database (`mysql.ini`)
-
-```pawn
-#define DB_HOST     "localhost"
-#define DB_USER     "root"
-#define DB_PASS     "root"
-#define DB_NAME     "sampsvr"
-```
-
 ---
 
-## 👥 ทีมพัฒนา
+## Team
 
-| ชื่อ | บทบาท |
+| Username | Role |
 |---|---|
-| exsycore | Lead Developer |
-| MeenCore | Developer |
+| [exsycore](https://github.com/exsycore) | Lead Developer |
+| [MeenCore](https://github.com/MeenCore) | Developer |
 
 ---
 
 <div align="center">
-
-**Cavalry Script** © 2025 — Private Repository
-
+<sub>CAVALRY � Private Repository � All rights reserved.</sub>
 </div>
