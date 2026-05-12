@@ -148,6 +148,8 @@ stock LoadPlayerData(playerid) {
 	cache_get_value_name_int(0, "playerGang", playerData[playerid][pGang]);
 	cache_get_value_name_int(0, "playerGangRank", playerData[playerid][pGangRank]);
 	cache_get_value_name_int(0, "playerPassport", playerData[playerid][pPassport]);
+	cache_get_value_name_int(0, "playerGiftbox", playerData[playerid][pGiftbox]);
+	cache_get_value_name_int(0, "playerGiftbox2", playerData[playerid][pGiftbox2]);
 
 	// ================================== INVENTORY ======================================
 	cache_get_value_name_float(0, "InvPos_X", playerData[playerid][pInvPos_X]);
@@ -229,6 +231,8 @@ stock UpdatePlayerData(playerid) {
 	acc_int_strcat(query, sizeof(query), "playerGang", playerData[playerid][pGang]);
 	acc_int_strcat(query, sizeof(query), "playerGangRank", playerData[playerid][pGangRank]);
 	acc_int_strcat(query, sizeof(query), "playerPassport", playerData[playerid][pPassport]);
+	acc_int_strcat(query, sizeof(query), "playerGiftbox", playerData[playerid][pGiftbox]);
+	acc_int_strcat(query, sizeof(query), "playerGiftbox2", playerData[playerid][pGiftbox2]);
 
 	// ================================== INVENTORY ======================================
 	acc_float_strcat(query, sizeof(query), "InvPos_X", playerData[playerid][pInvPos_X]);
@@ -257,10 +261,10 @@ stock accountCreate(playerid, const hash[]) {
 	"INSERT INTO "PLAYER_TABLE" \
 	(`playerName`, `playerPassword`, `playerRegDate`, `Skin`, `pPosX`, `pPosY`, `pPosZ`, `pPosA`, `playerHealth`, `playerArmour`\
 	,`playerExp`, `playerLevel`, `playerGender`, `playerHungry`, `playerThirsty`, `playerInDeath`, `playerInjuredTime`, `playerFaction`\
-	,`playerRank`, `playerMoney`, `playerRedMoney`, `playerBank`, `playerPassport`) \
+	,`playerRank`, `playerMoney`, `playerRedMoney`, `playerBank`, `playerPassport`, `playerGiftbox`, `playerGiftbox2`) \
 	VALUES \
 	('%e', '%e', '%e', '%d', '%.2f', '%.2f', '%.2f', '%.2f', '%.2f', '%.2f', '%.2f', '%i', '%i', '%.2f', '%.2f', '%d', '%d', '%d', '%d',\
-	'%d', '%d', '%d', '%d')"
+	'%d', '%d', '%d', '%d', '%d', '%d')"
 		, GetPlayerNameEx(playerid)
 		, hash
 		, ReturnDate()
@@ -284,6 +288,8 @@ stock accountCreate(playerid, const hash[]) {
 		, DEFAULT_RED_MONEY
 		, DEFAULT_PLAYER_BANK
 		, DEFAULT_PLAYER_PASSPORT
+		, DEFAULT_PLAYER_GIFTBOX
+		, DEFAULT_PLAYER_GIFTBOX2
 	);
 	mysql_tquery(get_handle(), query, "OnPlayerRegister", "d", playerid);
 	return 1;

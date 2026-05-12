@@ -7,18 +7,18 @@
 // สามารถเปิดใช้งานเวลา Test กันตัวเองด้วยเน็ตเดียวกันได้
 #define DISABLE_ANTICHEAT
 
-#define SERVER_NAME 	"Cavalry City | Beta"
-#define	SERVER_MODE		"RP"
+#define SERVER_NAME 	"[SA:MP] Cavalry City | Pre-Beta"
+#define	SERVER_MODE		"Roleplay"
 #define SERVER_LANGUAGE "Thai"
 #define SERVER_WEBSITE  "-"
 #define SERVER_COLOUR 	(0xF73E24FF)
 
-#define DEFAULT_POS_X (2442.9402)
-#define DEFAULT_POS_Y (1423.5302)
-#define DEFAULT_POS_Z (10.8280)
-#define DEFAULT_POS_A (269.6547)
+#define DEFAULT_POS_X (2845.8337)
+#define DEFAULT_POS_Y (2415.3398)
+#define DEFAULT_POS_Z (11.0690)
+#define DEFAULT_POS_A (225.4016)
 
-#define DEFAULT_MONEY 		(2000)
+#define DEFAULT_MONEY 		(0)
 #define DEFAULT_RED_MONEY	(0)
 #define DEFAULT_PLAYER_BANK	(0)
 
@@ -43,6 +43,9 @@
 #define DEFAULT_PLAYER_RANK (0)
 
 #define DEFAULT_PLAYER_PASSPORT (0)
+
+#define DEFAULT_PLAYER_GIFTBOX (0)
+#define DEFAULT_PLAYER_GIFTBOX2 (0)
 
 // ===================================================================================
 

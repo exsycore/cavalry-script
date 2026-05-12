@@ -89,7 +89,10 @@ enum PLAYER_DATA {
     pDopKletki,
     pTrashOpen,
     pProstoTak2,
-	pProstoTak
+	pProstoTak,
+
+    pGiftbox,
+    pGiftbox2,
 
     // =========================================================================
 };
