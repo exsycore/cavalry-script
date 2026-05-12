@@ -1766,6 +1766,17 @@ stock _GiveWeaponFromItem(playerid, itemIndex, slot) {
 	return 1;
 }
 
+stock AddItemByName(playerid, const name[], val) {
+	if (!playerData[playerid][IsLoggedIn]) return 1;
+	for (new s = 0; s < MAX_ITEMS; s++) {
+		if (!strcmp(ItemsInfo[s][ItemName2], name, true)) {
+			AddItem(playerid, s, val);
+			continue;
+		}
+	}
+	return 1;
+}
+
 hook OnPlayerUpdate(playerid) {
     if (!playerData[playerid][IsLoggedIn]) return 1;
 

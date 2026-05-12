@@ -53,9 +53,9 @@ public Giftbox(playerid) {
 				SendPlayerAction(playerid, "คุณได้รับเงินจำนวน $%d บาท", DEFAULT_MONEY_GIFTBOX);
 				SendPlayerAction(playerid, "คุณได้รับเบอร์เกอร์ไก่ จำนวน %d ชิ้น", DEFAULT_ITEM_GIFTBOX);
 				SendPlayerAction(playerid, "คุณได้รับเป๊ปซี่ จำนวน %d ชิ้น", DEFAULT_ITEM_GIFTBOX);
-
-                AddItem(playerid, 2768, DEFAULT_ITEM_GIFTBOX);
-                AddItem(playerid, 2647, DEFAULT_ITEM_GIFTBOX);
+                
+                AddItemByName(playerid, "เบอร์เกอร์ไก่", DEFAULT_ITEM_GIFTBOX);
+                AddItemByName(playerid, "เป๊ปซี่", DEFAULT_ITEM_GIFTBOX);
 
                 GivePlayerMoneyEx(playerid, DEFAULT_MONEY_GIFTBOX);
 			
