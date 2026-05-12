@@ -5,3 +5,4 @@
 #include <mapfix>
 
 #include "closegarage\impl"
+#include "cardealer\impl"
