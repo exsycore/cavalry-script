@@ -9,5 +9,6 @@
 #include "ui\impl"
 #include "actor_newbie\impl"
 #include "busk\impl"
+#include "wheelchair\impl"
 // #include "carshop\impl"
 // #include "pump\impl"

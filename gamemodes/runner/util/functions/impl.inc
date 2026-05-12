@@ -139,6 +139,16 @@ stock FormatNumber(number) {
 	return value;
 }
 
+stock SetPlayerForwardVelocity(playerid, Float:Velocity, Float:Z) {
+    new Float:Angle;
+    new Float:SpeedX, Float:SpeedY;
+    GetPlayerFacingAngle(playerid, Angle);
+    SpeedX = floatsin(-Angle, degrees);
+    SpeedY = floatcos(-Angle, degrees);
+    SetPlayerVelocity(playerid, floatmul(Velocity, SpeedX), floatmul(Velocity, SpeedY), Z);
+    return 1;
+}
+
 stock RemovePlayerWeapon(playerid, weaponid) {
 	new plyWeapons[12];
 	new plyAmmo[12];

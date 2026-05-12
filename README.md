@@ -50,12 +50,14 @@ Designed with a modular architecture using YSI4, MySQL, and Streamer as its core
 - [x] Number plate customization
 - [x] Mod & color persistence
 - [x] Engine toggle
+- [x] Wheelchair
 
 ### Player
 - [x] Registration & Login
 - [ ] Character system
 - [x] Inventory
 - [x] Stats & Skills
+- [x] FallJump
 - [x] Giftbox Player
 - [x] Open Busk
 
