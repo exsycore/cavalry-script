@@ -61,14 +61,14 @@ public Giftbox(playerid) {
 			
 				playerData[playerid][pGiftbox] = 1;
 
-                /*inline ShowOnlyGiftbox(res, list, string:in[]) {
-                    //#pragma unused in
-                    if (!res) @return 1;
+                inline ShowOnlyGiftt(_res, _list, string:_in[]) {
+                    #pragma unused _res, _list, _in
+                    @return 1;
                 }
-				Dialog_ShowCallback(playerid, using inline ShowOnlyGiftbox, DIALOG_STYLE_LIST, "รับของขวัญเด็กใหม่",
-				"{FFFFFF}คุณได้รับเงิน {009900}$2000 บาท\n\
-				{FFFFFF}ขนมปัง {FF0099}+10\n\
-				{FFFFFF}น้ำเปล่า {66FFFF}+10", "ตกลง", "ปิด");*/
+                Dialog_ShowCallback(playerid, using inline ShowOnlyGiftt, DIALOG_STYLE_LIST, "รับของขวัญเด็กใหม่",
+                    "{FFFFFF}คุณได้รับเงิน {009900}$2000 บาท\n\
+                    {FFFFFF}ขนมปัง {FF0099}+10\n\
+                    {FFFFFF}น้ำเปล่า {66FFFF}+10", "ตกลง", "ปิด");
 
 				//PlayAudioStreamForPlayer(playerid, "http://45.83.207.32/music/giftbox.mp3", 2594.2402,1889.6318,11.0234, 10.0, 1);
             }

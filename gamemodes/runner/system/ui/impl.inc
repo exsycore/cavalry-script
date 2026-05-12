@@ -342,8 +342,13 @@ stock CreatePlayerUI(playerid) {
     PlayerTextDrawSetSelectable(playerid, ui_thirsty_percent[playerid], 0);
 
     ui_progress_xp[playerid] = CreatePlayerProgressBar(playerid, 570.000000, 397.000000, 53.500000, 5.500000, 329251071, 100.000000, 0);
+    SetPlayerProgressBarBgColour(playerid, ui_progress_xp[playerid], 0xFFFFFFFF, true);
+
     ui_progress_hungry[playerid] = CreatePlayerProgressBar(playerid, 570.000000, 411.000000, 53.500000, 5.500000, -175567361, 100.000000, 0);
+    SetPlayerProgressBarBgColour(playerid, ui_progress_hungry[playerid], 0xFFFFFFFF, true);
+
     ui_progress_thirsty[playerid] = CreatePlayerProgressBar(playerid, 570.000000, 427.000000, 53.500000, 5.500000, 549318911, 100.000000, 0);
+    SetPlayerProgressBarBgColour(playerid, ui_progress_thirsty[playerid], 0xFFFFFFFF, true);
     
     SetPlayerProgressBarValue(playerid, ui_progress_xp[playerid],      100.0);
     SetPlayerProgressBarValue(playerid, ui_progress_hungry[playerid],   100.0);

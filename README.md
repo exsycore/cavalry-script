@@ -56,6 +56,8 @@ Designed with a modular architecture using YSI4, MySQL, and Streamer as its core
 - [ ] Character system
 - [x] Inventory
 - [x] Stats & Skills
+- [x] Giftbox Player
+- [x] Open Busk
 
 ### Jobs
 - [ ] `<!-- add job name -->`

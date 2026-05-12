@@ -100,6 +100,45 @@ stock HexToInt(const str[]) {
     return result;
 }
 
+stock FormatMoney(number, const prefix[] = "$") {
+	new
+		value[32],
+		length;
+
+	format(value, sizeof(value), "%d", (number < 0) ? (-number) : (number));
+
+	if ((length = strlen(value)) > 3) {
+		for (new i = length, l = 0; -- i >= 0; ++ l) {
+		    if ((l > 0) && (l % 3 == 0)) strins(value, ",", i + 1);
+		}
+	}
+	if (prefix[0] != 0)
+	    strins(value, prefix, 0);
+
+	if (number < 0)
+		strins(value, "-", 0);
+
+	return value;
+}
+
+stock FormatNumber(number) {
+	static
+		value[32],
+		length;
+
+	format(value, sizeof(value), "%d", (number < 0) ? (-number) : (number));
+
+	if ((length = strlen(value)) > 3) {
+		for (new i = length, l = 0; --i >= 0; l ++) {
+		    if ((l > 0) && (l % 3 == 0)) strins(value, ",", i + 1);
+		}
+	}
+	if (number < 0)
+		strins(value, "-", 0);
+
+	return value;
+}
+
 stock RemovePlayerWeapon(playerid, weaponid) {
 	new plyWeapons[12];
 	new plyAmmo[12];
