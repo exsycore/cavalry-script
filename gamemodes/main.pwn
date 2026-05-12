@@ -7,7 +7,7 @@
 #define YSI_NO_MODE_CACHE
 #define YSI_NO_OPTIMISATION_MESSAGE
 
-#include <a_samp>           /// SA-MP included EasyCore
+#include <a_samp>           /// SA-MP included EasyCore 123
 
 #undef MAX_PLAYERS
 #define MAX_PLAYERS (2)
