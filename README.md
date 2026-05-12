@@ -37,7 +37,7 @@ Designed with a modular architecture using YSI4, MySQL, and Streamer as its core
 | [mysql-plugin](https://github.com/pBlueG/SA-MP-MySQL) | R41-4 | Database layer |
 | [sscanf2](https://github.com/Y-Less/sscanf) | latest | Command parameter parsing |
 | [streamer](https://github.com/samp-incognito/samp-streamer-plugin) | 2.9.4 | Dynamic objects / areas / labels |
-| .. etc
+| .. etc ...
 
 ---
 
