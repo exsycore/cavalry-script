@@ -3,7 +3,7 @@ name: Discord Commit Notify
 on:
   push:
     branches:
-      - main
+      - '*'
 
 jobs:
   notify:
