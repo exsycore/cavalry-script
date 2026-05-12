@@ -12,3 +12,4 @@
 #include "chat\impl"
 #include "faction\impl"
 #include "gangs\impl"
+#include "falljump\impl"

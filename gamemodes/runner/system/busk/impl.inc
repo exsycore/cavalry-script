@@ -32,7 +32,7 @@ hook OnPlayerConnect(playerid) {
     busketZ[playerid] = 0.0;
     busketMoney[playerid] = 0;
     busketStats[playerid] = false;
-	return true;
+	return 1;
 }
 
 hook OnPlayerDisconnect(playerid, reason) {
@@ -49,7 +49,7 @@ hook OnPlayerDisconnect(playerid, reason) {
 		busketMoney[playerid] = 0;
 		busketStats[playerid] = false;
     }
-	return true;
+	return 1;
 }
 
 YCMD:busk(playerid, const params[], help) {
@@ -68,7 +68,7 @@ YCMD:busk(playerid, const params[], help) {
         format(str, sizeof(str), "%s\n{00ff00}$0\n{ffffff}กด {00ff00}'N'{ffffff} เพื่อให้เงิน", ReturnPlayerName(playerid));
 		busket3DText[playerid] = CreateDynamic3DTextLabel(str, -1, busketX[playerid], busketY[playerid], busketZ[playerid], 10.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, -1, -1, -1, 10.0);
 	} else return SendErrorMessage(playerid, "คุณได้วางหมวกแล้ว!");
-	return true;
+	return 1;
 }
 
 hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
@@ -77,11 +77,11 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
 			owner = CheckPlayerOwnerBusket(playerid),
 			str[512];
 
-		if (owner == -1) return true;
+		if (owner == -1) return 1;
 
 		if (owner == playerid) {
 			if (!IsPlayerInRangeOfPoint(playerid, 2.0, busketX[playerid], busketY[playerid], busketZ[playerid]))
-				return true;
+				return 1;
 
 			format(str, sizeof(str),
 				"{ffffff}เงินในหมวก\t{1BF909}%s\n\
@@ -92,14 +92,14 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
 			inline const BusketMain(pid, dialogid, response, listitem, string:inputtext[]) {
 				#pragma unused pid, dialogid, inputtext
 
-				if (!response) return true;
+				if (!response) return 1;
 
 				switch (listitem) {
 					case 1: { // เก็บเงิน
 						if (busketMoney[playerid] <= 0) {
 							inline const Msg(pids, dialogids, responses, listitems, string:inputtexts[]) {
 								#pragma unused pids, dialogids, listitems, inputtexts
-								if (!responses) return true;
+								if (!responses) return 1;
 							}
 							return Dialog_ShowCallback(playerid, using inline Msg,
 								DIALOG_STYLE_MSGBOX,
@@ -120,7 +120,7 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
 
 						inline const Msg2(pids, dialogids, responses, listitems, string:inputtexts[]) {
 							#pragma unused pids, dialogids, listitems, inputtexts
-							if (!responses) return true;
+							if (!responses) return 1;
 						}
 						Dialog_ShowCallback(playerid, using inline Msg2,
 							DIALOG_STYLE_MSGBOX,
@@ -153,7 +153,7 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
 						busketStats[playerid] = false;
 					}
 				}
-				return true;
+				return 1;
 			}
 			Dialog_ShowCallback(playerid, using inline BusketMain,
 				DIALOG_STYLE_TABLIST,
@@ -163,7 +163,7 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
 			);
 		} else {
 			if (!IsPlayerInRangeOfPoint(playerid, 2.0, busketX[owner], busketY[owner], busketZ[owner]))
-				return true;
+				return 1;
 
 			format(str, sizeof(str),
 				"{ffffff}กรอกเงินที่ต้องการให้\n\
@@ -175,7 +175,7 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
 			inline const GiveMoney(pid, dialogid, response, listitem, string:inputtext[]) {
 				#pragma unused pid, dialogid, listitem
 
-				if (!response) return true;
+				if (!response) return 1;
 
 				new money = strval(inputtext);
 				new target = CheckPlayerOwnerBusket(playerid);
@@ -183,7 +183,7 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
 				if (money <= 0 || money > 1000) {
 					inline const Msg(pids, dialogids, responses, listitems, string:inputtexts[]) {
 						#pragma unused pids, dialogids, listitems, inputtexts
-						if (!responses) return true;
+						if (!responses) return 1;
 					}
 					return Dialog_ShowCallback(playerid, using inline Msg,
 						DIALOG_STYLE_MSGBOX,
@@ -195,7 +195,7 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
 				if (money > GetPlayerMoneyEx(playerid)) {
 					inline const Msg2(pids, dialogids, responses, listitems, string:inputtexts[]) {
 						#pragma unused pids, dialogids, listitems, inputtexts
-						if (!responses) return true;
+						if (!responses) return 1;
 					}
 					return Dialog_ShowCallback(playerid, using inline Msg2,
 						DIALOG_STYLE_MSGBOX,
@@ -205,14 +205,14 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
 					);
 				}
 
-				if (target == -1) return true;
+				if (target == -1) return 1;
 
 				GivePlayerMoneyEx(playerid, -money);
 				busketMoney[target] += money;
 
 				inline const Done(pids, dialogids, responses, listitems, string:inputtexts[]) {
 					#pragma unused pids, dialogids, listitems, inputtexts
-					if (!responses) return true;
+					if (!responses) return 1;
 				}
 				Dialog_ShowCallback(playerid, using inline Done,
 					DIALOG_STYLE_MSGBOX,
@@ -229,7 +229,7 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
 				);
 
 				UpdateDynamic3DTextLabelText(busket3DText[target], 0xFFFFFFFF, msg);
-				return true;
+				return 1;
 			}
 
 			Dialog_ShowCallback(playerid, using inline GiveMoney,
@@ -240,5 +240,5 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
 			);
 		}
 	}
-    return true;
+    return 1;
 }
