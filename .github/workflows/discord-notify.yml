@@ -36,7 +36,7 @@ jobs:
                -d '{
                  "embeds": [{
                    "title": "PR Merged",
-                   "description": "**[${{ github.event.pull_request.title }}](${{ github.event.pull_request.html_url }})**\n**from:** `${{ github.head_ref }}` ? `${{ github.base_ref }}`\n**by:** ${{ github.actor }}",
+                   "description": "**[${{ github.event.pull_request.title }}](${{ github.event.pull_request.html_url }})**\n**from:** `${{ github.head_ref }}` -> `${{ github.base_ref }}`\n**by:** ${{ github.actor }}",
                    "color": 5763719
                  }]
                }' \
