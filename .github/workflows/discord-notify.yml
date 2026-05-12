@@ -1,113 +1,43 @@
+# .github/workflows/discord-notify.yml
 name: Discord Notify
 
 on:
   push:
     branches:
-      - '*'
+      - '**'          # ·Ø¡ branch
   pull_request:
-    types: [opened, closed, reopened]
-    branches:
-      - master
+    types:
+      - closed        # ´Ñ¡ event µÍ¹ PR ¶Ù¡»Ô´ (ÃÇÁ merge)
 
 jobs:
-  notify:
+  notify-push:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-      - name: Push Notification
-        if: github.event_name == 'push'
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      - name: Notify push
         run: |
-          BRANCH="${{ github.ref_name }}"
-          if [ "$BRANCH" = "master" ]; then
-            COLOR=5763719
-            TITLE="Push to MASTER"
-          else
-            COLOR=3447003
-            TITLE="Push to branch: $BRANCH"
-          fi
-
           curl -H "Content-Type: application/json" \
-          -d "{
-            \"embeds\": [{
-              \"title\": \"$TITLE\",
-              \"description\": \"**${{ github.actor }}** pushed to \`$BRANCH\`\n\n\`\`\`${{ github.event.head_commit.message }}\`\`\`\",
-              \"color\": $COLOR,
-              \"fields\": [
-                {
-                  \"name\": \"Commit\",
-                  \"value\": \"[\`${GITHUB_SHA::7}\`](${{ github.event.head_commit.url }})\",
-                  \"inline\": true
-                },
-                {
-                  \"name\": \"Branch\",
-                  \"value\": \"\`$BRANCH\`\",
-                  \"inline\": true
-                },
-                {
-                  \"name\": \"Repo\",
-                  \"value\": \"\`${{ github.repository }}\`\",
-                  \"inline\": true
-                }
-              ]
-            }]
-          }" \
-          $DISCORD_WEBHOOK
+               -d '{
+                 "embeds": [{
+                   "title": "Push new",
+                   "description": "**Repo:** ${{ github.repository }}\n**Branch:** `${{ github.ref_name }}`\n**by:** ${{ github.actor }}\n**Commit:** [`${{ github.sha }}`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})",
+                   "color": 3447003
+                 }]
+               }' \
+               ${{ secrets.DISCORD_WEBHOOK }}
 
-      - name: Pull Request Notification
-        if: github.event_name == 'pull_request'
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+  notify-pr-merged:
+    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify PR merged
         run: |
-          PR_ACTION="${{ github.event.action }}"
-          IS_MERGED="${{ github.event.pull_request.merged }}"
-
-          if [ "$IS_MERGED" = "true" ]; then
-            COLOR=5763719
-            TITLE="Merged PR â†’ master"
-            STATUS="Merged"
-          elif [ "$PR_ACTION" = "opened" ]; then
-            COLOR=16776960
-            TITLE="New Pull Request â†’ master"
-            STATUS="Opened"
-          elif [ "$PR_ACTION" = "reopened" ]; then
-            COLOR=16753920
-            TITLE="PR Reopened â†’ master"
-            STATUS="Reopened"
-          elif [ "$PR_ACTION" = "closed" ]; then
-            COLOR=15548997
-            TITLE="PR Closed (not merged)"
-            STATUS="Closed"
-          fi
-
           curl -H "Content-Type: application/json" \
-          -d "{
-            \"embeds\": [{
-              \"title\": \"$TITLE\",
-              \"description\": \"${{ github.event.pull_request.title }}\",
-              \"color\": $COLOR,
-              \"fields\": [
-                {
-                  \"name\": \"Status\",
-                  \"value\": \"$STATUS\",
-                  \"inline\": true
-                },
-                {
-                  \"name\": \"by\",
-                  \"value\": \"\`${{ github.actor }}\`\",
-                  \"inline\": true
-                },
-                {
-                  \"name\": \"Branch\",
-                  \"value\": \"\`${{ github.event.pull_request.head.ref }}\` â†’ \`master\`\",
-                  \"inline\": false
-                },
-                {
-                  \"name\": \"Link\",
-                  \"value\": \"[Pull Request](${{ github.event.pull_request.html_url }})\",
-                  \"inline\": false
-                }
-              ]
-            }]
-          }" \
-          $DISCORD_WEBHOOK
+               -d '{
+                 "embeds": [{
+                   "title": "PR Merged",
+                   "description": "**[${{ github.event.pull_request.title }}](${{ github.event.pull_request.html_url }})**\n**from:** `${{ github.head_ref }}` ? `${{ github.base_ref }}`\n**by:** ${{ github.actor }}",
+                   "color": 5763719
+                 }]
+               }' \
+               ${{ secrets.DISCORD_WEBHOOK }}
