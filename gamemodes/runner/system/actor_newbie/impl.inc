@@ -25,16 +25,8 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
 public Giftbox(playerid) {
     new string2[356], string3[356], body[256];
 
-	if (playerData[playerid][pGiftbox] == 0) {
-        format(string2, sizeof(string2), "{FF6600}ยังไม่ได้รับ");
-	} else {
-	    format(string2, sizeof(string2), "{33FF00}รับไปแล้ว");
-	}
-	if (playerData[playerid][pGiftbox2] == 0) {
-        format(string3, sizeof(string3), "{FF6600}ยังไม่ได้รับ");
-	} else {
-	    format(string3, sizeof(string3), "{33FF00}รับไปแล้ว");
-	}
+    format(string2, sizeof(string2), "%s", (playerData[playerid][pGiftbox] == 0) ? "{FF6600}ยังไม่ได้รับ" : "{33FF00}รับไปแล้ว");
+    format(string2, sizeof(string2), "%s", (playerData[playerid][pGiftbox2] == 0) ? "{FF6600}ยังไม่ได้รับ" : "{33FF00}รับไปแล้ว");
 
     format(body, sizeof(body),
         "{FFFFFF}รับของจากลุงเริง\t\t%s\n\
