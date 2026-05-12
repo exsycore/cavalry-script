@@ -153,6 +153,8 @@ CREATE TABLE IF NOT EXISTS `players` (
   `playerRank` int(11) NOT NULL DEFAULT 0,
   `playerGang` int(11) NOT NULL DEFAULT -1,
   `playerGangRank` int(11) NOT NULL DEFAULT 0,
+  `playerGiftbox` int(11) NOT NULL DEFAULT 0,
+  `playerGiftbox2` int(11) NOT NULL DEFAULT 0,
   `pPosX` float NOT NULL,
   `pPosY` float NOT NULL,
   `pPosZ` float NOT NULL,
