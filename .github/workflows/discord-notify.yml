@@ -16,7 +16,7 @@ jobs:
           curl -H "Content-Type: application/json" \
           -d '{
             "embeds": [{
-              "title": "?? New Commit - ${{ github.repository }}",
+              "title": "[!] New Commit - ${{ github.repository }}",
               "description": "**${{ github.actor }}** pushed to `${{ github.ref_name }}`\n\n${{ github.event.head_commit.message }}",
               "color": 3066993,
               "fields": [
