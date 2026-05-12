@@ -26,7 +26,7 @@ public Giftbox(playerid) {
     new string2[356], string3[356], body[256];
 
     format(string2, sizeof(string2), "%s", (playerData[playerid][pGiftbox] == 0) ? "{FF6600}ยังไม่ได้รับ" : "{33FF00}รับไปแล้ว");
-    format(string2, sizeof(string2), "%s", (playerData[playerid][pGiftbox2] == 0) ? "{FF6600}ยังไม่ได้รับ" : "{33FF00}รับไปแล้ว");
+    format(string3, sizeof(string3), "%s", (playerData[playerid][pGiftbox2] == 0) ? "{FF6600}ยังไม่ได้รับ" : "{33FF00}รับไปแล้ว");
 
     format(body, sizeof(body),
         "{FFFFFF}รับของจากลุงเริง\t\t%s\n\
