@@ -304,28 +304,6 @@ YCMD:adminmenu(playerid, string:params[], help) {
                             Command_ReProcess(playerid, "/itemsinfo", 0);
                         }
                         case 9: {
-                            inline InputGiveCar(res3, list3, string:in3[]) {
-                                #pragma unused list3
-                                if (!res3) @return Command_ReProcess(playerid, "/adminmenu", 0);
-
-                                new userId, model, c1, c2;
-                                if (sscanf(in3, "uddd", userId, model, c1, c2)) {
-                                    SendErrorMessage(playerid, "{FFFFFF}รูปแบบไม่ถูกต้อง เช่น: 0 522 2 2");
-                                    @return Command_ReProcess(playerid, "/adminmenu", 0);
-                                }
-                                new str[64];
-                                format(str, sizeof str, "/givecar %d %d %d %d", userId, model, c1, c2);
-                                Command_ReProcess(playerid, str, 0);
-                            }
-                            Dialog_ShowCallback(playerid, using inline InputGiveCar, DIALOG_STYLE_INPUT,
-                                "{FFFFFF}เสกรถเข้าตัว",
-                                "{FFFFFF}กรอก: {FFFF00}[ไอดี] [ไอดีรถ] [สี1] [สี2]\n{AAAAAA}ตัวอย่าง: 0 522 2 2",
-                                "{FFFFFF}ยืนยัน", "{FFFFFF}กลับ");
-                        }
-                        case 10: {
-                            SetTimer("AutoDespawn_Execute", 100, false);
-                        }
-                        case 11: {
                             for (new i = 0; i < MAX_DROP_ITEMS; i++) {
                                 if (IsValidDynamicPickup(dropData[i][dObjectID]))
                                     DestroyDynamicPickup(dropData[i][dObjectID]);
@@ -351,8 +329,6 @@ YCMD:adminmenu(playerid, string:params[], help) {
                     {FFFFFF}ให้ยศแอดมิน\n\
                     {FFFFFF}เสกสกินเข้ากระเป๋า\n\
                     {FFFFFF}เสกไอเทมเข้าประเป๋า\n\
-                    {FFFFFF}เสกรถเข้าตัว\n\
-                    {FFFFFF}รีรถส่วนตัวทั้งเซิร์ฟ\n\
                     {FFFFFF}รีไอเทมที่ดรอปทั้งเซิร์ฟ",
                     "{FFFFFF}เลือก", "{FFFFFF}กลับ");
             }
@@ -501,10 +477,96 @@ YCMD:adminmenu(playerid, string:params[], help) {
                 Command_ReProcess(playerid, "/garagepanel", 0);
             }
             case 7: { // หมวดหมู่ Car Shop
-                Command_ReProcess(playerid, "/adealership", 0);
-            }
-            case 8: { // หมวดหมู่ Pump
-                Command_ReProcess(playerid, "/apump", 0);
+                inline CarDealerMenu(res2, list2, string:in2[]) {
+                    #pragma unused in2
+                    if (!res2) @return Command_ReProcess(playerid, "/adminmenu", 0);
+
+                    switch (list2) {
+                        case 0: {
+                            inline Input(res3, list3, string:in3[]) {
+                                #pragma unused list3
+                                if (!res3) @return 1;
+
+                                new modelid[30], c1, c2, price;
+                                if (sscanf(in3, "s[30]iid", modelid, c1, c2, price)) {
+                                    SendErrorMessage(playerid, "{FFFFFF}รูปแบบไม่ถูกต้อง เช่น: 522 1 1 1000000");
+                                    @return Command_ReProcess(playerid, "/adminmenu", 0);
+                                }
+                                new str[128];
+                                format(str, sizeof str, "/createvehicle %s %d %d %d", modelid, c1, c2, price);
+                                Command_ReProcess(playerid, str, 0);
+                            }
+                            Dialog_ShowCallback(playerid, using inline Input, DIALOG_STYLE_INPUT,
+                                "{FFFFFF}สร้างรถทีจะขาย",
+                                "{FFFFFF}ตัวอย่าง: 522 1 1 1000000",
+                                "{FFFFFF}เลือก", "{FFFFFF}กลับ");
+                        }
+                        case 1: {
+                            inline Input(res3, list3, string:in3[]) {
+                                #pragma unused list3
+                                if (!res3) @return 1;
+
+                                new id;
+                                if (sscanf(in3, "i", id)) {
+                                    SendErrorMessage(playerid, "{FFFFFF}รูปแบบไม่ถูกต้อง เช่น: 1");
+                                    @return Command_ReProcess(playerid, "/adminmenu", 0);
+                                }
+                                new str[128];
+                                format(str, sizeof str, "/deletevehicle %d", id);
+                                Command_ReProcess(playerid, str, 0);
+                            }
+                            Dialog_ShowCallback(playerid, using inline Input, DIALOG_STYLE_INPUT,
+                                "{FFFFFF}ลบรถทีจะขาย",
+                                "{FFFFFF}ตัวอย่าง: 1",
+                                "{FFFFFF}เลือก", "{FFFFFF}กลับ");
+                        }
+                        case 2: {
+                            inline Input(res3, list3, string:in3[]) {
+                                #pragma unused list3
+                                if (!res3) @return 1;
+
+                                new id, price;
+                                if (sscanf(in3, "ii", id, price)) {
+                                    SendErrorMessage(playerid, "{FFFFFF}รูปแบบไม่ถูกต้อง เช่น: 1 1000");
+                                    @return Command_ReProcess(playerid, "/adminmenu", 0);
+                                }
+                                new str[128];
+                                format(str, sizeof str, "/setvehicleprice %d %d", id, price);
+                                Command_ReProcess(playerid, str, 0);
+                            }
+                            Dialog_ShowCallback(playerid, using inline Input, DIALOG_STYLE_INPUT,
+                                "{FFFFFF}ปรับราคารถทีจะขาย",
+                                "{FFFFFF}ตัวอย่าง: 1 1000",
+                                "{FFFFFF}เลือก", "{FFFFFF}กลับ");
+                        }
+                        case 3: {
+                            inline Input(res3, list3, string:in3[]) {
+                                #pragma unused list3
+                                if (!res3) @return 1;
+
+                                new id;
+                                if (sscanf(in3, "i", id)) {
+                                    SendErrorMessage(playerid, "{FFFFFF}รูปแบบไม่ถูกต้อง เช่น: 1");
+                                    @return Command_ReProcess(playerid, "/adminmenu", 0);
+                                }
+                                new str[128];
+                                format(str, sizeof str, "/gotovehicle %d", id);
+                                Command_ReProcess(playerid, str, 0);
+                            }
+                            Dialog_ShowCallback(playerid, using inline Input, DIALOG_STYLE_INPUT,
+                                "{FFFFFF}วาร์ปไปที่รถทีจะขาย",
+                                "{FFFFFF}ตัวอย่าง: 1",
+                                "{FFFFFF}เลือก", "{FFFFFF}กลับ");
+                        }
+                    }
+                }
+                Dialog_ShowCallback(playerid, using inline CarDealerMenu, DIALOG_STYLE_LIST,
+                    "{FFFFFF}Admin Menu -> Car Dealer",
+                    "{FFFFFF}สร้างรถที่จะขาย\n\
+                    {FFFFFF}ลบรถที่จะขาย\n\
+                    {FFFFFF}ปรับราคารถ\n\
+                    {FFFFFF}วาร์ปไปที่รถ",
+                    "{FFFFFF}เลือก", "{FFFFFF}กลับ");
             }
         }
     }
@@ -517,8 +579,7 @@ YCMD:adminmenu(playerid, string:params[], help) {
         {FFFFFF}หมวดหมู่ ATM\n\
         {FFFFFF}หมวดหมู่หน่วยงาน\n\
         {FFFFFF}หมวดหมู่ Garage/Pickcar/Pawncar\n\
-        {FFFFFF}หมวดหมู่ Car Shop\n\
-        {FFFFFF}หมวดหมู่ Pump",
+        {FFFFFF}หมวดหมู่ Car Dealer",
         "{FFFFFF}เลือก", "{FFFFFF}ปิด");
     return 1;
 }

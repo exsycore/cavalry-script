@@ -7,5 +7,5 @@
 #include "atm\impl"
 #include "gps\impl"
 #include "ui\impl"
-#include "carshop\impl"
-#include "pump\impl"
+// #include "carshop\impl"
+// #include "pump\impl"

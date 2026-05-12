@@ -1,76 +1,59 @@
 #if defined _inc_header
-    #undef _inc_header
+#undef _inc_header
 #endif
 
-forward public LoadPlayerVehicle(playerid);
-forward public SetPlayerVehicle(playerid);
-forward public UpdateFuel(playerid);
+#include <YSI_Visual\y_dialog>
+#include <YSI_Coding\y_inline>
 
-forward AutoDespawn_WarnTwoMin();
-forward AutoDespawn_WarnOneMin();
-forward AutoDespawn_Execute();
-
-#define AUTO_DESPAWN_INTERVAL   (60 * 60 * 1000)    // 1 ชั่วโมง (ms)
-#define WARN_TWO_MIN            (2 * 60 * 1000)     // แจ้งเตือน 2 นาทีก่อน
-#define WARN_ONE_MIN            (1 * 60 * 1000)     // แจ้งเตือน 1 นาทีก่อน
-
-new g_AutoDespawnTimer = -1;
-new g_WarnTwoMinTimer  = -1;
-new g_WarnOneMinTimer  = -1;
-
-#define MAX_PLATE_LENGTH (7)
-#define MAX_PLAYER_VEHICLE (500)
 #define VEHICLE_TABLE "vehicles"
-#define DEFAULT_VEHICLE_BROKEN (250)
 
-// Speed conversion factor (SA-MP velocity to km/h)
-#define VELOCITY_TO_KMH (181.5)
+#define VEHICLE_BUY_TEXT "รถรุ่น: %s\nราคา: $%s\n{FFFFFF}กด 'N' เพื่อซื้อรถคันนี้"
 
-enum E_PLAYER_VEHICLE {
-    E_PLAYER_Vehicle_id,                          // ไอดีสำคัญ
-    E_PLAYER_Vehicle_ownerid,                     // ไอดีสำคัญ2
-    E_PLAYER_Vehicle_modelid,                     // หมายเลขรถ (vehicle model ID)
-    E_PLAYER_Vehicle_color1,         	          // สีรถหลัก
-    E_PLAYER_Vehicle_color2,         	          // สีรถรอง
-    E_PLAYER_Vehicle_owner[MAX_PLAYER_NAME + 1],  // ชื่อเจ้าของรถ
-    E_PLAYER_Vehicle_plate[MAX_PLATE_LENGTH + 1], // ทะเบียนรถ
-    bool:E_PLAYER_Vehicle_spawned,                // รถถูกเรียกมาใว้แล้วหรือไม่
-    bool:E_PLAYER_Vehicle_exists,                 // รถคันนี้มีจริงหรือไม่
-    bool:E_PLAYER_Vehicle_lock,
+#define MAX_SERVER_VEHICLES (2000)
 
-    Float:E_PLAYER_Vehicle_posx,
-    Float:E_PLAYER_Vehicle_posy,
-    Float:E_PLAYER_Vehicle_posz,
-    Float:E_PLAYER_Vehicle_posa,
-    Float:E_PLAYER_Vehicle_fuel,
-    Float:E_PLAYER_Vehicle_health
-}
-new PlayerVehicle[MAX_PLAYERS][MAX_PLAYER_VEHICLE][E_PLAYER_VEHICLE]; // จัดเก็บข้อมูลรถของแต่ละผู้เล่น
+#define MODE_NOLOCK (0)
+#define MODE_LOCK   (1)
 
-new const CHAR_SET[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-new const g_arrVehicleNames[][] = {
-    "Landstalker", "Bravura", "Buffalo", "Linerunner", "Perrenial", "Sentinel", "Dumper", "Firetruck", "Trashmaster",
-    "Stretch", "Manana", "Infernus", "Voodoo", "Pony", "Mule", "Cheetah", "Ambulance", "Leviathan", "Moonbeam",
-    "Esperanto", "Taxi", "Washington", "Bobcat", "Whoopee", "BF Injection", "Hunter", "Premier", "Enforcer",
-    "Securicar", "Banshee", "Predator", "Bus", "Rhino", "Barracks", "Hotknife", "Trailer", "Previon", "Coach",
-    "Cabbie", "Stallion", "Rumpo", "RC Bandit", "Romero", "Packer", "Monster", "Admiral", "Squalo", "Seasparrow",
-    "Pizzaboy", "Tram", "Trailer", "Turismo", "Speeder", "Reefer", "Tropic", "Flatbed", "Yankee", "Caddy", "Solair",
-    "Berkley's RC Van", "Skimmer", "PCJ-600", "Faggio", "Freeway", "RC Baron", "RC Raider", "Glendale", "Oceanic",
-    "Sanchez", "Sparrow", "Patriot", "Quad", "Coastguard", "Dinghy", "Hermes", "Sabre", "Rustler", "ZR-350", "Walton",
-    "Regina", "Comet", "BMX", "Burrito", "Camper", "Marquis", "Baggage", "Dozer", "Maverick", "News Chopper", "Rancher",
-    "FBI Rancher", "Virgo", "Greenwood", "Jetmax", "Hotring", "Sandking", "Blista Compact", "Police Maverick",
-    "Boxville", "Benson", "Mesa", "RC Goblin", "Hotring Racer A", "Hotring Racer B", "Bloodring Banger", "Rancher",
-    "Super GT", "Elegant", "Journey", "Bike", "Mountain Bike", "Beagle", "Cropduster", "Stunt", "Tanker", "Roadtrain",
-    "Nebula", "Majestic", "Buccaneer", "Shamal", "Hydra", "FCR-900", "NRG-500", "HPV1000", "Cement Truck", "Tow Truck",
-    "Fortune", "Cadrona", "SWAT Truck", "Willard", "Forklift", "Tractor", "Combine", "Feltzer", "Remington", "Slamvan",
-    "Blade", "Streak", "Freight", "Vortex", "Vincent", "Bullet", "Clover", "Sadler", "Firetruck", "Hustler", "Intruder",
-    "Primo", "Cargobob", "Tampa", "Sunrise", "Merit", "Utility", "Nevada", "Yosemite", "Windsor", "Monster", "Monster",
-    "Uranus", "Jester", "Sultan", "Stratum", "Elegy", "Raindance", "RC Tiger", "Flash", "Tahoma", "Savanna", "Bandito",
-    "Freight Flat", "Streak Carriage", "Kart", "Mower", "Dune", "Sweeper", "Broadway", "Tornado", "AT-400", "DFT-30",
-    "Huntley", "Stafford", "BF-400", "News Van", "Tug", "Trailer", "Emperor", "Wayfarer", "Euros", "Hotdog", "Club",
-    "Freight Box", "Trailer", "Andromada", "Dodo", "RC Cam", "Launch", "LSPD Cruiser", "SFPD Cruiser", "LVPD Cruiser",
-    "Police Rancher", "Picador", "S.W.A.T", "Alpha", "Phoenix", "Glendale", "Sadler", "Luggage", "Luggage", "Stairs",
-    "Boxville", "Tiller", "Utility Trailer"
+forward LoadDealerVehicles();
+forward LoadPlayerVehicles(playerid);
+forward OnDealerVehicleCreated(vehicleid);
+
+enum VehiclesData {
+    vehID,
+    vehSessionID,
+    vehModel,
+    vehName[25],
+    vehOwner[26],
+    vehPlate[16],
+    vehPrice,
+    vehLock,
+    vehMod[14],
+    vehColorOne,
+    vehColorTwo,
+    Text3D:vehLabel,
+    Float:vehX,
+    Float:vehY,
+    Float:vehZ,
+    Float:vehA
 };
+new vInfo[MAX_VEHICLES][VehiclesData],
+    Iterator: ServerVehicles<MAX_VEHICLES>,
+    Iterator: PrivateVehicles[MAX_PLAYERS]<MAX_SERVER_VEHICLES>;
 
-#include "garage\header"
+new VehicleNames[212][] = {
+    "Landstalker", "Bravura", "Buffalo", "Linerunner", "Pereniel", "Sentinel", "Dumper", "Firetruck", "Trashmaster", "Stretch", "Manana", "Infernus","Voodoo", "Pony",
+    "Mule", "Cheetah", "Ambulance", "Leviathan", "Moonbeam", "Esperanto", "Taxi", "Washington", "Bobcat", "Mr Whoopee", "BF Injection", "Hunter", "Premier", "Enforcer",
+    "Securicar", "Banshee", "Predator", "Bus", "Rhino", "Barracks", "Hotknife", "Trailer", "Previon", "Coach", "Cabbie", "Stallion", "Rumpo", "RC Bandit", "Romero",
+    "Packer", "Monster", "Admiral", "Squalo", "Seasparrow", "Pizzaboy", "Tram", "Trailer 2", "Turismo", "Speeder", "Reefer", "Tropic", "Flatbed", "Yankee", "Caddy",
+    "Solair", "Berkley's RC Van", "Skimmer", "PCJ-600", "Faggio", "Freeway", "RC Baron", "RC Raider", "Glendale", "Oceanic", "Sanchez", "Sparrow", "Patriot", "Quad",
+    "Coastguard", "Dinghy", "Hermes", "Sabre", "Rustler", "ZR3 50", "Walton", "Regina", "Comet", "BMX", "Burrito", "Camper", "Marquis", "Baggage", "Dozer", "Maverick",
+    "News Chopper", "Rancher", "FBI Rancher", "Virgo", "Greenwood", "Jetmax", "Hotring", "Sandking", "Blista Compact", "Police Maverick", "Boxville", "Benson", "Mesa",
+    "RC Goblin", "Hotring Racer A", "Hotring Racer B", "Bloodring Banger", "Rancher", "Super GT", "Elegant", "Journey", "Bike", "Mountain Bike", "Beagle", "Cropdust",
+    "Stunt", "Tanker", "RoadTrain", "Nebula", "Majestic", "Buccaneer", "Shamal", "Hydra", "FCR-900", "NRG-500", "HPV1000", "Cement Truck", "Tow Truck", "Fortune",
+    "Cadrona", "FBI Truck", "Willard", "Forklift", "Tractor", "Combine", "Feltzer", "Remington", "Slamvan", "Blade", "Freight", "Streak", "Vortex", "Vincent", "Bullet",
+    "Clover", "Sadler", "Firetruck", "Hustler", "Intruder", "Primo", "Cargobob", "Tampa", "Sunrise", "Merit", "Utility", "Nevada", "Yosemite", "Windsor", "Monster A",
+    "Monster B", "Uranus", "Jester", "Sultan", "Stratum", "Elegy", "Raindance", "RC Tiger", "Flash", "Tahoma", "Savanna", "Bandito", "Freight", "Trailer", "Kart", "Mower",
+    "Duneride", "Sweeper", "Broadway", "Tornado", "AT-400", "DFT-30", "Huntley", "Stafford", "BF-400", "Newsvan", "Tug", "Trailer A", "Emperor", "Wayfarer", "Euros",
+    "Hotdog", "Club", "Trailer B", "Trailer C", "Andromada", "Dodo", "RC Cam", "Launch", "Police Car (LSPD)", "Police Car (SFPD)", "Police Car (LVPD)", "Police Ranger",
+    "Picador", "S.W.A.T. Van", "Alpha", "Phoenix", "Glendale", "Sadler", "Luggage Trailer A", "Luggage Trailer B", "Stair Trailer", "Boxville", "Farm Plow", "Utility Trailer"
+};
