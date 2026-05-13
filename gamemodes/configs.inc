@@ -47,6 +47,8 @@
 #define DEFAULT_PLAYER_GIFTBOX (0)
 #define DEFAULT_PLAYER_GIFTBOX2 (0)
 
+#define MODEL_NULL (18700)
+
 // ===================================================================================
 
 #define PRESSED(%0) (((newkeys & (%0)) == (%0)) && ((oldkeys & (%0)) != (%0)))
