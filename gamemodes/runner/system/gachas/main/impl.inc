@@ -30,6 +30,9 @@ hook OnGameModeInit() {
 		}
 	}
 
+	//--> โหลด กาชา
+	mysql_tquery(g_SQL, "SELECT * FROM `gachas`", "GachaBoxLoad", "");
+
 	// GaChaItemModel[0][0] = 1240;
 	// GaChaItemModel[0][1] = 1239; // 2 ของเขียว
 	// GaChaItemModel[0][2] = 1550;
@@ -45,7 +48,7 @@ hook OnGameModeInit() {
 	// GaChaItemModel[0][12] = 1654; // 13 ของเขียว
 	// GaChaItemModel[0][13] = 1279;
 	// GaChaItemModel[0][14] = 1276;
-	return ;
+	return 1;
 }
 
 forward GachaBoxLoad();
@@ -69,7 +72,7 @@ public GachaBoxLoad() {
 		printf("LoadedGachaBox: [%d] [%s]", i, GachaData[i][gachaName]);
 		count++;
 	}
-	return ;
+	return 1;
 }
 
 stock OnPlayerStartGacha(playerid) {
@@ -123,8 +126,8 @@ public playerUpdateGacha(playerid) {
 
 					/*new query[256];
 
-					mysql_format(gtadb, query, sizeof(query), "INSERT INTO venturas_vehicles (carOwnerID, carOwner, carModel, carPrice, carFuel) VALUES(%d, '%s', %d, %d, %.1f)", Player.Auth[playerid][@sqlid], ReturnName(playerid), 415, 0, 100.0);
-					mysql_tquery(gtadb, query);
+					mysql_format(g_SQL, query, sizeof(query), "INSERT INTO venturas_vehicles (carOwnerID, carOwner, carModel, carPrice, carFuel) VALUES(%d, '%s', %d, %d, %.1f)", Player.Auth[playerid][@sqlid], ReturnName(playerid), 415, 0, 100.0);
+					mysql_tquery(g_SQL, query);
 
 					Inventory_Remove(playerid, "Cheetah", 1);*/
 					//GiveMoney(playerid, getitemAmount, "Open Gacha");
@@ -134,8 +137,8 @@ public playerUpdateGacha(playerid) {
 
 					/*new query[256];
 
-					mysql_format(gtadb, query, sizeof(query), "INSERT INTO venturas_vehicles (carOwnerID, carOwner, carModel, carPrice, carFuel) VALUES(%d, '%s', %d, %d, %.1f)", Player.Auth[playerid][@sqlid], ReturnName(playerid), 422, 0, 100.0);
-					mysql_tquery(gtadb, query);
+					mysql_format(g_SQL, query, sizeof(query), "INSERT INTO venturas_vehicles (carOwnerID, carOwner, carModel, carPrice, carFuel) VALUES(%d, '%s', %d, %d, %.1f)", Player.Auth[playerid][@sqlid], ReturnName(playerid), 422, 0, 100.0);
+					mysql_tquery(g_SQL, query);
 					Inventory_Remove(playerid, "Bobcat", 1);*/
 					//GiveMoney(playerid, getitemAmount, "Open Gacha");
 					//GivePlayerMoneyEx(playerid, getitemAmount);
@@ -144,8 +147,8 @@ public playerUpdateGacha(playerid) {
 
 					/*new query[256];
 
-					mysql_format(gtadb, query, sizeof(query), "INSERT INTO venturas_vehicles (carOwnerID, carOwner, carModel, carPrice, carFuel) VALUES(%d, '%s', %d, %d, %.1f)", Player.Auth[playerid][@sqlid], ReturnName(playerid), 462, 0, 100.0);
-					mysql_tquery(gtadb, query);
+					mysql_format(g_SQL, query, sizeof(query), "INSERT INTO venturas_vehicles (carOwnerID, carOwner, carModel, carPrice, carFuel) VALUES(%d, '%s', %d, %d, %.1f)", Player.Auth[playerid][@sqlid], ReturnName(playerid), 462, 0, 100.0);
+					mysql_tquery(g_SQL, query);
 					Inventory_Remove(playerid, "Faggio", 1);*/
 					//GiveMoney(playerid, getitemAmount, "Open Gacha");
 					//GivePlayerMoneyEx(playerid, getitemAmount);
@@ -155,8 +158,8 @@ public playerUpdateGacha(playerid) {
 
 					new query[256];
 
-					mysql_format(gtadb, query, sizeof(query), "INSERT INTO venturas_vehicles (carOwnerID, carOwner, carModel, carPrice, carFuel) VALUES(%d, '%s', %d, %d, %.1f)", Player.Auth[playerid][@sqlid], ReturnName(playerid), 481, 0, 100.0);
-					mysql_tquery(gtadb, query);
+					mysql_format(g_SQL, query, sizeof(query), "INSERT INTO venturas_vehicles (carOwnerID, carOwner, carModel, carPrice, carFuel) VALUES(%d, '%s', %d, %d, %.1f)", Player.Auth[playerid][@sqlid], ReturnName(playerid), 481, 0, 100.0);
+					mysql_tquery(g_SQL, query);
 					//GiveMoney(playerid, getitemAmount, "Open Gacha");
 					//GivePlayerMoneyEx(playerid, getitemAmount);
 				}*/
@@ -168,7 +171,7 @@ public playerUpdateGacha(playerid) {
 					playerMaxCoutingGacha[playerid] = 0;
 					OnPlayerDestroyGachaUI(playerid);
 					ResetPlayerGacha(playerid);
-					return ;
+					return 1;
 				} else {
 					if (!strcmp(getitemName, "Cash", true) && getitemModel == 1212) {
 						va_SendClientMessage(playerid, COLOR_YELLOW, "[Gacha]: คุณได้รับเงินจำนวน '%s' จากการเปิดกาชา", FormatNumber(getitemAmount));
@@ -213,7 +216,7 @@ public playerUpdateGacha(playerid) {
 				if (playerOpenGachaAuto[playerid]) defer OpenGachaAuto(playerid);
 			}*/
 		}
-		return ;
+		return 1;
 	}
 
 	// printf("playerGetGachaBoxID: %d of PlayerID: %d", playerGetGachaBoxID[playerid], playerid);
@@ -337,5 +340,19 @@ public playerUpdateGacha(playerid) {
 
 		playerTimerGacha[playerid] = SetTimerEx("playerUpdateGacha", playerTimeCountingGacha[playerid], false, "i", playerid);
 	} 
-	return ;
+	return 1;
+}
+
+timer OpeningGachaUI[300](playerid){
+	if (!PlayerOpeningGachaMenu[playerid]) OnPlayerCreateGachaUI(playerid, playerGetGachaBoxID[playerid]);
+	else OnPlayerDestroyGachaUI(playerid);
+}
+
+YCMD:gachatest(playerid, const params[], help) {
+	if (GetPlayerLoggedIn(playerid)) {
+		playerGetGachaBoxID[playerid] = 0;
+		playerGetGachaItemInvIndex[playerid] = 0;
+		defer OpeningGachaUI(playerid);
+	}
+	return 1;
 }

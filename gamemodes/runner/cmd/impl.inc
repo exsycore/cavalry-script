@@ -27,6 +27,27 @@ hook OP_CommandPerformed(playerid, cmd[], params[], result, flags) {
     return true;
 }
 
+public e_COMMAND_ERRORS:OnPlayerCommandReceived(playerid, cmdtext[], e_COMMAND_ERRORS:success)  {
+    if (!GetPlayerLoggedIn(playerid)) {
+		return COMMAND_DENIED;
+    }
+
+	printf("[%s (%d)]: %s [Status: %d]", ReturnPlayerName(playerid), playerid, cmdtext, success);
+
+    switch (success) {
+    	case COMMAND_DENIED: {
+			SendErrorMessage(playerid, "คุณไม่ได้รับอนุญาตให้ใช้คำสั่งนี้");
+    		return COMMAND_DENIED;
+    	}
+
+    	case COMMAND_UNDEFINED: {
+	    	SendErrorMessage(playerid, "ไม่พบคำสั่ง '%s'", cmdtext);
+    		return COMMAND_OK;
+    	}
+    }
+    return success;
+}
+
 /* ######################################################## */
 /* # ????? ?????   ?????????  ??????   ?????? ??????????  # */
 /* #????? ?????   ??????????????????? ?????? ???????????? # */
