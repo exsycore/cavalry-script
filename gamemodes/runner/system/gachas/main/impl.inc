@@ -19,6 +19,7 @@ stock ResetPlayerGacha(playerid) {
 	format(playerGetLastItemNameGacha[playerid], 64, "NULL");
 	playerOpenGachaAuto[playerid] = false;
 	PlayerOpeningGachaMenu[playerid] = false;
+	return 1;
 }
 
 hook OnGameModeInit() {
@@ -48,6 +49,11 @@ hook OnGameModeInit() {
 	// GaChaItemModel[0][12] = 1654; // 13 ของเขียว
 	// GaChaItemModel[0][13] = 1279;
 	// GaChaItemModel[0][14] = 1276;
+	return 1;
+}
+
+hook OnPlayerConnect(playerid) {
+	ResetPlayerGacha(playerid);
 	return 1;
 }
 
@@ -93,11 +99,7 @@ stock OnPlayerStartGacha(playerid) {
 	return 1;
 }
 
-stock timer PlaySoundGachaComplete[300](playerid) {
-	PlayerPlaySound(playerid, 40405, 0.0, 0.0, 0.0);
-}
-
-stock timer OpenGachaAuto[500](playerid) {
+timer OpenGachaAuto[500](playerid) {
 	OnPlayerStartGacha(playerid);
 }
 
@@ -189,7 +191,10 @@ public playerUpdateGacha(playerid) {
 						va_SendClientMessage(playerid, COLOR_YELLOW, "[Gacha]: คุณได้รับไอเท็ม '%s' จำนวน '%d' ชิ้นจากการเปิดกาชา", getitemName, getitemAmount);
 						if (announce) SendClientMessageToAllEx(0xF5C100FF, "[กล่องกาชา]: ผู้เล่น '%s' เปิดได้ไอเท็ม '%s' จำนวน '%d' จากกล่องกาชา '%s'", GetPlayerNameEx(playerid), getitemName, getitemAmount, GachaData[playerGetGachaBoxID[playerid]][gachaName]);
 					}
-					defer PlaySoundGachaComplete(playerid);
+					PlayerPlaySound(playerid, 40405, 0.0, 0.0, 0.0);
+					playerMaxCoutingGacha[playerid] = 0;
+					OnPlayerDestroyGachaUI(playerid);
+					ResetPlayerGacha(playerid);
 
 					//Player.Auth[playerid][@itemboxnewbie] -= 1;
 
@@ -343,16 +348,13 @@ public playerUpdateGacha(playerid) {
 	return 1;
 }
 
-timer OpeningGachaUI[300](playerid){
-	if (!PlayerOpeningGachaMenu[playerid]) OnPlayerCreateGachaUI(playerid, playerGetGachaBoxID[playerid]);
-	else OnPlayerDestroyGachaUI(playerid);
-}
-
 YCMD:gachatest(playerid, const params[], help) {
 	if (GetPlayerLoggedIn(playerid)) {
 		playerGetGachaBoxID[playerid] = 0;
 		playerGetGachaItemInvIndex[playerid] = 0;
-		defer OpeningGachaUI(playerid);
+
+		if (!PlayerOpeningGachaMenu[playerid]) OnPlayerCreateGachaUI(playerid, playerGetGachaBoxID[playerid]);
+		else OnPlayerDestroyGachaUI(playerid);
 	}
 	return 1;
 }
