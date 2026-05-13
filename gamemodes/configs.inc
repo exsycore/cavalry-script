@@ -75,18 +75,18 @@
 #define Player. OO_TYPE(PLAYER, Player)
 
 #define SendErrorMessage(%0,%1) \
-	va_SendClientMessage(%0, COLOR_RED, "ข้อผิดพลาด: "%1)
+	va_SendClientMessage(%0, COLOR_RED, "[ข้อผิดพลาด]: {FFFFFF}"%1)
 #define SendTipsMessage(%0,%1) \
-	va_SendClientMessage(%0, COLOR_GRAY, "เคล็ดลับ: "%1)
+	va_SendClientMessage(%0, COLOR_GRAY, "[เคล็ดลับ]: {FFFFFF}"%1)
 #define SendPlayerAction(%0,%1) \
-	va_SendClientMessage(%0, COLOR_GREEN, ">> "%1)
+	va_SendClientMessage(%0, COLOR_GREEN, "[>>] {FFFFFF}"%1)
 #define SendGarageAction(%0,%1) \
-	va_SendClientMessage(%0, COLOR_ORANGE, "การาจ: "%1)
+	va_SendClientMessage(%0, COLOR_ORANGE, "[การาจ]: {FFFFFF}"%1)
 #define SendSyntaxMessage(%0,%1) \
-	va_SendClientMessage(%0, COLOR_CLIENT, "Usage: "%1)
+	va_SendClientMessage(%0, COLOR_CLIENT, "[Syntax]: {FFFFFF}"%1)
 #define SendWarningMessage(%0,%1) \
-	va_SendClientMessage(%0, COLOR_RED, "แจ้งเตือน: "%1)
+	va_SendClientMessage(%0, COLOR_RED, "[Warning]: {FFFFFF}"%1)
 #define SendCongratMessage(%0,%1) \
-	va_SendClientMessage(%0, COLOR_GREEN, "แจ้งเตือน: "%1)
+	va_SendClientMessage(%0, COLOR_GREEN, "[Congrat]: {FFFFFF}"%1)
 
 DEFINE_HOOK_REPLACEMENT__(OnPlayer   , OP_);

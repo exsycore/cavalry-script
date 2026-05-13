@@ -54,7 +54,6 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
 }
 
 hook OnPlayerConnect(playerid) {
-
 	new query[65];
     mysql_format(get_handle(), query, sizeof(query), "SELECT * FROM "VEHICLE_TABLE" WHERE `vehOwner` = '%e'", ReturnPlayerName(playerid));
     mysql_tquery(get_handle(), query, "LoadPlayerVehicles", "i", playerid);

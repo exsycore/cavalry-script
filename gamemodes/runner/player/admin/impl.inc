@@ -33,6 +33,56 @@ YCMD:arevive(playerid, const params[], help) {
     return 1;
 }
 
+YCMD:tp(playerid, const params[], help) {
+	if (!GetPlayerLoggedIn(playerid)) return 1;
+    if (!IsPlayerAdminEx(playerid)) return 1;
+
+	new targetid;
+	if (sscanf(params, "u", targetid)) return SendSyntaxMessage(playerid, "/tp [playerid]");
+	if (targetid == INVALID_PLAYER_ID) return SendErrorMessage(playerid, "ไอดีผู้เล่นดังกล่าวไม่ถูกต้อง!");
+	if (!GetPlayerLoggedIn(targetid)) return SendErrorMessage(playerid, "ผู้เล่นดังกล่าวยังไม่ได้ทำการล็อคอินเข้าสู่ระบบ!");
+
+	new Float:x, Float:y, Float:z;
+	GetPlayerPos(targetid, x, y, z);
+	SetPlayerPos(playerid, x+0.5, y, z);
+	SetPlayerInterior(playerid, GetPlayerInterior(targetid));
+	SetPlayerVirtualWorld(playerid, GetPlayerVirtualWorld(targetid));
+	return 1;
+}
+
+YCMD:gethere(playerid, const params[], help) {
+	if (!GetPlayerLoggedIn(playerid)) return 1;
+    if (!IsPlayerAdminEx(playerid)) return 1;
+
+    new targetid;
+    if (sscanf(params, "u", targetid)) return SendSyntaxMessage(playerid, "/gethere [playerid]");
+    if (targetid == INVALID_PLAYER_ID) return SendErrorMessage(playerid, "ไอดีผู้เล่นดังกล่าวไม่ถูกต้อง!");
+    if (!GetPlayerLoggedIn(targetid)) return SendErrorMessage(playerid, "ผู้เล่นดังกล่าวยังไม่ได้ทำการล็อคอินเข้าสู่ระบบ!");
+
+	new Float:x, Float:y, Float:z;
+    GetPlayerPos(playerid, x, y, z);
+	SetPlayerPos(targetid, x+0.5, y, z);
+	SetPlayerInterior(targetid, GetPlayerInterior(playerid));
+	SetPlayerVirtualWorld(targetid, GetPlayerVirtualWorld(playerid));
+	return 1;
+}
+
+YCMD:attachobject1(playerid, const params[], help) {
+	if (!GetPlayerLoggedIn(playerid)) return 1;
+    if (!IsPlayerAdminEx(playerid)) return 1;
+
+    SetPlayerAttachedObject(playerid, 8, 1607, 1, -0.000999, -0.214999, -0.021999, 94.999961, 0.599999, -88.899932, 0.195000, 0.134000, 0.125999, 0xFFFF00FF);
+    return 1;
+}
+
+YCMD:attachobject2(playerid, const params[], help) {
+	if (!GetPlayerLoggedIn(playerid)) return 1;
+    if (!IsPlayerAdminEx(playerid)) return 1;
+
+    SetPlayerAttachedObject(playerid, 8, 1607, 1, -0.000999, -0.214999, -0.021999, 94.999961, 0.599999, -88.899932, 0.195000, 0.134000, 0.125999, 0xFF00FF00);
+    return 1;
+}
+
 YCMD:sethealth(playerid, const params[], help) {
     if (!GetPlayerLoggedIn(playerid)) return 1;
     if (!IsPlayerAdminEx(playerid)) return 1;
@@ -610,9 +660,16 @@ YCMD:adminmenu(playerid, string:params[], help) {
     }
 #endif
 
+//--> คลิกแมพวาป Admin
 hook OnPlayerClickMap(playerid, Float:fX, Float:fY, Float:fZ) {
+    if (IsPlayerAdminEx(playerid)) SetPVarFloat(playerid, "XMap", fX), SetPVarFloat(playerid, "YMap", fY), SetPVarFloat(playerid, "ZMap", fZ);
     if (IsPlayerAdminEx(playerid)) {
-        SetPlayerPosFindZ(playerid, fX, fY, fZ);
-    }
-    return 1;
+	    if (GetPlayerState(playerid) == 2) {
+			new tmpcar = GetPlayerVehicleID(playerid);
+			SetVehiclePos(tmpcar, fX, fY, fZ+2);
+		}   else SetPlayerPos(playerid, fX, fY, fZ+1);
+		SetPlayerVirtualWorld(playerid, 0);
+		SetPlayerInterior(playerid, 0);
+	}
+    return true;
 }

@@ -12,32 +12,32 @@ hook OnPlayerClickTextDraw(playerid, Text:clickedid) {
 					return SelectTextDraw(playerid, 0x8F00C4FF);
 				} else if (playerCoutingGacha[playerid] == 0) {
 					OnPlayerDestroyGachaUI(playerid);
-					return true;
+					return 1;
 				}
 			} else {
 			}
 		}
 	}
-	return true;
+	return 1;
 }
 
-hook OP_ClickPlayerTextDraw(playerid, PlayerText:playertextid) {
+hook OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid) {
 	if (GetPlayerLoggedIn(playerid)) {
 		if (PlayerOpeningGachaMenu[playerid]) {
-			if (playertextid == PlayerGachaUI[playerid][18]) { //Cancel
+			if (playertextid == PlayerGachaUI[playerid][18]) { // Cancel
 				if (playerTimeCountingGacha[playerid] == 0 && !playerOpenGachaAuto[playerid]) {
 					OnPlayerDestroyGachaUI(playerid);
-					return true;
+					return 1;
 				}
 			}
 
-			if (playertextid == PlayerGachaUI[playerid][15]) { //Open
+			if (playertextid == PlayerGachaUI[playerid][15]) { // Open
 				if (playerTimeCountingGacha[playerid] == 0) {
 					return OnPlayerStartGacha(playerid);
 				}
 			}
 
-			if (playertextid == PlayerGachaUI[playerid][23]) { //Open Auto
+			if (playertextid == PlayerGachaUI[playerid][23]) { // Open Auto
 				if (!playerOpenGachaAuto[playerid]) {
 					playerOpenGachaAuto[playerid] = true;
 					PlayerTextDrawSetString(playerid, PlayerGachaUI[playerid][23], "OPEN AUTO (TRUE)");
@@ -60,20 +60,21 @@ hook OP_ClickPlayerTextDraw(playerid, PlayerText:playertextid) {
 			}
 		}
 	}
-	return true;
+	return 1;
 }
 
 stock OnPlayerDestroyGachaUI(playerid) {
 	if (PlayerOpeningGachaMenu[playerid] && playerMaxCoutingGacha[playerid] == 0) {
 		for (new i = 0; i < MAX_GACHAS_UI; i ++) {
-			/*if (IsPlayerTextDrawVisible(playerid, PlayerGachaUI[playerid][i])) {
+			if (IsPlayerTextDrawVisible(playerid, PlayerGachaUI[playerid][i])) {
 				PlayerTextDrawHide(playerid, PlayerGachaUI[playerid][i]);
-			}*/
-			PlayerTextDrawHide(playerid, PlayerGachaUI[playerid][i]);
+			}
 			PlayerTextDrawDestroy(playerid, PlayerGachaUI[playerid][i]);
 		}
 
 		PlayerOpeningGachaMenu[playerid] = false;
+
+		ShowPlayerUI(playerid);
 
 		CancelSelectTextDraw(playerid);
 	}
@@ -313,7 +314,7 @@ stock OnPlayerCreateGachaUI(playerid, gachaindex) {
 		PlayerTextDrawSetProportional(playerid, PlayerGachaUI[playerid][14], 1);
 		PlayerTextDrawSetSelectable(playerid, PlayerGachaUI[playerid][14], 0);
 
-		format(string, sizeof string, "OPEN %d", Player.Auth[playerid][@itemboxnewbie]);
+		//format(string, sizeof string, "OPEN %d", Player.Auth[playerid][@itemboxnewbie]);
 		PlayerGachaUI[playerid][15] = CreatePlayerTextDraw(playerid, 244.000000, 373.000000, string);
 		PlayerTextDrawFont(playerid, PlayerGachaUI[playerid][15], 1);
 		PlayerTextDrawLetterSize(playerid, PlayerGachaUI[playerid][15], 0.258332, 1.750000);
@@ -474,5 +475,7 @@ stock OnPlayerCreateGachaUI(playerid, gachaindex) {
 			PlayerTextDrawShow(playerid, PlayerGachaUI[playerid][i]);
 		}
 		SelectTextDraw(playerid, 0x8F00C4FF);
+
+		DestroyPlayerUI(playerid);
 	}
 }
