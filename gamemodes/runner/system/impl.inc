@@ -10,5 +10,6 @@
 #include "actor_newbie\impl"
 #include "busk\impl"
 #include "wheelchair\impl"
+#include "gachas\impl"
 // #include "carshop\impl"
 // #include "pump\impl"

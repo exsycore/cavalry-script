@@ -204,6 +204,48 @@ stock ReturnDate() {
     return sendString;
 }
 
+stock SendClientMessageToAllEx(color, const text[], {Float, _}:...) {
+	static
+	    args,
+	    str[144];
+
+	/*
+     *  Custom function that uses #emit to format variables into a string.
+     *  This code is very fragile; touching any code here will cause crashing!
+	*/
+	if ((args = numargs()) == 2) {
+	    SendClientMessageToAll(color, text);
+	} else {
+		while (--args >= 2) {
+			#emit LCTRL 5
+			#emit LOAD.alt args
+			#emit SHL.C.alt 2
+			#emit ADD.C 12
+			#emit ADD
+			#emit LOAD.I
+			#emit PUSH.pri
+		}
+		#emit PUSH.S text
+		#emit PUSH.C 144
+		#emit PUSH.C str
+		#emit LOAD.S.pri 8
+		#emit ADD.C 4
+		#emit PUSH.pri
+		#emit SYSREQ.C format
+		#emit LCTRL 5
+		#emit SCTRL 4
+
+		SendClientMessageToAll(color, str);
+
+		#emit RETN
+	}
+	return 1;
+}
+
+stock randomEx(min, max) {
+    return random(max + 1 - min) + min;
+}
+
 stock DelayedKick(playerid) {
     SetTimerEx("_DelayedKick", 500, false, "d", playerid);
     return 1;
