@@ -56,16 +56,16 @@ stock CheckPlayerLevelUp(playerid) {
 
         for (new i = 0; i < changed; i++) {
             new lv = playerData[playerid][pLevel] - (changed - 1 - i);
-            SendCongratMessage(playerid,
-                "{FFFFFF}คุณขึ้นเป็น Level {FFD700}%d {FFFFFF}แล้ว! (ต้องการ EXP ถัดไป: {AAFFAA}%d{FFFFFF})",
+            va_SendClientMessage(playerid, COLOR_GREEN,
+                "[Congrat]: {FFFFFF}คุณขึ้นเป็น Level {FFD700}%d {FFFFFF}แล้ว! (ต้องการ EXP ถัดไป: {AAFFAA}%d{FFFFFF})",
                 lv,
                 lv < MAX_PLAYER_LEVELS ? GetExpRequired(lv) : 0
             );
         }
 
         if (playerData[playerid][pLevel] >= MAX_PLAYER_LEVELS) {
-            SendErrorMessage(playerid,
-                "{FFFFFF}คุณถึง Level สูงสุด {FF4444}%d {FFFFFF}แล้ว! (บอสแมพ)",
+            va_SendClientMessage(playerid, COLOR_RED,
+                "[ข้อผิดพลาด]: {FFFFFF}คุณถึง Level สูงสุด {FF4444}%d {FFFFFF}แล้ว! (บอสแมพ)",
                 MAX_PLAYER_LEVELS
             );
         }
