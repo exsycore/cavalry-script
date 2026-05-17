@@ -80,15 +80,6 @@ stock bool:TogglePlayerLoadObject(playerid, millis = DEFAULT_LOAD_OBJECT) {
 /* #?????          ????????   ???????????  ??????????? ?????   ?????????  # */
 /* ######################################################################## */
 
-public EndCameraMoveToSpawn(playerid) {
-    TogglePlayerControllable(playerid, true);
-	SetCameraBehindPlayer(playerid);
-    TogglePlayerLoadObject(playerid);
-    return 1;
-}
+public EndCameraMoveToSpawn(playerid) {    if (!IsPlayerConnected(playerid)) return 1;    TogglePlayerControllable(playerid, true);	SetCameraBehindPlayer(playerid);    TogglePlayerLoadObject(playerid);    return 1;}
 
-public EndPlayerLoadObject(playerid) {
-    TogglePlayerControllable(playerid, true);
-	SetCameraBehindPlayer(playerid);
-    return 1;
-}
+public EndPlayerLoadObject(playerid) {    if (!IsPlayerConnected(playerid)) return 1;    TogglePlayerControllable(playerid, true);	SetCameraBehindPlayer(playerid);    return 1;}

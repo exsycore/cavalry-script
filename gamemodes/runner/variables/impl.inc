@@ -25,9 +25,10 @@ stock ResetArrays(playerid) {
     playerData[playerid][pProstoTak] = 0;
 	playerData[playerid][pProstoTak2] = 0;
 
-    for (new i; i < 7; i++) playerData[playerid][pSlotItem][i] = 0;
+    for (new i; i < 8; i++) playerData[playerid][pSlotItem][i] = 0;
     for (new i; i < 72; i++) playerData[playerid][pInventory][i] = 0;
     for (new i; i < 72; i++) playerData[playerid][pInventoryKolvo][i] = 0;
+    for (new i; i < 72; i++) playerData[playerid][pDopInv][i] = 0;
 	return 1;
 }
 

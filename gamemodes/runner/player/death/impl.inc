@@ -64,10 +64,7 @@ hook OnPlayerConnect(playerid) {
     return 1;
 }
 
-hook OnPlayerDisconnect(playerid, reason) {
-    playerData[playerid][pInjuredTimer] = -1;
-    return 1;
-}
+hook OnPlayerDisconnect(playerid, reason) {    if ((playerData[playerid][pInjuredTimer]) != -1) {        KillTimer(playerData[playerid][pInjuredTimer]);        playerData[playerid][pInjuredTimer] = -1;    }    return 1;}
 
 hook OnPlayerDeath(playerid, killerid, reason) {
     if (!GetPlayerLoggedIn(playerid)) return 1;

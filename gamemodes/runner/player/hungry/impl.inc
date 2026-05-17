@@ -73,7 +73,7 @@ public HungryTime(playerid) {
 
     FullnessTick[playerid] = 0;
 
-    static Float:sHealth;
+    new Float:sHealth;
     new Hungry  = floatround(GetPlayerHungry(playerid));
     new Thirsty = floatround(GetPlayerThirsty(playerid));
     GetPlayerHealth(playerid, sHealth);

@@ -97,16 +97,11 @@ YCMD:sethealth(playerid, const params[], help) {
     if (!GetPlayerLoggedIn(userId))
         return SendErrorMessage(playerid, "ผู้เล่นคนนี้ยังไม่เข้าสู่ระบบ");
 
-    SetPlayerHealth(userId, playerHealth);
-    UpdatePlayerData(playerid);
+    SetPlayerHealthEx(userId, float(playerHealth));
+    UpdatePlayerData(userId);
 
     SendAdminMessage(COLOR_ADMIN, "AdmLog: %s ได้ทำการปรับเลือดของ %s[%d] เป็น %d", ReturnPlayerName(playerid), ReturnPlayerName(userId), userId, playerHealth);
 
-    Query(get_handle()
-        , "UPDATE "PLAYER_TABLE" SET `playerHealth` = '%.2f' WHERE `playerID` = '%i' LIMIT 1;"
-        , playerData[userId][pHealth]
-        , playerData[userId][pID]
-    );
     return 1;
 }
 
