@@ -99,7 +99,7 @@ stock OnPlayerStartGacha(playerid) {
 	return 1;
 }
 
-timer OpenGachaAuto[500](playerid) {
+stock timer OpenGachaAuto[500](playerid) {
 	OnPlayerStartGacha(playerid);
 }
 

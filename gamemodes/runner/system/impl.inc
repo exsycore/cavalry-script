@@ -11,5 +11,6 @@
 #include "busk\impl"
 #include "wheelchair\impl"
 #include "gachas\impl"
+#include "job\impl"
 // #include "carshop\impl"
 // #include "pump\impl"
