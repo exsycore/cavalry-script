@@ -166,13 +166,13 @@ stock RemovePlayerWeapon(playerid, weaponid) {
 }
 
 stock GetPlayerNameEx(playerid) {
-    new string[MAX_PLAYER_NAME + 1];
+    static string[MAX_PLAYER_NAME + 1];
     GetPlayerName(playerid, string, sizeof(string));
     return string;
 }
 
 stock ClearPlayerChat(playerid, lines) {
-	for (new i = 0; i <= lines; i++) {
+	for (new i = 0; i < lines; i++) {
 	    SendClientMessage(playerid, COLOR_WHITE, "");
 	}
 	return 1;
@@ -258,12 +258,7 @@ stock UpdatePlayerDataEx(playerid, const fieldss[], data) {
 	return true;
 }
 
-stock UpdatePlayerDataStr(playerid, const fieldss[], data) {
-	new str[144];
-	format(str, 144, "UPDATE `players` SET `%s` = '%s' WHERE `playerID` = '%d'", fieldss, data, playerData[playerid][pID]);
-	mysql_tquery(get_handle(), str);
-	return true;
-}
+stock UpdatePlayerDataStr(playerid, const fieldss[], const data[]) {	new str[512], escaped[256];	mysql_escape_string(data, escaped, sizeof(escaped), get_handle());	format(str, sizeof(str), "UPDATE `players` SET `%s` = '%s' WHERE `playerID` = '%d'", fieldss, escaped, playerData[playerid][pID]);	mysql_tquery(get_handle(), str);	return true;}
 
 stock acc_int_strcat(query[], len, const name[], number) {
 	new string[256];
@@ -272,12 +267,7 @@ stock acc_int_strcat(query[], len, const name[], number) {
 	return true;
 }
 
-stock acc_str_strcat(query[], len, const name[], const str[]) {
-	new string[256];
-	format(string, sizeof(string), "`%s` = '%s',", name, str);
-	strcat(query, string, len);
-	return true;
-}
+stock acc_str_strcat(query[], len, const name[], const str[]) {	new string[256], escaped[256];	mysql_escape_string(str, escaped, sizeof(escaped), get_handle());	format(string, sizeof(string), "`%s` = '%s'", name, escaped);	strcat(query, string, len);	return true;}
 
 stock acc_float_strcat(query[], len, const name[], Float:number) {
 	new string[256];

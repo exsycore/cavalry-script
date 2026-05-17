@@ -28,6 +28,7 @@ stock SelectGenderDialog(playerid) {
 		if (!response) {
 			SelectGender[playerid] = DEFAULT_PLAYER_SKIN_MALE;
 			bcrypt_hash(playerid, "OnPasswordHash", hash, BCRYPT_COST);
+			@return 1;
 		}
 
 		switch (listitem) {
@@ -250,8 +251,9 @@ stock UpdatePlayerData(playerid) {
 	// ===================================================================================
 	
 	strdel(query, strlen(query)-1, strlen(query));
-	format(query, sizeof(query), "%s WHERE `playerID` = '%d'", query, playerData[playerid][pID]);
-	mysql_query(get_handle(), query, false);
+	new tmpQuery[2048];
+	format(tmpQuery, sizeof(tmpQuery), "%s WHERE `playerID` = '%d'", query, playerData[playerid][pID]);
+	mysql_query(get_handle(), tmpQuery, false);
     return true;
 }
 

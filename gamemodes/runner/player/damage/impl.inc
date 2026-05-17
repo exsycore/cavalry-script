@@ -149,18 +149,18 @@ hook OnPlayerDamageDone(playerid, Float:amount, issuerid, WEAPON:weapon, bodypar
     new issuerName[MAX_PLAYER_NAME], victimName[MAX_PLAYER_NAME];
     new weapName[32];
 
-    GetPlayerName(playerid,  victimName,  MAX_PLAYER_NAME);
-    GetPlayerName(issuerid,  issuerName,  MAX_PLAYER_NAME);
+    GetPlayerName(playerid, victimName, MAX_PLAYER_NAME);
 
-    if (issuerid != INVALID_PLAYER_ID) {
+    if (issuerid != INVALID_PLAYER_ID && IsPlayerConnected(issuerid)) {
+        GetPlayerName(issuerid, issuerName, MAX_PLAYER_NAME);
         new cw = g_PlayerCustomWeapon[issuerid];
         if (cw != -1) strmid(weapName, g_WeaponTable[cw][CW_Name], 0, sizeof(weapName));
         else GetWeaponName(weapon, weapName, sizeof(weapName));
     } else {
+        issuerName = "Environment";
         GetWeaponName(weapon, weapName, sizeof(weapName));
     }
 
-    // printf("[DMG] %s ? %s | %.1f HP | %s | bodypart:%d", issuerName, victimName, amount, weapName, bodypart);
     return 1;
 }
 
