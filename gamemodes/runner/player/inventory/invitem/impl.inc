@@ -123,6 +123,19 @@ stock GetItemAmount(playerid, itemid) {
     return amount;
 }
 
+/*
+ * @brief Get the total amount of an item a player has, looked up by item name.
+ * @param playerid Player ID in server.
+ * @param name Item name to search (matches ItemsInfo[][ItemName]).
+ * @return -1 if item name not found in ItemsInfo, 0 if player doesn't own it, otherwise the total quantity.
+ */
+stock GetItemAmountByName(playerid, const name[]) {
+    new itemid = GetItemsIDByName(name);
+    if (itemid == -1) return -1;
+
+    return GetItemAmount(playerid, itemid);
+}
+
 stock bool:OnPlayerClickSlot(playerid, slot) {
     if (playerData[playerid][pInventoryKolvo][slot] >= 2) {
 	    for (new i = 0; i < 7; i++) {

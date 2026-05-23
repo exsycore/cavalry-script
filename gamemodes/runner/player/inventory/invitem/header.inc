@@ -22,3 +22,4 @@ new g_PlayerLastAmmo[MAX_PLAYERS] = {-1, ...};
 
 stock bool:HasItem(playerid, itemid);
 stock GetItemAmount(playerid, itemid);
+stock GetItemAmountByName(playerid, const name[]);
