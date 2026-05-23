@@ -2,85 +2,79 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Importance
-
-This project use tis620 encoding only, Please claude use tis-620 only to edit files in project
-
 ## Project Overview
 
-**Cavalry City** — a SA-MP 0.3.7 roleplay gamemode written in **Pawn**, targeting a Thai-language community. Currently in **Pre-Beta** status.
+**Cavalry** is a SA:MP 0.3.7 roleplay gamemode written in Pawn, using a modular architecture powered by YSI4, MySQL, and Streamer. The project is in active development (Pre-Beta). Language is Thai-oriented (Thai UI strings, Thai server language).
 
-## Build & Run
+## Build & Compile
 
-**Compile:**
-```bash
-pawno/pawncc.exe gamemodes/main.pwn --% -Dgamemodes -;+ -(+ -d3 -O1
+The Pawn compiler (`pawno/pawncc.exe`) compiles `gamemodes/main.pwn` into `gamemodes/main.amx`.
+
+**VS Code build task** (default build task in `.vscode/tasks.json`):
 ```
-Output: `gamemodes/main.amx`
-
-**Run:**
-```bash
-samp-server.exe
+pawno\pawncc.exe gamemodes\main.pwn --% -Dgamemodes -;+ -(+ -d3 -O1
 ```
 
-## Configuration Files
+Flags:
+- `-d3` — full debug info
+- `-O1` — optimization level 1
+- `-;+` — require semicolons
+- `-(` — require parentheses on function calls
 
-| File | Purpose |
-|---|---|
-| `server.cfg` | SA-MP server settings (port 7777, plugins, gamemode) |
-| `mysql.ini` | MySQL credentials (database: `sampsvr`) |
-| `gamemodes/configs.inc` | All server constants: spawn pos, default money/skin/health, gender, key-press macros, message macros, `OO_TYPE` accessor pattern |
-| `database/dump.sql` | Full MySQL schema and seed data |
+**Run server:** Execute `samp-server.exe` (requires `server.cfg`, MySQL running, and all plugins in `plugins/`).
 
 ## Architecture
 
-### Two-Pass Include System ("Runner")
+### Entry Point
+`gamemodes/main.pwn` — includes all dependencies (YSI, MySQL, Streamer, sscanf, etc.), then includes `configs` and `runner/runner` twice (once for headers, once for implementations).
 
-The most distinctive pattern: `main.pwn` includes `runner/runner.inc` **twice**. On the first pass, all `header.inc` files are loaded (forward declarations, enums, variables). On the second pass, all `impl.inc` files are loaded (implementations). This resolves Pawn's forward-reference limitations.
+### Two-Pass Include System
+`runner/runner.inc` uses a two-pass pattern via include guards:
+1. **First pass** (`RUNNER_@@@@_HEADER`): includes all `header.inc` files — declares enums, forwards, stocks, variables
+2. **Second pass** (`RUNNER_@@@@_IMPL`): includes all `impl.inc` files — implements callbacks, hooks, and function bodies
 
-```pawn
-#include "runner\runner"   // pass 1: headers
-#include "runner\runner"   // pass 2: implementations
-```
-
-Controlled by preprocessor guards `RUNNER_@@@@_HEADER` and `RUNNER_@@@@_IMPL`.
+`main.pwn` includes `"runner\runner"` twice to trigger both passes. This is critical — do not remove the duplicate include.
 
 ### Module Structure (`gamemodes/runner/`)
+Each module has `header.inc` (declarations) and `impl.inc` (implementations), sometimes with a `callape.inc` that combines both:
 
-- `core/` — Server init/exit hooks, build version textdraw
-- `db/` — MySQL connection (`mysql_connect_file`), charset `tis620`, server name/mode setup
-- `variables/` — Global state, `playerData` array (per-player enum with ~50+ fields)
-- `cmd/` — Command processing, login enforcement, command logging
-- `player/` — Player subsystems: login (bcrypt), admin, chat, damage, death, faction, gangs, hungry/thirsty, inventory (9 sub-modules), level/XP, fall detection
-- `system/` — World systems: vehicle ownership/dealership, entrance/exit teleportation, ATM banking, GPS, car shop, gas pumps, gacha/loot boxes, wheelchair, HUD/UI
-- `server/` — Anti-cheat (nex-ac), voice chat (sampvoice), map objects
-- `fixed/` — Animation fixes
-- `util/` — Color constants (29 colors), helper functions (money format, hex, SQL query wrapper)
+| Directory | Purpose |
+|---|---|
+| `core/` | YSI includes (y_hooks, y_timers, y_commands, y_master), base declarations |
+| `db/` | MySQL connection (`g_SQL` handle), database initialization |
+| `util/` | Utility functions and colour definitions |
+| `variables/` | Global variable declarations |
+| `fixed/` | SA-MP fixes (animation fixes) |
+| `player/` | Player systems: login, inventory, admin, chat, damage, death, level, hungry, faction, gangs, falljump |
+| `server/` | Server systems: anticheat (nex-ac), voicechat (sampvoice), map objects, progress bars |
+| `cmd/` | Command definitions |
+| `system/` | Game systems: vehicle, entrance, atm, gps, ui, busk, wheelchair, gachas, jobs (apple, fishing, mining) |
 
-### Key Libraries & Plugins
+### Key Conventions
 
-- **YSI4** — `y_hooks`, `y_commands` (YCMD), `y_inline`, `y_timers`, `y_dialog`, `y_master`
-- **MySQL R41-4** — All queries are threaded (`mysql_tquery`), helper `Query()` wraps `va_format` + `mysql_tquery`
-- **Pawn.RakNet** — Low-level packet/RPC interception
-- **nex-ac** — Anti-cheat
-- **sampvoice** — Proximity voice chat
-- **bcrypt** — Password hashing (`$2b$12$` format)
-- **Streamer** — Extended object/area/3D text streaming
+- **Player data** uses an OOP-like macro pattern: `Player.varName[playerid]` expands via `OO_TYPE` macros in `configs.inc`
+- **Hook replacement**: `DEFINE_HOOK_REPLACEMENT__(OnPlayer, OP_)` shortens callback names (e.g., `OP_Connect` instead of `OnPlayerConnect`)
+- **YSI4 hooks**: all callbacks are hooked via `hook` (y_hooks), not `public`/`OnPlayer*` directly
+- **Commands**: defined with `YCMD:` prefix using y_commands
+- **Message macros**: `SendErrorMessage`, `SendSyntaxMessage`, `SendTipsMessage`, etc. defined in `configs.inc` using `va_SendClientMessage` (variadic)
+- **Key press macros**: `PRESSED(%0)`, `RELEASED(%0)`, `PRESS_*` constants in `configs.inc`
+- **Database**: MySQL via `mysql-plugin` R41-4, connection handle is global `g_SQL`, database name `sampsvr`, credentials in `mysql.ini`
 
-### Code Patterns
+### Key Files
+- `gamemodes/configs.inc` — server config, constants, macros, key press definitions
+- `gamemodes/runner/db/header.inc` — MySQL handle (`g_SQL`) and `get_handle()` stock
+- `gamemodes/runner/core/header.inc` — base YSI includes and `buildVersionName` PlayerText
+- `database/dump.sql` — database schema
 
-- **Macro-based OOP:** `OO_TYPE` macro and `Player.` prefix create pseudo-OOP accessors for player data (e.g., `Player.id[playerid]`)
-- **Hook-based callbacks:** All SA-MP callbacks use YSI hooks (`hook OnPlayerConnect`, etc.) with `DEFINE_HOOK_REPLACEMENT__(OnPlayer, OP_)` shorthand
-- **Message macros** (defined in `configs.inc`): `SendErrorMessage`, `SendTipsMessage`, `SendPlayerAction`, `SendSyntaxMessage`, `SendWarningMessage`, `SendCongratMessage`, `SendGarageAction`
-- **Key-press macros:** `PRESSED(%0)`, `RELEASED(%0)`, `PRESS_Y`, `PRESS_F`, `PRESS_TAB`, etc.
-- **Dialogs:** Use YSI's inline callback pattern: `inline Response(...) { ... } Dialog_ShowCallback(playerid, using inline Response, ...)`
-- **Iterators:** `Iterator: ServerVehicles`, `Iterator: PrivateVehicles`
-- **Naming:** Hungarian notation (`g_SQL` for global MySQL handle), player arrays sized to `MAX_PLAYERS`
+### Plugins (server.cfg)
+crashdetect, pawnraknet, sscanf, mysql, YSF, streamer, sampvoice, cec, encore, samp_bcrypt, bscrashfix
 
-### Database (MySQL)
+### Filterscripts
+`sampvoice` — voice chat filterscript (`filterscripts/sampvoice.pwn`)
 
-Database: `sampsvr`, charset: `tis620` (Thai). Key tables: `players`, `vehicles`, `dealership`, `dealership_stock`, `atms`, `entrances`, `gang`, `garage`, `gps_locations`, `pumps`, `dropitems`, `gachas`.
+## Important Notes
 
-### Plugins (loaded in order)
-
-`crashdetect`, `pawnraknet`, `sscanf`, `mysql`, `YSF`, `streamer`, `sampvoice`, `cec`, `samp_bcrypt`, `bscrashfix`
+- `MAX_PLAYERS` is overridden to `2` in `main.pwn` (development/testing mode)
+- `CGEN_MEMORY` is set to `50000` in `configs.inc` for y_hooks code generation
+- `DISABLE_ANTICHEAT` is defined in `configs.inc` — anticheat is currently disabled for testing
+- The `.gitignore` excludes `*.amx`, `*.txt`, and binaries — compiled output and logs are not tracked
