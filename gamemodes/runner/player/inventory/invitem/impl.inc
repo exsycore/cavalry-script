@@ -759,7 +759,7 @@ stock CheckOn(playerid) {
         PlayerTextDrawShow(playerid, InfoItems[playerid][2]),
         PlayerTextDrawShow(playerid, InfoItems[playerid][3]);
         PlayerTextDrawShow(playerid, InfoItems[playerid][4]),
-        PlayerTextDrawShow(playerid, InfoItems[playerid][5]); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.
+        PlayerTextDrawShow(playerid, InfoItems[playerid][5]); // Воспроизводим звук.
     }
     return true;
 }
@@ -787,7 +787,7 @@ stock bool:CheckSuka(playerid) {
 		}
 
 		RefreshInv2(playerid, PickInvent[playerid]);
-		va_SendClientMessage(playerid, COLOR_RED, "[пїЅпїЅНјФґпїЅпїЅТґ] {FFFFFF}пїЅпїЅпїЅпїЅпїЅНґпїЅпїЅпїЅпїЅНјпїЅпїЅпїЅпїЅпїЅпїЅТ№пїЅпїЅпїЅНЎ");
+		va_SendClientMessage(playerid, COLOR_RED, "[ўйНјФґѕЕТґ] {FFFFFF}ЛйТБ¶НґаКЧйНјйТаЛЕиТ№ХйННЎ");
 		return true;
 	}
 
@@ -922,63 +922,63 @@ stock GiveItem(playerid,item) {
 	new skin = GetPlayerSkin(playerid);
 	switch (item) {
 		case 19039..19053: SetAttachToSkin(playerid, 15, skin, item);
-		case 19421..19424://пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+		case 19421..19424://Наушники
 			{
 				SetAttachToSkin(playerid, 14, skin, item);
 			}
-		case 18911..18920: //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+		case 18911..18920: //банданы
 			{
 				SetAttachToSkin(playerid, 13, skin, item);
 			}
-		case 19011..19019,19024,19027,19028,19029,19022,19035,19031,19032,19033://пїЅпїЅпїЅпїЅ
+		case 19011..19019,19024,19027,19028,19029,19022,19035,19031,19032,19033://Очки
 			{
 				SetAttachToSkin(playerid, 12, skin, item);
 			}
-		case 19069,19068,19067://пїЅпїЅпїЅпїЅпїЅ
+		case 19069,19068,19067://Шапки
 			{
 				SetAttachToSkin(playerid, 1, skin, item);
 			}
-		case 19554: //пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+		case 19554: //Шапка баллас
 			{
 				SetAttachToSkin(playerid, 3, skin, item);
 			}
-		case 18953,18954: //ТёпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+		case 18953,18954: //Тёплые шапки
 			{
 				SetAttachToSkin(playerid, 2, skin, item);
 			}
-		case 18968,18967,18969://пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+		case 18968,18967,18969://Панамки
 			{
 				SetAttachToSkin(playerid, 4, skin, item);
 			}
-		case 18955,18956,18957,18959://пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ
+		case 18955,18956,18957,18959://Кепки на зад
 			{
 				SetAttachToSkin(playerid, 5, skin, item);
 			}
-		case 18926,18927,18928,18929,18930,18931,18932,18933: //пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+		case 18926,18927,18928,18929,18930,18931,18932,18933: //Кепки наперёд
 			{
 				SetAttachToSkin(playerid, 6, skin, item);
 			}
-		case 19104,19105,19106,19107,19108,19109://пїЅпїЅпїЅпїЅпїЅ
+		case 19104,19105,19106,19107,19108,19109://Каски
 			{
 				SetAttachToSkin(playerid, 9, skin, item);
 			}
-		case 19519://пїЅпїЅпїЅпїЅпїЅпїЅ 1
+		case 19519://Парики 1
 			{
 				SetAttachToSkin(playerid, 10, skin, item);
 			}
-		case 19274://пїЅпїЅпїЅпїЅпїЅпїЅ 2
+		case 19274://Парики 2
 			{
 				SetAttachToSkin(playerid, 11, skin, item);
 			}
-		case 18925,18922,18923,18924,18921: //пїЅпїЅпїЅпїЅпїЅпїЅ
+		case 18925,18922,18923,18924,18921: //Береты
 			{
 				SetAttachToSkin(playerid, 8, skin, item);
 			}
-		case 18947,18948,18949,18950,18951: //пїЅпїЅпїЅпїЅпїЅ
+		case 18947,18948,18949,18950,18951: //Шляпы
 			{
 				SetAttachToSkin(playerid, 7, skin, item);
 			}
-			//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+			//Рякзаки
 		case 3026:
 			{
 				SetAttachToSkin(playerid, 16, skin, item);
@@ -991,168 +991,168 @@ stock GiveItem(playerid,item) {
 			{
 				SetAttachToSkin(playerid, 18, skin, item);
 			}
-			//пїЅпїЅпїЅ
-			//пїЅпїЅпїЅпїЅпїЅ 1
+			//Вип
+			//Шляпы 1
 		case 18970, 18973, 18972, 18971:
 			{
 				SetAttachToSkin(playerid, 19, skin, item);
 			}
-			//пїЅпїЅпїЅпїЅпїЅ 2
+			//Шляпы 2
 		case 19487, 19352:
 			{
 				SetAttachToSkin(playerid, 20, skin, item);
 			}
-			//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+			//Банданы на голову
 		case 18910, 18909, 18908, 18907, 18906:
 			{
 				SetAttachToSkin(playerid, 21, skin, item);
 			}
-			//пїЅпїЅпїЅ
+			//Усы
 		case 19351:
 			{
 				SetAttachToSkin(playerid, 22, skin, item);
 			}
-			//пїЅпїЅпїЅ
+			//Усы
 		case 19350:
 			{
 				SetAttachToSkin(playerid, 24, skin, item);
 			}
-			//пїЅпїЅпїЅпїЅпїЅпїЅ
+			//Гитары
 		case 19319, 19318, 19317:
 			{
 				SetAttachToSkin(playerid, 23, skin, item);
 			}
-			//пїЅпїЅпїЅпїЅпїЅ
+			//Скейт
 		case 19878:
 			{
 				SetAttachToSkin(playerid, 32, skin, item);
 			}
-		case 19064..19066://пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+		case 19064..19066://шапки новогоднии
 			{
 				SetAttachToSkin(playerid, 25, skin, item);
 			}
-		case 19085://пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+		case 19085://повязка
 			{
 				SetAttachToSkin(playerid, 26, skin, item);
 			}
-		case 19054..19058://пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+		case 19054..19058://новогодний рякзак
 			{
 				SetAttachToSkin(playerid, 27, skin, item);
 			}
-		case 881://пїЅпїЅпїЅпїЅ
+		case 881://Ёлка
 			{
 				SetAttachToSkin(playerid, 28, skin, item);
 			}
-		case 19624: //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+		case 19624: //Чимодан
 			{
 				SetAttachToSkin(playerid, 29, skin, item);
 			}
-			//пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
-		case 2102: //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+			//Вещи из крафта
+		case 2102: //Колонка
 			{
 				SetAttachToSkin(playerid, 33, skin, item);
 			}
-		case 2690://пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+		case 2690://Огнетушителя
 			{
 				SetAttachToSkin(playerid, 34, skin, item);
 			}
-		case 2045://пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+		case 2045://Бита с гвоздями
 			{
 				SetAttachToSkin(playerid, 35, skin, item);
 			}
-		case 19590://пїЅпїЅпїЅ
+		case 19590://Меч
 			{
 				SetAttachToSkin(playerid, 36, skin, item);
 			}
-		case 19631://пїЅпїЅпїЅпїЅпїЅ
+		case 19631://Молот
 			{
 				SetAttachToSkin(playerid, 37, skin, item);
 			}
-		case 18963://пїЅпїЅпїЅпїЅпїЅ CJ
+		case 18963://Маска CJ
 			{
 				SetAttachToSkin(playerid, 38, skin, item);
 			}
-		case 19921://пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+		case 19921://Красный чемодан
 			{
 				SetAttachToSkin(playerid, 39, skin, item);
 			}
-		case 18645://пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+		case 18645://Огненный шлем
 			{
 				SetAttachToSkin(playerid, 40, skin, item);
 			}
-		case 19036://пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+		case 19036://Белая маска
 			{
 				SetAttachToSkin(playerid, 41, skin, item);
 			}
-		case 19037://пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+		case 19037://Красная маска
 			{
 				SetAttachToSkin(playerid, 42, skin, item);
 			}
-		case 19038://пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+		case 19038://Зеленая маска
 			{
 				SetAttachToSkin(playerid, 43, skin, item);
 			}
-		case 18938://пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+		case 18938://Синяя шапка
 			{
 				SetAttachToSkin(playerid, 44, skin, item);
 			}
-		case 18937://пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+		case 18937://Красная шапка
 			{
 				SetAttachToSkin(playerid, 45, skin, item);
 			}
-		case 19118://пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+		case 19118://Зеленая шапка
 			{
 				SetAttachToSkin(playerid, 46, skin, item);
 			}
-		case 19904://пїЅпїЅпїЅпїЅпїЅ
+		case 19904://Жилет
 			{
 				SetAttachToSkin(playerid, 47, skin, item);
 			}
-		case 19469://пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ
+		case 19469://Повязка на шея
 			{
 				SetAttachToSkin(playerid, 48, skin, item);
 			}
-		case 333://пїЅпїЅпїЅпїЅпїЅпїЅ
+		case 333://Кляшка
 			{
 				SetAttachToSkin(playerid, 49, skin, item);
 			}
-		case 336://пїЅпїЅпїЅпїЅ
+		case 336://Бита
 			{
 				SetAttachToSkin(playerid, 50, skin, item);
 			}
-		case 19626://пїЅпїЅпїЅпїЅпїЅпїЅ
+		case 19626://Лопата
 			{
 				SetAttachToSkin(playerid, 51, skin, item);
 			}
-		case 338://пїЅпїЅпїЅ
+		case 338://Кий
 			{
 				SetAttachToSkin(playerid, 52, skin, item);
 			}
-		case 339://пїЅпїЅпїЅпїЅпїЅпїЅ
+		case 339://Катана
 			{
 				SetAttachToSkin(playerid, 53, skin, item);
 			}
-		case 326://пїЅпїЅпїЅпїЅпїЅпїЅ
+		case 326://Тростя
 			{
 				SetAttachToSkin(playerid, 54, skin, item);
 			}
-		case 18637://пїЅпїЅпїЅ
+		case 18637://Щит
 			{
 				SetAttachToSkin(playerid, 55, skin, item);
 			}
-		case 18636://пїЅпїЅпїЅпїЅпїЅ POLICE
+		case 18636://Кепка POLICE
 			{
 				SetAttachToSkin(playerid, 56, skin, item);
 			}
-		case 19472://пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+		case 19472://Респиратор
 			{
 				SetAttachToSkin(playerid, 57, skin, item);
 			}
-		case 2226://пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+		case 2226://Бумбокс
 			{
 				SetAttachToSkin(playerid, 58, skin, item);
 			}
-		case 1276://пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+		case 1276://Красная маска
 			{
 				SetAttachToSkin(playerid, 59, skin, item);
 			}
@@ -1160,95 +1160,95 @@ stock GiveItem(playerid,item) {
 			{
 				SetAttachToSkin(playerid, 60, skin, item);
 			}
-			case 11704://пїЅпїЅпїЅпїЅпїЅ ( пїЅпїЅпїЅпїЅпїЅпїЅ )
+			case 11704://Маска ( Демона )
 			{
 				SetAttachToSkin(playerid, 61, skin, item);
 			}
-		case 19137://пїЅпїЅпїЅпїЅпїЅ ( пїЅпїЅпїЅпїЅпїЅпїЅ )
+		case 19137://Маска ( Петуха )
 			{
 				SetAttachToSkin(playerid, 62, skin, item);
 			}
-		case 19346://пїЅпїЅпїЅпїЅпїЅпїЅ
+		case 19346://ХотДог
 			{
 				SetAttachToSkin(playerid, 63, skin, item);
 			}
-		case 6865://пїЅпїЅпїЅпїЅпїЅ ( пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ )
+		case 6865://Маска ( Кентавра )
 			{
 				SetAttachToSkin(playerid, 64, skin, item);
 			}
-		case 18952://пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+		case 18952://Шлем боксера
 			{
 				SetAttachToSkin(playerid, 65, skin, item);
 			}
-		case 19847://пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ19136
+		case 19847://Акс Мясо19136
 			{
 				SetAttachToSkin(playerid, 66, skin, item);
 			}
-		case 19136://пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+		case 19136://Акс Мясо
 			{
 				SetAttachToSkin(playerid, 67, skin, item);
 			}
-		case 11745://пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ by despaze in venni
+		case 11745://Сумка для ноута by despaze in venni
 			{
 				SetAttachToSkin(playerid, 68, skin, item);
 			}
-		case 19094://пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ by despaze in venni
+		case 19094://Бургер на голову by despaze in venni
 			{
 				SetAttachToSkin(playerid, 69, skin, item);
 			}
 		case 19141:
 			{
-				SetAttachToSkin(playerid, 70, skin, item); // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+				SetAttachToSkin(playerid, 70, skin, item); // Шлем сват
 			}
 		case 19314:
 			{
-				SetAttachToSkin(playerid, 71, skin, item); // пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+				SetAttachToSkin(playerid, 71, skin, item); // Рога на голову
 			}
 		case 2908:
 			{
-				SetAttachToSkin(playerid, 72, skin, item); // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+				SetAttachToSkin(playerid, 72, skin, item); // Маска зомби
 			}
 		case 2803:
 			{
-				SetAttachToSkin(playerid, 73, skin, item); // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+				SetAttachToSkin(playerid, 73, skin, item); // Маска зомби
 			}
 		case 2406:
 			{
-				SetAttachToSkin(playerid, 74, skin, item); // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+				SetAttachToSkin(playerid, 74, skin, item); // Маска зомби
 			}
 		case 368:
 			{
-				SetAttachToSkin(playerid, 75, skin, item); // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+				SetAttachToSkin(playerid, 75, skin, item); // Маска зомби
 			}
 		case 19636:
 			{
-				SetAttachToSkin(playerid, 76, skin, item); // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+				SetAttachToSkin(playerid, 76, skin, item); // Маска зомби
 			}
 		case 19079:
 			{
-				SetAttachToSkin(playerid, 77, skin, item); // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+				SetAttachToSkin(playerid, 77, skin, item); // Маска зомби
 			}
 		case 8492:
 			{
-				SetAttachToSkin(playerid, 78, skin, item); // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+				SetAttachToSkin(playerid, 78, skin, item); // Маска зомби
 			}
 		case 2511:
 			{
-				SetAttachToSkin(playerid, 79, skin, item); // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+				SetAttachToSkin(playerid, 79, skin, item); // Маска зомби
 			}
 		case 19521:
 			{
-				SetAttachToSkin(playerid, 80, skin, item); // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+				SetAttachToSkin(playerid, 80, skin, item); // Маска зомби
 			}
 		case 11712:
 			{
-				SetAttachToSkin(playerid, 81, skin, item); // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+				SetAttachToSkin(playerid, 81, skin, item); // Маска зомби
 			}
 		case 356:
 			{
-				SetAttachToSkin(playerid, 82, skin, item); // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+				SetAttachToSkin(playerid, 82, skin, item); // Маска зомби
 			}
-		case 19332: // пїЅпїЅпїЅ
+		case 19332: // Шар
 			{
 				SetAttachToSkin(playerid, 84, skin, item);
 			}
@@ -1256,27 +1256,27 @@ stock GiveItem(playerid,item) {
 			{
 				SetAttachToSkin(playerid, 85, skin, item);
 			}
-		case 19333: // пїЅпїЅпїЅ
+		case 19333: // Шар
 			{
 				SetAttachToSkin(playerid, 86, skin, item);
 			}
-		case 19334: // пїЅпїЅпїЅ
+		case 19334: // Шар
 			{
 				SetAttachToSkin(playerid, 87, skin, item);
 			}
-		case 19335: // пїЅпїЅпїЅ
+		case 19335: // Шар
 			{
 				SetAttachToSkin(playerid, 88, skin, item);
 			}
-		case 19336: // пїЅпїЅпїЅ
+		case 19336: // Шар
 			{
 				SetAttachToSkin(playerid, 89, skin, item);
 			}
-		case 19337: // пїЅпїЅпїЅ
+		case 19337: // Шар
 			{
 				SetAttachToSkin(playerid, 90, skin, item);
 			}
-		case 19338: // пїЅпїЅпїЅ
+		case 19338: // Шар
 			{
 				SetAttachToSkin(playerid, 91, skin, item);
 			}
@@ -1739,7 +1739,7 @@ stock _GiveWeaponFromItem(playerid, itemIndex, slot) {
 		ResetPlayerWeapons(playerid);
 		ResetPlayerCustomWeapon(playerid);
 		weaponOn[playerid] = false;
-		SendCongratMessage(playerid, "{FFFFFF}пїЅШіпїЅпїЅпїЅпїЅпїЅпїЅпїЅШёпїЅпїЅпїЅВєпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
+		SendCongratMessage(playerid, "{FFFFFF}¤ШідґйаЎзєНТЗШёаГХВєГйНВбЕйЗ");
 	} else {
 		new variant[25];
 		strmid(variant, ItemsInfo[itemIndex][ItemPhoneColor], 0, sizeof(variant));
@@ -1773,7 +1773,7 @@ stock _GiveWeaponFromItem(playerid, itemIndex, slot) {
 		else if (!strcmp(itemName, "Knife+",         true)) { weaponID = WEAPON_KNIFE;     ammo = 1;  }
 		else if (!strcmp(itemName, "Baseball Bat",   true)) { weaponID = WEAPON_BAT;       ammo = 1;  }
 
-		if (weaponID == -1) return 1; // пїЅпїЅиѕє mapping
+		if (weaponID == -1) return 1; // дБиѕє mapping
 
 		new bool:isMelee = (weaponID == WEAPON_KNIFE || weaponID == WEAPON_BAT ||
 							weaponID == WEAPON_BRASSKNUCKLE || weaponID == WEAPON_KATANA ||
@@ -1784,13 +1784,13 @@ stock _GiveWeaponFromItem(playerid, itemIndex, slot) {
 				new idx = playerData[playerid][pInventory][i];
 				if (idx <= 0) continue;
 
-				if (!strcmp(ItemsInfo[idx][ItemName2], "пїЅпїЅпїЅпїЅШ№", true)) {
+				if (!strcmp(ItemsInfo[idx][ItemName2], "ЎГРКШ№", true)) {
 					new qty = playerData[playerid][pInventoryKolvo][i];
 					ammo += qty;
 				}
 			}
 
-			if (ammo <= 0) return SendErrorMessage(playerid, "{FFFFFF}пїЅШіпїЅпїЅпїЅпїЅХЎпїЅпїЅН§пїЅпїЅпїЅпїЅШ№ пїЅШіпїЅпїЅпїЅпїЅГ¶пїЅпїЅТїпїЅпїЅпїЅН§пїЅпїЅпїЅпїЅШ№пїЅпїЅ");
+			if (ammo <= 0) return SendErrorMessage(playerid, "{FFFFFF}¤ШідБиБХЎЕиН§ЎГРКШ№ ¤ШіКТБТГ¶¤ГТїЎЕиН§ЎГРКШ№дґй");
 		}
 
 		ResetPlayerWeapons(playerid);
@@ -1806,7 +1806,7 @@ stock _GiveWeaponFromItem(playerid, itemIndex, slot) {
 		g_PlayerLastAmmo[playerid] = ammo;
 		weaponOn[playerid] = true;
 
-		SendCongratMessage(playerid, "{FFFFFF}пїЅШіпїЅпїЅТ№пїЅпїЅпїЅШё {FDCF28}%s {FFFFFF}(%d пїЅСґ)", itemName, ammo);
+		SendCongratMessage(playerid, "{FFFFFF}¤ШігЄй§Т№НТЗШё {FDCF28}%s {FFFFFF}(%d №Сґ)", itemName, ammo);
 	}
 	return 1;
 }
@@ -1854,7 +1854,7 @@ hook OnPlayerUpdate(playerid) {
             new idx = playerData[playerid][pInventory][i];
             if (idx <= 0) continue;
 
-            if (!strcmp(ItemsInfo[idx][ItemName2], "пїЅпїЅпїЅпїЅШ№", true)) {
+            if (!strcmp(ItemsInfo[idx][ItemName2], "ЎГРКШ№", true)) {
                 new qty = playerData[playerid][pInventoryKolvo][i];
 
                 if (qty <= remaining) {
@@ -1887,7 +1887,7 @@ stock UseItem(playerid, td, itemIndex, itemModel) {
     if (ItemsInfo[itemIndex][itemused] == false) {
         if (musorka[playerid] >= 1) {
             RefreshInv2(playerid, td);
-            va_SendClientMessage(playerid, COLOR_RED, "[пїЅпїЅНјФґпїЅпїЅТґ] {FFFFFF}пїЅШіпїЅпїЅпїЅпїЅГ¶пїЅпїЅпїЅпїЅпїЅи§ўН§пїЅпїЅа©ѕпїЅРўпїЅТ§пїЅС§пїЅпїЅпїЅпїЅпїЅТ№пїЅпїЅ");
+            va_SendClientMessage(playerid, COLOR_RED, "[ўйНјФґѕЕТґ] {FFFFFF}¤ШіКТБТГ¶·Фй§КФи§ўН§дґйа©ѕТРўйТ§¶С§ўВРа·иТ№Сй№");
         }
         if (musorka[playerid] == 0) {
             SetPVarInt(playerid, "dItemID", itemIndex);
@@ -1898,17 +1898,17 @@ stock UseItem(playerid, td, itemIndex, itemModel) {
         return true;
     }
 
-    switch (itemModel) { // пїЅпїЅ itemModel пїЅпїЅпїЅпїЅСєпїЅпїЅ case
-		// пїЅпїЅ USE пїЅпїЅпїЅШё
+    switch (itemModel) { // гЄй itemModel КУЛГСєаЄз¤ case
+		// Ўґ USE НТЗШё
 		case 321 .. 372: {
 			_GiveWeaponFromItem(playerid, itemIndex, IDS);
 			RefreshInv2(playerid, td);
 			closeuse(playerid);
 		}
-		// пїЅпїЅ USE пїЅпїЅпїЅН§пїЅпїЅпїЅпїЅШ№
+		// Ўґ USE ЎЕиН§ЎГРКШ№
 		case 2041: {
 			for (new s = 0; s < MAX_ITEMS; s++) {
-				if (!strcmp(ItemsInfo[s][ItemName2], "пїЅпїЅпїЅпїЅШ№", true)) {
+				if (!strcmp(ItemsInfo[s][ItemName2], "ЎГРКШ№", true)) {
 					AddItem(playerid, s, 30);
 				}
 			}
@@ -1916,59 +1916,59 @@ stock UseItem(playerid, td, itemIndex, itemModel) {
 			// RefreshInv2(playerid, td);
 			// closeuse(playerid);
 		}
-        // пїЅпїЅ USE пїЅН§пїЅФ№
+        // Ўґ USE ўН§ЎФ№
 		case 2768: {
-			if (playerData[playerid][pHungry] >= 100) return SendErrorMessage(playerid, "{FFFFFF}пїЅН№пїЅпїЅпїЅШіпїЅС§пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
+			if (playerData[playerid][pHungry] >= 100) return SendErrorMessage(playerid, "{FFFFFF}µН№№Хй¤ШіВС§дБиЛФЗНТЛТГ");
 
 			GivePlayerHungry(playerid, 10);
 			ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.1, 0, 0, 0, 0, 0, 1);
 			CallLocalFunction("DeleteItem", "ddd", playerid, itemIndex, 1);
-			SendCongratMessage(playerid, "{FFFFFF}пїЅШіпїЅпїЅпїЅСєпїЅпїЅР·Т№пїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ +10)");
+			SendCongratMessage(playerid, "{FFFFFF}¤ШідґйГСє»ГР·Т№НТЛТГ (¤иТНТЛТГ +10)");
 			// RefreshInv2(playerid, td);
 			// closeuse(playerid);
 		}
-		// пїЅпїЅ USE пїЅН§пїЅФ№
+		// Ўґ USE ўН§ЎФ№
 		case 2647: {
-			if (playerData[playerid][pThirsty] >= 100) return SendErrorMessage(playerid, "{FFFFFF}пїЅН№пїЅпїЅпїЅШіпїЅС§пїЅпїЅпїЅпїЅпїЅЗ№пїЅпїЅ");
+			if (playerData[playerid][pThirsty] >= 100) return SendErrorMessage(playerid, "{FFFFFF}µН№№Хй¤ШіВС§дБиЛФЗ№йУ");
 
 			GivePlayerThirsty(playerid, 10);
 			ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.1, 0, 0, 0, 0, 0, 1);
 			CallLocalFunction("DeleteItem", "ddd", playerid, itemIndex, 1);
-			SendCongratMessage(playerid, "{FFFFFF}пїЅШіпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅН§пїЅпїЅпїЅпїЅ (пїЅпїЅТѕпїЅС§пїЅТ№ +10)");
+			SendCongratMessage(playerid, "{FFFFFF}¤ШідґйґЧиБа¤ГЧиН§ґЧиБ (¤иТѕЕС§§Т№ +10)");
 			// RefreshInv2(playerid, td);
 			// closeuse(playerid);
 		}
-		// пїЅпїЅ PUT пїЅН§пїЅпїЅпїЅи§µпїЅЗЁпїЅпїЅТ·пїЅпїЅпїЅпїЅ
+		// Ўґ PUT ўН§µЎбµи§µСЗЁРБТ·Хи№Хи
         case 19090..19091,19092,18636,19487,19352,19064,19065,19066,19200,19141,2908,19314,19094,19136,18952,19346,19137,19067..19069,19554,18953,18954,18968,18967,18969,18955,18956,18957,18959,18926,18927,18928,18929,18930,18931,18932,18933,19104..19109,18921..18925,19519,19274,18906..18910,18970..18973,18947,18948,18949,18950,18951,19521: {
 			if (playerData[playerid][pSlotItem][2] != 0) return ShowDialogSlotItem(playerid, 2);
 			CheckAks3(playerid, itemModel, PickInvent[playerid]);
 		}
-		// пїЅпїЅ PUT пїЅН§пїЅпїЅпїЅи§µпїЅЗЁпїЅпїЅТ·пїЅпїЅпїЅпїЅ
+		// Ўґ PUT ўН§µЎбµи§µСЗЁРБТ·Хи№Хи
 		case 2102,2690,2045,19590,19631,2226,19591,1276,19317,19319,19318,19054,19055,19056,19057,19058,19847,2803,19878,2406,3026,19559,19636,2511,8492,19332,19333,19334,19335,19336,19337,19338: {
 			if (playerData[playerid][pSlotItem][5] != 0) return ShowDialogSlotItem(playerid, 3);
 			CheckAks(playerid, itemModel, PickInvent[playerid]);
 		}
-		// пїЅпїЅ PUT пїЅН§пїЅпїЅпїЅи§µпїЅЗЁпїЅпїЅТ·пїЅпїЅпїЅпїЅ
+		// Ўґ PUT ўН§µЎбµи§µСЗЁРБТ·Хи№Хи
 		case 18963,19036,19037,19038,19472,19350,19085,11704,6865,18911..18920: {
 			if (playerData[playerid][pSlotItem][1] != 0) return ShowDialogSlotItem(playerid, 1);
 			CheckAks2(playerid, itemModel, PickInvent[playerid]);
 		}
-		// пїЅпїЅ PUT пїЅН§пїЅпїЅпїЅи§µпїЅЗЁпїЅпїЅТ·пїЅпїЅпїЅпїЅ
+		// Ўґ PUT ўН§µЎбµи§µСЗЁРБТ·Хи№Хи
 		case 19011..19019: {
 			if (playerData[playerid][pSlotItem][7] != 0) return ShowDialogSlotItem(playerid, 7);
 			CheckAks8(playerid, itemModel, PickInvent[playerid]);
 		}
-		// пїЅпїЅ PUT пїЅН§пїЅпїЅпїЅи§µпїЅЗЁпїЅпїЅТ·пїЅпїЅпїЅпїЅ
+		// Ўґ PUT ўН§µЎбµи§µСЗЁРБТ·Хи№Хи
 		case 19039..19053: {
 			if (playerData[playerid][pSlotItem][6] != 0) return ShowDialogSlotItem(playerid, 6);
 			CheckAks7(playerid, itemModel, PickInvent[playerid]);
 		}
-		// пїЅпїЅ PUT пїЅН§пїЅпїЅпїЅи§µпїЅЗЁпїЅпїЅТ·пїЅпїЅпїЅпїЅ
+		// Ўґ PUT ўН§µЎбµи§µСЗЁРБТ·Хи№Хи
 		case 19421..19424: {
 			if (playerData[playerid][pSlotItem][0] != 0) return ShowDialogSlotItem(playerid, 0);
 			CheckAks6(playerid, itemModel, PickInvent[playerid]);
 		}
-		// пїЅпїЅпїЅпїЅ PUT КЎФ№пїЅпїЅпїЅТ·пїЅпїЅпїЅпїЅ
+		// ЎґгЄй PUT КЎФ№ЁРБТ·Хи№Хи
 		case 1..311: {
 			new skin = GetPlayerSkin(playerid);
             PlayerTextDrawBackgroundColor(playerid, InvTextDraws[playerid][46], 0x333333FF);
@@ -2027,9 +2027,9 @@ stock ShowInvInfoItems(playerid, const str[]) {
 		}
 	}
 	Dialog_ShowCallback(playerid, using inline Response, 0
-		, "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅЗЎСєпїЅпїЅпїЅпїЅ"
+		, "ўйНБЩЕаЎХиВЗЎСєдНа·Б"
 		, str
-		, "пїЅФґ"
+		, "»Фґ"
 		, ""
 	);
 	return 1;
@@ -2050,10 +2050,10 @@ stock ShowItemInfoDialog(playerid, page) {
     }
 
     if (end < MAX_ITEMS)
-        strcat(str, "{FFD700}>>> Л№пїЅТ¶СґпїЅ\n");
+        strcat(str, "{FFD700}>>> Л№йТ¶Сґд»\n");
 
     if (page > 0)
-        strcat(str, "{FFD700}<<< Л№пїЅТЎпїЅН№");
+        strcat(str, "{FFD700}<<< Л№йТЎиН№");
 
     SetPVarInt(playerid, "ItemInfoPage", page);
 
@@ -2097,7 +2097,7 @@ stock ShowItemInfoDialog(playerid, page) {
 
 				for (new i = 0; inputtext2[i] != '\0'; i++) {
 					if (inputtext[i] < '0' || inputtext[i] > '9') {
-						va_SendClientMessage(playerid, COLOR_RED, "[!] {FFFFFF}пїЅпїЅШіпїЅпїЅпїЅпїЅпїЅпїЅпїЅЕўпїЅпїЅТ№пїЅпїЅ");
+						va_SendClientMessage(playerid, COLOR_RED, "[!] {FFFFFF}ЎГШіТгКиа»з№аЕўа·иТ№Сй№");
 						ShowItemInfoDialog(playerid, 1);
 						@return 1;
 					}
@@ -2106,10 +2106,10 @@ stock ShowItemInfoDialog(playerid, page) {
 				va_SendClientMessage(
 					playerid,
 					COLOR_GREEN,
-					"[пїЅпїЅпїЅпїЅпїЅпїЅ] {FFFFFF}пїЅШіпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅВЎпїЅГ№пїЅпїЅЕ§г№¤пїЅС§пїЅФ№пїЅпїЅТўН§пїЅШіпїЅпїЅпїЅВєпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"
+					"[ўйНБЩЕ] {FFFFFF}¤ШідґйаѕФиБГТВЎТГ№ХйЕ§г№¤ЕС§КФ№¤йТўН§¤ШіаГХВєГйНВбЕйЗ"
 				);
 				SendAdminMessage(COLOR_ADMIN
-					, "AdmLog: %s пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ %s пїЅпїЅпїЅпїЅпїЅпїЅН§ пїЅУ№З№ %i пїЅпїЅпїЅ"
+					, "AdmLog: %s дґйаѕФиБдНа·Б %s гЛйµСЗаН§ ЁУ№З№ %i ЄФй№"
 					, GetPlayerNameEx(playerid)
 					, ItemsInfo[itemid][ItemName]
 					, strval(inputtext2)
@@ -2119,18 +2119,18 @@ stock ShowItemInfoDialog(playerid, page) {
 				SaveInventory(playerid);
 			}
 			Dialog_ShowCallback(playerid, using inline Response2, DIALOG_STYLE_INPUT
-				, "{ffffff}пїЅпїЅНЎпїЅУ№З№"
-				, "{FFFFFF}пїЅпїЅШіТЎпїЅНЎпїЅУ№З№пїЅпїЅпїЅпїЅН§пїЅпїЅпїЅпїЅпїЅпїЅ"
-				, "пїЅпїЅЕ§"
-				, "ВЎпїЅпїЅФЎ"
+				, "{ffffff}ЎГНЎЁУ№З№"
+				, "{FFFFFF}ЎГШіТЎГНЎЁУ№З№·ХиµйН§ЎТГгЛй"
+				, "µЎЕ§"
+				, "ВЎаЕФЎ"
 			);
 		}
 	}
 	Dialog_ShowCallback(playerid, using inline Response, DIALOG_STYLE_LIST
-		, "{ffcd66}ID - пїЅпїЅпїЅпїЅ"
+		, "{ffcd66}ID - ЄЧиН"
 		, str
-		, "пїЅпїЅпїЅНЎ"
-		, "ВЎпїЅпїЅФЎ"
+		, "аЕЧНЎ"
+		, "ВЎаЕФЎ"
 	);
 	return 1;
 }
@@ -2150,10 +2150,10 @@ stock ShowSkinInfoDialog(playerid, page) {
     }
 
     if (end < 312)
-        strcat(str, "{FFD700}>>> Л№пїЅТ¶СґпїЅ\n");
+        strcat(str, "{FFD700}>>> Л№йТ¶Сґд»\n");
 
     if (page > 0)
-        strcat(str, "{FFD700}<<< Л№пїЅТЎпїЅН№");
+        strcat(str, "{FFD700}<<< Л№йТЎиН№");
 
     SetPVarInt(playerid, "SkinInfoPage", page);
 
@@ -2190,10 +2190,10 @@ stock ShowSkinInfoDialog(playerid, page) {
 			va_SendClientMessage(
 				playerid,
 				COLOR_GREEN,
-				"[пїЅпїЅпїЅпїЅпїЅпїЅ] {FFFFFF}пїЅШіпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅВЎпїЅГ№пїЅпїЅЕ§г№¤пїЅС§пїЅФ№пїЅпїЅТўН§пїЅШіпїЅпїЅпїЅВєпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"
+				"[ўйНБЩЕ] {FFFFFF}¤ШідґйаѕФиБГТВЎТГ№ХйЕ§г№¤ЕС§КФ№¤йТўН§¤ШіаГХВєГйНВбЕйЗ"
 			);
 			SendAdminMessage(COLOR_ADMIN
-				, "AdmLog: %s пїЅпїЅпїЅпїЅпїЅпїЅКЎФ№ %s пїЅпїЅпїЅСєпїЅпїЅпїЅпїЅН§ 1 КЎФ№"
+				, "AdmLog: %s дґйаѕФиБКЎФ№ %s гЛйЎСєµСЗаН§ 1 КЎФ№"
 				, GetPlayerNameEx(playerid)
 				, ItemsInfo[itemid][ItemName]
 			);
@@ -2203,10 +2203,10 @@ stock ShowSkinInfoDialog(playerid, page) {
 		}
 	}
 	Dialog_ShowCallback(playerid, using inline Response, DIALOG_STYLE_LIST
-		, "{ffcd66}ID - пїЅпїЅпїЅпїЅ"
+		, "{ffcd66}ID - ЄЧиН"
 		, str
-		, "пїЅпїЅпїЅНЎ"
-		, "ВЎпїЅпїЅФЎ"
+		, "аЕЧНЎ"
+		, "ВЎаЕФЎ"
 	);
 	return 1;
 }
@@ -2222,15 +2222,15 @@ stock GetInvSet(playerid) {
 stock AddItem(playerid, itemid, amount) {
     new string[256];
     if (GetInvSet(playerid) >= MAX_SLOT_ITEMS) 
-        return va_SendClientMessage(playerid, COLOR_RED, "[пїЅпїЅНјФґпїЅпїЅТґ] {FFFFFF}пїЅШіпїЅХѕпїЅй№·пїЅпїЅг№¤пїЅС§пїЅФ№пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅВ§пїЅпїЅ");
+        return va_SendClientMessage(playerid, COLOR_RED, "[ўйНјФґѕЕТґ] {FFFFFF}¤ШіБХѕЧй№·Хиг№¤ЕС§КФ№¤йТдБиаѕХВ§ѕН");
 
     for (new i = 0; i < 72; i++) {
         if (playerData[playerid][pInventory][i] != itemid) continue;
         if (!Custom_AddInvItem(playerid, i, itemid, amount)) continue;
         if (amount >= 2)
-            format(string, sizeof(string), "[пїЅпїЅВЎпїЅпїЅпїЅпїЅи§ўН§] {FFFFFF}пїЅХЎпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅВЎпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅСєпїЅШі '%s' (%d пїЅпїЅпїЅ). пїЅТЎпїЅпїЅН§пїЅпїЅпїЅпїЅФґпїЅпїЅпїЅпїЅВЎпїЅпїЅпїЅФ№пїЅпїЅТўН§пїЅШі пїЅпїЅ 'Y'", ItemsInfo[itemid][ItemName2], amount);
+            format(string, sizeof(string), "[ГТВЎТГКФи§ўН§] {FFFFFF}БХЎТГаѕФиБГТВЎТГгЛБигЛйЎСє¤Ші '%s' (%d ЄФй№). ЛТЎµйН§ЎТГа»ФґґЩГТВЎТГКФ№¤йТўН§¤Ші Ўґ 'Y'", ItemsInfo[itemid][ItemName2], amount);
         else
-            format(string, sizeof(string), "[пїЅпїЅВЎпїЅпїЅпїЅпїЅи§ўН§] {FFFFFF}пїЅХЎпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅВЎпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅСєпїЅШі '%s' пїЅТЎпїЅпїЅН§пїЅпїЅпїЅпїЅФґпїЅпїЅпїЅпїЅВЎпїЅпїЅпїЅФ№пїЅпїЅТўН§пїЅШі пїЅпїЅ 'Y'", ItemsInfo[itemid][ItemName2]);
+            format(string, sizeof(string), "[ГТВЎТГКФи§ўН§] {FFFFFF}БХЎТГаѕФиБГТВЎТГгЛБигЛйЎСє¤Ші '%s' ЛТЎµйН§ЎТГа»ФґґЩГТВЎТГКФ№¤йТўН§¤Ші Ўґ 'Y'", ItemsInfo[itemid][ItemName2]);
         va_SendClientMessage(playerid, COLOR_YELLOW, string);
         SaveInventory(playerid);
         return 1;
@@ -2240,9 +2240,9 @@ stock AddItem(playerid, itemid, amount) {
         if (playerData[playerid][pInventory][i] != 0) continue;
         if (!Custom_SetInvItem(playerid, i, itemid, amount)) continue;
         if (amount >= 2)
-            format(string, sizeof(string), "[пїЅпїЅВЎпїЅпїЅпїЅпїЅи§ўН§] {FFFFFF}пїЅХЎпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅВЎпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅСєпїЅШі '%s' (%d пїЅпїЅпїЅ). пїЅТЎпїЅпїЅН§пїЅпїЅпїЅпїЅФґпїЅпїЅпїЅпїЅВЎпїЅпїЅпїЅФ№пїЅпїЅТўН§пїЅШі пїЅпїЅ 'Y'", ItemsInfo[itemid][ItemName2], amount);
+            format(string, sizeof(string), "[ГТВЎТГКФи§ўН§] {FFFFFF}БХЎТГаѕФиБГТВЎТГгЛБигЛйЎСє¤Ші '%s' (%d ЄФй№). ЛТЎµйН§ЎТГа»ФґґЩГТВЎТГКФ№¤йТўН§¤Ші Ўґ 'Y'", ItemsInfo[itemid][ItemName2], amount);
         else
-            format(string, sizeof(string), "[пїЅпїЅВЎпїЅпїЅпїЅпїЅи§ўН§] {FFFFFF}пїЅХЎпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅВЎпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅСєпїЅШі '%s' пїЅТЎпїЅпїЅН§пїЅпїЅпїЅпїЅФґпїЅпїЅпїЅпїЅВЎпїЅпїЅпїЅФ№пїЅпїЅТўН§пїЅШі пїЅпїЅ 'Y'", ItemsInfo[itemid][ItemName2]);
+            format(string, sizeof(string), "[ГТВЎТГКФи§ўН§] {FFFFFF}БХЎТГаѕФиБГТВЎТГгЛБигЛйЎСє¤Ші '%s' ЛТЎµйН§ЎТГа»ФґґЩГТВЎТГКФ№¤йТўН§¤Ші Ўґ 'Y'", ItemsInfo[itemid][ItemName2]);
         va_SendClientMessage(playerid, COLOR_YELLOW, string);
         SaveInventory(playerid);
         return 1;
@@ -2474,7 +2474,7 @@ hook OnPlayerClickPlayerTD(playerid, PlayerText:playertextid) {
   		deletevy(playerid);
         updateslot6(playerid);
 		if (playerData[playerid][pInventoryKolvo][PickInvent[playerid]] >= 2) {
-			if (GetInvSet(playerid) >= MAX_SLOT_ITEMS) return RefreshInv2(playerid, PickInvent[playerid]), SendErrorMessage(playerid, "{FFFFFF}пїЅШіпїЅХѕпїЅй№·пїЅпїЅг№ЎпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅВ§пїЅпїЅ!");
+			if (GetInvSet(playerid) >= MAX_SLOT_ITEMS) return RefreshInv2(playerid, PickInvent[playerid]), SendErrorMessage(playerid, "{FFFFFF}¤ШіБХѕЧй№·Хиг№ЎГРа»лТдБиаѕХВ§ѕН!");
 			playerData[playerid][pInventoryKolvoDop] = playerData[playerid][pInventoryKolvo][PickInvent[playerid]];
 			if (playerData[playerid][pInventoryKolvo][PickInvent[playerid]] % 2 == 0) {
 			    playerData[playerid][pInventoryKolvo][PickInvent[playerid]] /= 2;
@@ -2483,7 +2483,7 @@ hook OnPlayerClickPlayerTD(playerid, PlayerText:playertextid) {
 				playerData[playerid][pInventoryKolvo][PickInvent[playerid]] /= 2;
 			}
 			PlayerPlaySound(playerid, 17803, 0.0, 0.0, 0.0);
-			va_SendClientMessage(playerid, COLOR_YELLOW, "пїЅШіпїЅпїЅпїЅпїЅпїЅпїЅВЎпїЅГ№пїЅпїЅпїЅпїЅпїЅВєпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
+			va_SendClientMessage(playerid, COLOR_YELLOW, "¤Шідґйбєи§ГТВЎТГ№Сй№аГХВєГйНВбЕйЗ");
 	    	for (new i = 0; i < 72; i++) {
                 if (playerData[playerid][pInventory][i] != 0) continue;
                 playerData[playerid][pInventory][i] = playerData[playerid][pInventory][PickInvent[playerid]];
@@ -2498,10 +2498,10 @@ hook OnPlayerClickPlayerTD(playerid, PlayerText:playertextid) {
 		} else {
 			if (musorka[playerid] >= 1) {
 			    RefreshInv2(playerid, PickInvent[playerid]);
-				va_SendClientMessage(playerid, COLOR_RED, "[пїЅпїЅНјФґпїЅпїЅТґ] {FFFFFF}пїЅШіпїЅпїЅпїЅпїЅГ¶пїЅпїЅпїЅпїЅпїЅи§ўН§пїЅпїЅа©ѕпїЅРўпїЅТ§пїЅС§пїЅпїЅпїЅпїЅпїЅТ№пїЅпїЅ");
+				va_SendClientMessage(playerid, COLOR_RED, "[ўйНјФґѕЕТґ] {FFFFFF}¤ШіКТБТГ¶·Фй§КФи§ўН§дґйа©ѕТРўйТ§¶С§ўВРа·иТ№Сй№");
 			}
 			if (musorka[playerid] == 0) {
-				// TODO: пїЅРєпїЅпїЅпїЅй§ўН§ (Drop Item System)
+				// TODO: ГРєє·Фй§ўН§ (Drop Item System)
 				new IDS = PickInvent[playerid];
         		new ID = playerData[playerid][pInventory][IDS];
 				SetPVarInt(playerid, "dItemID", ID);
@@ -2548,10 +2548,10 @@ hook OnPlayerClickPlayerTD(playerid, PlayerText:playertextid) {
 	if (playertextid == dropmenu[playerid][3]) {
 		if (musorka[playerid] >= 1) {
 		    RefreshInv2(playerid, PickInvent[playerid]);
-			va_SendClientMessage(playerid, COLOR_RED, "[пїЅпїЅНјФґпїЅпїЅТґ] {FFFFFF}пїЅШіпїЅпїЅпїЅпїЅГ¶пїЅпїЅпїЅпїЅпїЅи§ўН§пїЅпїЅа©ѕпїЅРўпїЅТ§пїЅС§пїЅпїЅпїЅпїЅпїЅТ№пїЅпїЅ");
+			va_SendClientMessage(playerid, COLOR_RED, "[ўйНјФґѕЕТґ] {FFFFFF}¤ШіКТБТГ¶·Фй§КФи§ўН§дґйа©ѕТРўйТ§¶С§ўВРа·иТ№Сй№");
 		}
 		if (musorka[playerid] == 0) {
-			// TODO: пїЅРєпїЅпїЅпїЅй§ўН§ (Drop Item System)
+			// TODO: ГРєє·Фй§ўН§ (Drop Item System)
 			new IDS = PickInvent[playerid];
 			new ID = playerData[playerid][pInventory][IDS];
 			SetPVarInt(playerid, "dItemID", ID);
@@ -2563,7 +2563,7 @@ hook OnPlayerClickPlayerTD(playerid, PlayerText:playertextid) {
 	}
 
 	if (playertextid == dropmenu[playerid][2]) {
-        if (GetInvSet(playerid) >= MAX_SLOT_ITEMS) return RefreshInv2(playerid, PickInvent[playerid]), SendErrorMessage(playerid, "{FFFFFF}пїЅШіпїЅХѕпїЅй№·пїЅпїЅг№ЎпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅВ§пїЅпїЅ!");
+        if (GetInvSet(playerid) >= MAX_SLOT_ITEMS) return RefreshInv2(playerid, PickInvent[playerid]), SendErrorMessage(playerid, "{FFFFFF}¤ШіБХѕЧй№·Хиг№ЎГРа»лТдБиаѕХВ§ѕН!");
         playerData[playerid][pInventoryKolvoDop] = playerData[playerid][pInventoryKolvo][PickInvent[playerid]];
         if (playerData[playerid][pInventoryKolvo][PickInvent[playerid]] % 2 == 0) {
             playerData[playerid][pInventoryKolvo][PickInvent[playerid]] /= 2;
@@ -2572,7 +2572,7 @@ hook OnPlayerClickPlayerTD(playerid, PlayerText:playertextid) {
             playerData[playerid][pInventoryKolvo][PickInvent[playerid]] /= 2;
         }
         PlayerPlaySound(playerid, 17803, 0.0, 0.0, 0.0);
-        va_SendClientMessage(playerid, COLOR_YELLOW, "пїЅШіпїЅпїЅпїЅпїЅпїЅпїЅВЎпїЅГ№пїЅпїЅпїЅпїЅпїЅВєпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
+        va_SendClientMessage(playerid, COLOR_YELLOW, "¤Шідґйбєи§ГТВЎТГ№Сй№аГХВєГйНВбЕйЗ");
         for (new i = 0; i < 72; i++) {
             if (playerData[playerid][pInventory][i] != 0) continue;
             playerData[playerid][pInventory][i] = playerData[playerid][pInventory][PickInvent[playerid]];
@@ -2630,7 +2630,7 @@ hook OnPlayerClickPlayerTD(playerid, PlayerText:playertextid) {
 		return 1;
 	}
 
-	// пїЅГ§пїЅпїЅпїЅпїЅпїЅ slot пїЅЛ­пїЅ 72 пїЅпїЅН§
+	// µГ§№Хй¤ЧН slot гЛ­и 72 ЄиН§
     for (new j = 0; j < 72; j++) {
         if (playertextid == Govnishe[playerid][j]) {
             PlayerTextDrawShow(playerid, InvTextDraws[playerid][58]);
@@ -2751,9 +2751,9 @@ hook OnPlayerClickPlayerTD(playerid, PlayerText:playertextid) {
                         new quantity2 = playerData[playerid][pInventoryKolvo][j]+playerData[playerid][pInventoryKolvo][ID];
                         if (quantity2 >= quantity) {
                             if (quantity2 == quantity) {
-                                playerData[playerid][pInventoryKolvo][j] += playerData[playerid][pInventoryKolvo][ID]; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ID пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
-                                playerData[playerid][pInventory][ID] = 0; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
-                                playerData[playerid][pInventoryKolvo][ID] = 0; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+                                playerData[playerid][pInventoryKolvo][j] += playerData[playerid][pInventoryKolvo][ID]; // записываем значение ID в значение выбранной ячейки
+                                playerData[playerid][pInventory][ID] = 0; // обнуляем значение прошлой выбранной ячейки
+                                playerData[playerid][pInventoryKolvo][ID] = 0; // обнуляем значение количества прошлой выбранной ячейки
                                 RefreshInv2(playerid, j);
                                 RefreshInv2(playerid, ID);
                                 return true;
@@ -2765,9 +2765,9 @@ hook OnPlayerClickPlayerTD(playerid, PlayerText:playertextid) {
                             RefreshInv2(playerid, ID);
                             return true;
                         }
-                        playerData[playerid][pInventoryKolvo][j] += playerData[playerid][pInventoryKolvo][ID]; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ID пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
-                        playerData[playerid][pInventory][ID] = 0; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
-                        playerData[playerid][pInventoryKolvo][ID] = 0; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+                        playerData[playerid][pInventoryKolvo][j] += playerData[playerid][pInventoryKolvo][ID]; // записываем значение ID в значение выбранной ячейки
+                        playerData[playerid][pInventory][ID] = 0; // обнуляем значение прошлой выбранной ячейки
+                        playerData[playerid][pInventoryKolvo][ID] = 0; // обнуляем значение количества прошлой выбранной ячейки
                         for (new i = 0; i < 6; i++) {
                             DestroyPlayerTD(playerid, InfoItems[playerid][i]);
                         }
@@ -2828,7 +2828,7 @@ hook OnPlayerClickPlayerTD(playerid, PlayerText:playertextid) {
     }
 
 	if (playertextid == InvTextDraws[playerid][46]) {
-		if (GetInvSet(playerid) >= MAX_SLOT_ITEMS) return va_SendClientMessage(playerid, COLOR_RED, "[пїЅпїЅНјФґпїЅпїЅТґ] {FFFFFF}пїЅШіпїЅпїЅпїЅпїЅХѕпїЅй№·пїЅпїЅг№ЄпїЅН§пїЅзєўН§пїЅпїЅВ§пїЅН·пїЅпїЅР№пїЅпїЅпїЅпїЅпїЅНјпїЅпїЅпїЅНЎ");
+		if (GetInvSet(playerid) >= MAX_SLOT_ITEMS) return va_SendClientMessage(playerid, COLOR_RED, "[ўйНјФґѕЕТґ] {FFFFFF}¤ШідБиБХѕЧй№·Хиг№ЄиН§аЎзєўН§аѕХВ§ѕН·ХиЁР№УаКЧйНјйТННЎ");
 	    if (playerData[playerid][pSkin] != GetPlayerSkin(playerid)) {
 
 			if (GetPVarInt(playerid, "usedGangSkin") == 1) {
@@ -2850,7 +2850,7 @@ hook OnPlayerClickPlayerTD(playerid, PlayerText:playertextid) {
 			}
 
 			RefreshInv2(playerid, PickInvent[playerid]);
-			va_SendClientMessage(playerid, COLOR_RED, "[пїЅпїЅНјФґпїЅпїЅТґ] {FFFFFF}пїЅпїЅпїЅпїЅпїЅНґпїЅпїЅпїЅпїЅНјпїЅпїЅпїЅпїЅпїЅпїЅТ№пїЅпїЅпїЅНЎ");
+			va_SendClientMessage(playerid, COLOR_RED, "[ўйНјФґѕЕТґ] {FFFFFF}ЛйТБ¶НґаКЧйНјйТаЛЕиТ№ХйННЎ");
 			return true;
 		}
 
