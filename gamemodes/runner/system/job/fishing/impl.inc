@@ -6,13 +6,13 @@
 #include <YSI_Coding\y_timers>
 
 new
-	FishingRod[MAX_PLAYERS],
 	fishTake[MAX_PLAYERS],
 	auto_farm[MAX_PLAYERS];
 
 hook OnPlayerConnect(playerid) {
     fishTake[playerid] = 0;
 	auto_farm[playerid] = 0;
+	FishingRod[playerid] = 0;
     return 1;
 }
 
@@ -32,9 +32,6 @@ hook OnGameModeInit() {
 
 	CreateActor(33, DEFAULT_POS_FISHING_X, DEFAULT_POS_FISHING_Y, DEFAULT_POS_FISHING_Z, DEFAULT_POS_FISHING_A);
 	CreateDynamic3DTextLabel("{708090}ชาวประมง\n{FFFFFF}กด {00ffff}N{FFFFFF} เพื่อเข้าสู่ร้าน", -1, DEFAULT_POS_FISHING_X, DEFAULT_POS_FISHING_Y, DEFAULT_POS_FISHING_Z + 1.3, 5.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, -1);
-
-	/*CreateDynamicPickup(1239, 23, 257.549011,-1800.140625,4.406894);
-	CreateDynamic3DTextLabel("(SELL:ปลา)\n[ ใช้ 'N' เพื่อขาย]", COLOR_GREEN, 257.549011, -1800.140625, 4.406894, 5.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, -1);*/
 
 	new fishingmap;
 	fishingmap = CreateDynamicObject(19482, 2154.557128, -94.198486, 2.148847, 0.000000, 0.000000, 149.500000, -1, -1, -1, 300.00, 300.00); 
@@ -101,10 +98,10 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
 								if (GetPlayerMoneyEx(playerid) < DEFAULT_FISH_ROD)
 									return SendErrorFishingMessage(playerid, "คุณมีเงินไม่เพียงพอในการซื้อ {00ffff}เบ็ดตกปลา{FFFFFF} (%s/%s)", FormatMoney(GetPlayerMoneyEx(playerid)), FormatMoney(DEFAULT_FISH_ROD));
 
-								/*if (Player.Auth[playerid][@itemfishingrod] >= 3)
-									return SendErrorFishingMessage(playerid, "คุณซื้อเบ็ดตกปลาครบ 3 อันแล้ว!");*/
+								if (GetItemAmountByName(playerid, "เบ็ดตกปลา") >= 3)
+									return SendErrorFishingMessage(playerid, "คุณซื้อเบ็ดตกปลาครบ 3 อันแล้ว !");
 
-								//Player.Auth[playerid][@itemfishingrod] += 1;
+								AddItemByName(playerid, "เบ็ดตกปลา", 1);
 								GivePlayerMoneyEx(playerid, -DEFAULT_FISH_ROD);
 
 								SendPlayerAction(playerid, "คุณได้ซื้อ {00ffff}เบ็ดตกปลา{FFFFFF} สำเร็จ ในราคา {00ffff}%s", FormatMoney(DEFAULT_FISH_ROD));
@@ -150,18 +147,18 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
 										"ตกลง", "ยกเลิก");
 								}
 
-								/*if (Player.Auth[playerid][@itemvictim] >= 50)
-									return SendClientMessage(playerid, 0xFF0000FF, "[!]: {FFFFFF}คุณมีเหยื่อในตัว 50 ชิ้นแล้ว!");*/
+								if (GetItemAmountByName(playerid, "เหยื่อตกปลา") >= 50)
+									return SendErrorMessage(playerid, "คุณมีเหยื่อในตัว 50 ชิ้นแล้ว !");
 
-								//Player.Auth[playerid][@itemvictim] += amount;
+								AddItemByName(playerid, "เหยื่อตกปลา", amount);
 								GivePlayerMoneyEx(playerid, -price);
 								va_SendClientMessage(playerid, COLOR_YELLOW, "[เหยื่อ]: {FFFFFF}คุณได้ซื้อเหยื่อ จำนวน %d", amount);
-							} /*else {
+							} else {
 								Dialog_ShowCallback(playerid, using inline Dialog_Show_Fishing, DIALOG_STYLE_LIST,
 									"ชาวประมง", 
 									"{FFFFFF}คันเบ็ดตกปลา\t\t{00FF00}$5,000\n{FFFFFF}เหยื่อ\t\t\t{00FF00}$30", 
 									"เลือก", "ปิด");
-							}*/
+							}
                         }
 
 						new str[256];
@@ -181,20 +178,14 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
 
 		for (new i = 0; i < sizeof(fishData); i ++) {
 		    if (IsPlayerInRangeOfPoint(playerid, 2.5, fishData[i][fishPosX], fishData[i][fishPosY], fishData[i][fishPosZ])) {
-                /*if (!Player.Auth[playerid][@itemvictim])
-                    return SendErrorFishingMessage(playerid, "คุณไม่มีเหยื่ออยู่ในตัวเลย");*/
+                if (!GetItemAmountByName(playerid, "เบ็ดตกปลา"))
+                    return SendErrorFishingMessage(playerid, "คุณไม่มีเหยื่ออยู่ในตัวเลย");
 
 				if (FishingRod[playerid] == 0)
                     return SendErrorFishingMessage(playerid, "คุณยังไม่สามารถตกปลาได้เนื่องจากคุณยังไม่ได้หยิบเบ็ดตกปลา !");
 
                 if (fishTake[playerid] == 1)
                     return SendErrorFishingMessage(playerid, "คุณกำลังตกปลาอยู่ !");
-
-				/*if (auto_farm[playerid] == 1)
-				{
-					auto_farm[playerid] = 0;
-					//auto_farm[playerid] = 1;
-				}*/
 
 	        	fishTake[playerid] = 1;
 				auto_farm[playerid] = 1;
@@ -203,44 +194,20 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
 				SetPlayerFacingAngle(playerid, fishData[i][fishPosA]);
 
 				ApplyAnimation(playerid, "SWORD", "sword_block", 50.0, 0, 1, 0, 1, 1);
-				//SetPlayerAttachedObject(playerid, 0, 18632, 6, 0.079376, 0.037070, 0.007706, 181.482910, 0.000000, 0.000000, 1.000000, 1.000000, 1.000000);
-
+				
 				new rand = randomEx(100, 200);
                 StartProgress(playerid, rand, 0, INVALID_OBJECT_ID);
-				//OP_PlayerStartCircleProgressbar(playerid, rand, 0x00FFFFFF, "PlayerFishingUnfreeze");
-	        	//Player.Auth[playerid][@itemvictim] -= 1;
+				
+	        	for (new s = 0; s < MAX_ITEMS; s++) {
+					if (!strcmp(ItemsInfo[s][ItemName2], "เหยื่อตกปลา", true)) {
+						CallLocalFunction("DeleteItem", "ddd", playerid, s, 1);
+					}
+				}
+
 				TogglePlayerControllable(playerid, false);
 	        	break;
 	    	}
 		}
-        /*if (IsPlayerInRangeOfPoint(playerid, 2.5, 257.549011,-1800.140625,4.406894))
-        {
-            Dialog_Show(playerid, DIALOG_SELLFISH, DIALOG_STYLE_TABLIST_HEADERS, "[รายการรับซื้อ]", "\
-				ชื่อรายการ\tราคา\n\
-				ปลาเก๋า\t{00FF00}$%d\n\
-				ปลาช่อน\t{00FF00}$%d\n\
-				ปลาดอลลี่\t{00FF00}$%d\n\
-				ปลานิล\t{00FF00}$%d\n\
-				ปลากระพง\t{00FF00}$%d\n\
-				ปลาทับทิม\t{00FF00}$%d\n\
-				ปลาดุก\t{00FF00}$%d\n\
-				ปลาทูน่า\t{00FF00}$%d\n\
-				ปลาแซลม่อน\t{00FF00}$%d\n\
-				ปลากระเบน\t{00FF00}$%d\n\
-				ปลาฉลาม\t{00FF00}$%d",
-				"ขาย", "ออก",
-				JobCash[0],
-				JobCash[1],
-				JobCash[2],
-				JobCash[3],
-				JobCash[4],
-				JobCash[5],
-				JobCash[6],
-				JobCash[7],
-				JobCash[8],
-				JobCash[9],
-				JobCash[10]);
-        }*/
 	}
 	if (newkeys & KEY_CTRL_BACK && !IsPlayerInAnyVehicle(playerid)) {
 		for (new i = 0; i < sizeof(fishData); i ++) {
@@ -255,219 +222,35 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys) {
 	return 1;
 }
 
-/*Dialog:DIALOG_SELLFISH(playerid, response, listitem, inputtext[])
-{
-	if (response)
-	{
-	    switch(listitem)
-	    {
-	        case 0:
-	        {
-	            new name[128];
-	            name = "ปลาเก๋า";
-			    new ammo = Inventory_Count(playerid, name);
-			    new price = ammo*JobCash[0];
-			    
-
-			    if (ammo <= 0)
-			        return SendClientMessageEx(playerid, COLOR_RED, "[WARNING] {FFFFFF} ไม่มี %s",  name);
-
-		        GivePlayerMoneyEx(playerid, price);
-		        SendClientMessageEx(playerid, COLOR_GREEN, "[ร้านรับซื้อปลา] {FFFFFF}เงินเขียว +{00FF00}%s ", FormatMoney(price), name);
-				Inventory_Remove(playerid, name, ammo);
-		    }
-		    case 1:
-	        {
-	            new name[128];
-	            name = "ปลาช่อน";
-			    new ammo = Inventory_Count(playerid, name);
-			    new price = ammo*JobCash[1];
-
-
-			    if (ammo <= 0)
-			        return SendClientMessageEx(playerid, COLOR_RED, "[WARNING] {FFFFFF} ไม่มี %s",  name);
-
-		        GivePlayerMoneyEx(playerid, price);
-		        SendClientMessageEx(playerid, COLOR_GREEN, "[ร้านรับซื้อปลา] {FFFFFF}เงินเขียว +{00FF00}%s ", FormatMoney(price), name);
-				Inventory_Remove(playerid, name, ammo);
-		    }
-	        case 2:
-	        {
-	            new name[128];
-	            name = "ปลาดอลลี่";
-			    new ammo = Inventory_Count(playerid, name);
-			    new price = ammo*JobCash[2];
-
-
-			    if (ammo <= 0)
-			        return SendClientMessageEx(playerid, COLOR_RED, "[WARNING] {FFFFFF} ไม่มี %s",  name);
-
-		        GivePlayerMoneyEx(playerid, price);
-		        SendClientMessageEx(playerid, COLOR_GREEN, "[ร้านรับซื้อปลา] {FFFFFF}เงินเขียว +{00FF00}%s ", FormatMoney(price), name);
-				Inventory_Remove(playerid, name, ammo);
-		    }
-		    case 3:
-	        {
-	            new name[128];
-	            name = "ปลานิล";
-			    new ammo = Inventory_Count(playerid, name);
-			    new price = ammo*JobCash[3];
-
-
-			    if (ammo <= 0)
-			        return SendClientMessageEx(playerid, COLOR_RED, "[WARNING] {FFFFFF} ไม่มี %s",  name);
-
-		        GivePlayerMoneyEx(playerid, price);
-		        SendClientMessageEx(playerid, COLOR_GREEN, "[ร้านรับซื้อปลา] {FFFFFF}เงินเขียว +{00FF00}%s ", FormatMoney(price), name);
-				Inventory_Remove(playerid, name, ammo);
-		    }
-		    case 4:
-	        {
-	            new name[128];
-	            name = "ปลากระพง";
-			    new ammo = Inventory_Count(playerid, name);
-			    new price = ammo*JobCash[4];
-
-
-			    if (ammo <= 0)
-			        return SendClientMessageEx(playerid, COLOR_RED, "[WARNING] {FFFFFF} ไม่มี %s",  name);
-
-		        GivePlayerMoneyEx(playerid, price);
-		        SendClientMessageEx(playerid, COLOR_GREEN, "[ร้านรับซื้อปลา] {FFFFFF}เงินเขียว +{00FF00}%s ", FormatMoney(price), name);
-				Inventory_Remove(playerid, name, ammo);
-		    }
-		    case 5:
-	        {
-	            new name[128];
-	            name = "ปลาทับทิม";
-			    new ammo = Inventory_Count(playerid, name);
-			    new price = ammo*JobCash[5];
-
-
-			    if (ammo <= 0)
-			        return SendClientMessageEx(playerid, COLOR_RED, "[WARNING] {FFFFFF} ไม่มี %s",  name);
-
-		        GivePlayerMoneyEx(playerid, price);
-		        SendClientMessageEx(playerid, COLOR_GREEN, "[ร้านรับซื้อปลา] {FFFFFF}เงินเขียว +{00FF00}%s ", FormatMoney(price), name);
-				Inventory_Remove(playerid, name, ammo);
-		    }
-		    case 6:
-	        {
-	            new name[128];
-	            name = "ปลาดุก";
-			    new ammo = Inventory_Count(playerid, name);
-			    new price = ammo*JobCash[6];
-
-
-			    if (ammo <= 0)
-			        return SendClientMessageEx(playerid, COLOR_RED, "[WARNING] {FFFFFF} ไม่มี %s",  name);
-
-		        GivePlayerMoneyEx(playerid, price);
-		        SendClientMessageEx(playerid, COLOR_GREEN, "[ร้านรับซื้อปลา] {FFFFFF}เงินเขียว +{00FF00}%s ", FormatMoney(price), name);
-				Inventory_Remove(playerid, name, ammo);
-		    }
-		    case 7:
-	        {
-	            new name[128];
-	            name = "ปลาทูน่า";
-			    new ammo = Inventory_Count(playerid, name);
-			    new price = ammo*JobCash[7];
-
-
-			    if (ammo <= 0)
-			        return SendClientMessageEx(playerid, COLOR_RED, "[WARNING] {FFFFFF} ไม่มี %s",  name);
-
-		        GivePlayerMoneyEx(playerid, price);
-		        SendClientMessageEx(playerid, COLOR_GREEN, "[ร้านรับซื้อปลา] {FFFFFF}เงินเขียว +{00FF00}%s ", FormatMoney(price), name);
-				Inventory_Remove(playerid, name, ammo);
-		    }
-		    case 8:
-	        {
-	            new name[128];
-	            name = "ปลาแซลม่อน";
-			    new ammo = Inventory_Count(playerid, name);
-			    new price = ammo*JobCash[8];
-
-
-			    if (ammo <= 0)
-			        return SendClientMessageEx(playerid, COLOR_RED, "[WARNING] {FFFFFF} ไม่มี %s",  name);
-
-		        GivePlayerMoneyEx(playerid, price);
-		        SendClientMessageEx(playerid, COLOR_GREEN, "[ร้านรับซื้อปลา] {FFFFFF}เงินเขียว +{00FF00}%s ", FormatMoney(price), name);
-				Inventory_Remove(playerid, name, ammo);
-		    }
-		    case 9:
-	        {
-	            new name[128];
-	            name = "ปลากระเบน";
-			    new ammo = Inventory_Count(playerid, name);
-			    new price = ammo*JobCash[9];
-
-
-			    if (ammo <= 0)
-			        return SendClientMessageEx(playerid, COLOR_RED, "[WARNING] {FFFFFF} ไม่มี %s",  name);
-
-		        GivePlayerMoneyEx(playerid, price);
-		        SendClientMessageEx(playerid, COLOR_GREEN, "[ร้านรับซื้อปลา] {FFFFFF}เงินเขียว +{00FF00}%s ", FormatMoney(price), name);
-				Inventory_Remove(playerid, name, ammo);
-		    }
-		    case 10:
-	        {
-	            new name[128];
-	            name = "ปลาฉลาม";
-			    new ammo = Inventory_Count(playerid, name);
-			    new price = ammo*JobCash[10];
-
-
-			    if (ammo <= 0)
-			        return SendClientMessageEx(playerid, COLOR_RED, "[WARNING] {FFFFFF} ไม่มี %s",  name);
-
-		        GivePlayerMoneyEx(playerid, price);
-		        SendClientMessageEx(playerid, COLOR_GREEN, "[ร้านรับซื้อปลา] {FFFFFF}เงินเขียว +{00FF00}%s ", FormatMoney(price), name);
-				Inventory_Remove(playerid, name, ammo);
-		    }
-		}
-	}
-	return 1;
-}*/
-
 public PlayerFishingUnfreeze(playerid) {
 	fishTake[playerid] = 0;
 	TogglePlayerControllable(playerid, true);
-	//RemovePlayerAttachedObject(playerid, 0);
     SetPlayerSpecialAction(playerid, SPECIAL_ACTION_NONE);
 	ClearAnimations(playerid);
+
 	new rand = randomEx(1, 200);
 	switch (rand) {
 	    case 1..15: {
 			SendErrorFishingMessage(playerid, "เสียใจด้วย คุณตกไม่ได้ปลาอะไรเลย !"); 
 		}
 	    case 16..40: {
-			//Player.Auth[playerid][@itemgrouper] += 1;
+			AddItemByName(playerid, "ปลานิล", 1);
 
 			GivePlayerExp(playerid, 20);
 			SetPlayerSpecialAction(playerid, SPECIAL_ACTION_NONE);
 			ClearAnimations(playerid);
-			SendPlayerAction(playerid, "คุณได้รับ {00FF00}ปลาเก๋า +1{FFFFFF} ตัว");
+			SendPlayerAction(playerid, "คุณได้รับ {00FF00}ปลานิล +1{FFFFFF} ตัว");
 	    }
 	    case 41..60: {
-			//Player.Auth[playerid][@itemsnakeheadfish] += 1;
+			AddItemByName(playerid, "ปลาดุก", 1);
 
 			GivePlayerExp(playerid, 20);
 			SetPlayerSpecialAction(playerid, SPECIAL_ACTION_NONE);
 			ClearAnimations(playerid);
-			SendPlayerAction(playerid, "คุณได้รับ {00FF00}ปลาช่อน +1{FFFFFF} ตัว");
-	    }
-	    case 61..75: {
-			//Player.Auth[playerid][@itemdollyfish] += 1;
-
-			GivePlayerExp(playerid, 20);
-			SetPlayerSpecialAction(playerid, SPECIAL_ACTION_NONE);
-			ClearAnimations(playerid);
-			SendPlayerAction(playerid, "คุณได้รับ {00FF00}ปลาดอลลี่ +1{FFFFFF} ตัว");
+			SendPlayerAction(playerid, "คุณได้รับ {00FF00}ปลาดุก +1{FFFFFF} ตัว");
 	    }
 	    case 76..85: {
-			//Player.Auth[playerid][@itemtilapia] += 1;
+			AddItemByName(playerid, "ปลานิล", 1);
 
 			GivePlayerExp(playerid, 20);
 			SetPlayerSpecialAction(playerid, SPECIAL_ACTION_NONE);
@@ -475,46 +258,22 @@ public PlayerFishingUnfreeze(playerid) {
 			SendPlayerAction(playerid, "คุณได้รับ {00FF00}ปลานิล +1{FFFFFF} ตัว");
 	    }
 	    case 86..99: {
-			//Player.Auth[playerid][@itemseabass] += 1;
+			AddItemByName(playerid, "ปลากระพง", 1);
 
 			GivePlayerExp(playerid, 20);
 			SetPlayerSpecialAction(playerid, SPECIAL_ACTION_NONE);
 			ClearAnimations(playerid);
 			SendPlayerAction(playerid, "คุณได้รับ {00FF00}ปลากระพง +1{FFFFFF} ตัว");
 	    }
-	    case 100..130: {
-			//Player.Auth[playerid][@itemrubyfish] += 1;
-
-			GivePlayerExp(playerid, 20);
-			SetPlayerSpecialAction(playerid, SPECIAL_ACTION_NONE);
-			ClearAnimations(playerid);
-			SendPlayerAction(playerid, "คุณได้รับ {00FF00}ปลาทับทิม +1{FFFFFF} ตัว");
-	    }
-	    case 131..140: {
-			//Player.Auth[playerid][@itemcatfish] += 1;
-
-			GivePlayerExp(playerid, 20);
-			SetPlayerSpecialAction(playerid, SPECIAL_ACTION_NONE);
-			ClearAnimations(playerid);
-			SendPlayerAction(playerid, "คุณได้รับ {00FF00}ปลาดุก +1{FFFFFF} ตัว");
-	    }
-	    case 141..160: {
-			//Player.Auth[playerid][@itemtuna] += 1;
-
-			GivePlayerExp(playerid, 20);
-			SetPlayerSpecialAction(playerid, SPECIAL_ACTION_NONE);
-			ClearAnimations(playerid);
-			SendPlayerAction(playerid, "คุณได้รับ {00FF00}ปลาทูน่า +1{FFFFFF} ตัว");
-	    }
-	    case 161..170: {
-			//Player.Auth[playerid][@itemsalmon] += 1;
+	    case 101..130: {
+			AddItemByName(playerid, "ปลาแซลม่อน", 1);
 
 			GivePlayerExp(playerid, 20);
 			SetPlayerSpecialAction(playerid, SPECIAL_ACTION_NONE);
 			ClearAnimations(playerid);
 			SendPlayerAction(playerid, "คุณได้รับ {00FF00}ปลาแซลม่อน +1{FFFFFF} ตัว");
 	    }
-	    case 181..194: {
+	    case 141..160: {
 			SendErrorFishingMessage(playerid, "เสียใจด้วย คุณตกไม่ได้ปลาอะไรเลย !");
 		}
 	}
@@ -522,28 +281,29 @@ public PlayerFishingUnfreeze(playerid) {
 	if (auto_farm[playerid] == 1) {
 		for (new i = 0; i < sizeof(fishData); i ++) {
 			if (IsPlayerInRangeOfPoint(playerid, 3.0, fishData[i][fishPosX], fishData[i][fishPosY], fishData[i][fishPosZ])) {
-                /*if (!Player.Auth[playerid][@itemvictim])
-                    return SendErrorFishingMessage(playerid, "คุณไม่มีเหยื่ออยู่ในตัวเลย");*/
+                if (!GetItemAmountByName(playerid, "เบ็ดตกปลา"))
+                    return SendErrorFishingMessage(playerid, "คุณไม่มีเหยื่ออยู่ในตัวเลย");
 
 				if (FishingRod[playerid] == 0)
                     return SendErrorFishingMessage(playerid, "คุณยังไม่สามารถตกปลาได้เนื่องจากคุณยังไม่ได้หยิบเบ็ดตกปลา !");
 
 				fishTake[playerid] = 1;
 				auto_farm[playerid] = 1;
-				//SetPlayerPos(playerid, fishData[i][fishPosX], fishData[i][fishPosY], fishData[i][fishPosZ]);
-
+				
 				new randx = randomEx(100, 200);
 				StartProgress(playerid, randx, 0, i); 
-				//OP_PlayerStartCircleProgressbar(playerid, randx, 0x00FFFFFF, "PlayerFishingUnfreeze");
-									
-				//Player.Auth[playerid][@itemvictim] -= 1;
+								
+				for (new s = 0; s < MAX_ITEMS; s++) {
+					if (!strcmp(ItemsInfo[s][ItemName2], "เหยื่อตกปลา", true)) {
+						CallLocalFunction("DeleteItem", "ddd", playerid, s, 1);
+					}
+				}
 
 				SetPlayerPos(playerid, fishData[i][fishPosX], fishData[i][fishPosY], fishData[i][fishPosZ]);
 				SetPlayerFacingAngle(playerid, fishData[i][fishPosA]);
 
 				ApplyAnimation(playerid, "SWORD", "sword_block", 50.0, 0, 0, 0, 1, 1);
-				//SetPlayerAttachedObject(playerid, 0, 18632, 6, 0.079376, 0.037070, 0.007706, 181.482910, 0.000000, 0.000000, 1.000000, 1.000000, 1.000000);
-
+				
 				SendClientMessage(playerid, COLOR_YELLOW, "[AUTO FARM] {FFFFFF}เหวี่ยงเบ็ดตกปลา...");
 				//break;	
 			}

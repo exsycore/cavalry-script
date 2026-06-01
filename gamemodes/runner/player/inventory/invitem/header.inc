@@ -19,6 +19,7 @@ forward Custom_SetInvItem(playerid, slot, itemid, quantity);
 new clickOnSkin[MAX_PLAYERS];
 new bool:weaponOn[MAX_PLAYERS] = {false, ...};
 new g_PlayerLastAmmo[MAX_PLAYERS] = {-1, ...};
+new FishingRod[MAX_PLAYERS];
 
 stock bool:HasItem(playerid, itemid);
 stock GetItemAmount(playerid, itemid);
