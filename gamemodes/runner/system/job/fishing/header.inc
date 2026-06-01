@@ -10,6 +10,11 @@
 #define DEFAULT_POS_FISHING_Z (2.7636)
 #define DEFAULT_POS_FISHING_A (60.3935)
 
+#define DEFAULT_POS_SELL_FISHING_X (0.0)
+#define DEFAULT_POS_SELL_FISHING_Y (0.0)
+#define DEFAULT_POS_SELL_FISHING_Z (0.0)
+#define DEFAULT_POS_SELL_FISHING_A (0.0)
+
 #define SendErrorFishingMessage(%0,%1) \
 	va_SendClientMessage(%0, COLOR_RED, "[¢ÈÕº‘¥æ≈“¥]: {FFFFFF}"%1)
 

@@ -1980,6 +1980,19 @@ stock UseItem(playerid, td, itemIndex, itemModel) {
             CheckSuka(playerid);
             clickOnSkin[playerid] = 0;
 		}
+		// กด USE เบ็ดตกปลา
+		case 18632: {
+			if (GetItemAmountByName(playerid, "เบ็ดตกปลา") <= 0)
+                return SendErrorMessage(playerid, "คุณมีเบ็ดตกปลาไม่เพียงพอ ต้องมี 1 ชิ้นขึ้นไปจึงจะสามารถใช้งานได้");
+
+			if (FishingRod[playerid] == 0) {
+				FishingRod[playerid] = 1;
+            	SetPlayerAttachedObject(playerid, 1, 18632, 6, 0.079376, 0.037070, 0.007706, 181.482910, 0.000000, 0.000000, 1.000000, 1.000000, 1.000000);
+			} else {
+				FishingRod[playerid] = 0;
+                RemovePlayerAttachedObject(playerid, 1);
+			}
+		}
     }
     RefreshInv2(playerid, td);
     return 1;
